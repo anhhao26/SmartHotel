@@ -10,7 +10,6 @@ public class Room {
     @Column(name = "RoomID")
     private Integer roomID;
 
-    // ĐÃ FIX: Chuyển thành RoomNumber chuẩn với CSDL
     @Column(name = "RoomNumber") 
     private String roomNumber;
 
@@ -18,12 +17,17 @@ public class Room {
     private Integer floor;
 
     @Column(name = "Status")
-    private String status;
+    private String status = "Available";
 
-    @Column(name = "RoomTypeID")
-    private Integer roomTypeID;
+    @Column(name = "Price")
+    private Double price;
 
-    // --- GETTERS & SETTERS ---
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "RoomTypeID")
+    private RoomType roomType;
+
+    public Room() {}
+
     public Integer getRoomID() { return roomID; }
     public void setRoomID(Integer roomID) { this.roomID = roomID; }
     
@@ -36,6 +40,13 @@ public class Room {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public Integer getRoomTypeID() { return roomTypeID; }
-    public void setRoomTypeID(Integer roomTypeID) { this.roomTypeID = roomTypeID; }
+    public Double getPrice() { 
+        if (price != null && price > 0) return price;
+        if (roomType != null && roomType.getPricePerNight() != null) return roomType.getPricePerNight().doubleValue();
+        return 0.0; 
+    }
+    public void setPrice(Double price) { this.price = price; }
+
+    public RoomType getRoomType() { return roomType; }
+    public void setRoomType(RoomType roomType) { this.roomType = roomType; }
 }

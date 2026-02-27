@@ -2,10 +2,10 @@ package com.smarthotel.dao;
 
 import com.smarthotel.model.Booking;
 import com.smarthotel.util.JPAUtil;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BookingDAO {
@@ -32,22 +32,23 @@ public class BookingDAO {
         em.merge(b); 
     }
 
+    // ĐÃ SỬA LỖI TÀNG HÌNH ĐƠN HÀNG:
+    // Mở rộng phễu lấy cả đơn Pending (chưa thanh toán) và Confirmed (đã thanh toán online)
     public List<BookingShort> findPendingBookings() {
-        return findBookingsByStatus("Pending");
+        return findBookingsByStatuses(Arrays.asList("Pending", "PENDING", "Confirmed", "CONFIRMED"));
     }
 
     public List<BookingShort> findCheckedInBookings() {
-        return findBookingsByStatus("Checked-in");
+        return findBookingsByStatuses(Arrays.asList("Checked-in", "CHECKED-IN"));
     }
 
-    // ĐÃ SỬA: Chuyển từ Native SQL sang JPQL để không bị phụ thuộc vào tên bảng SQL
-    private List<BookingShort> findBookingsByStatus(String status) {
+    // Tối ưu hóa hàm lọc để truyền được nhiều trạng thái cùng lúc (Dùng IN)
+    private List<BookingShort> findBookingsByStatuses(List<String> statuses) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            // Dùng JPQL truy vấn qua Entity Booking thay vì truy vấn thẳng bảng SQL
-            String jpql = "SELECT b FROM Booking b WHERE b.status = :status ORDER BY b.bookingID";
+            String jpql = "SELECT b FROM Booking b WHERE b.status IN :statuses ORDER BY b.bookingID DESC";
             TypedQuery<Booking> q = em.createQuery(jpql, Booking.class);
-            q.setParameter("status", status);
+            q.setParameter("statuses", statuses);
             
             List<Booking> list = q.getResultList();
             List<BookingShort> out = new ArrayList<>();
@@ -56,14 +57,12 @@ public class BookingDAO {
                 BookingShort bs = new BookingShort();
                 bs.bookingID = b.getBookingID();
                 
-                // Lấy Room ID an toàn
                 if (b.getRoom() != null) {
                     bs.roomID = b.getRoom().getRoomID();
                 } else {
                     bs.roomID = 0;
                 }
                 
-                // Lấy thông tin Khách hàng an toàn
                 if (b.getCustomer() != null) {
                     bs.customerID = b.getCustomer().getCustomerID();
                     bs.customerName = b.getCustomer().getFullName();
@@ -78,6 +77,54 @@ public class BookingDAO {
                 out.add(bs);
             }
             return out;
+        } finally {
+            em.close();
+        }
+    }
+
+    // --- CÁC HÀM XỬ LÝ ĐẶT PHÒNG ---
+    public boolean saveBooking(Booking b){
+        EntityManager em = JPAUtil.getEntityManager();
+        try{
+            em.getTransaction().begin();
+            
+            // Logic chống trùng phòng
+            Long conflict = em.createQuery(
+            "SELECT COUNT(b) FROM Booking b WHERE b.room.roomID = :roomId " +
+            "AND UPPER(b.status) IN ('PENDING', 'CONFIRMED', 'CHECKED-IN') " +
+            "AND :checkIn < b.checkOutDate AND :checkOut > b.checkInDate", Long.class)
+            .setParameter("roomId", b.getRoom().getRoomID())
+            .setParameter("checkIn", b.getCheckInDate())
+            .setParameter("checkOut", b.getCheckOutDate())
+            .getSingleResult();
+
+            if(conflict > 0){
+                em.getTransaction().rollback();
+                return false;
+            }
+
+            em.persist(b);
+            em.getTransaction().commit();
+            return true;
+        }catch(Exception e){
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        }finally{
+            em.close();
+        }
+    }
+
+    public void confirm(int id){
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Booking b = em.find(Booking.class, id);
+            if (b != null) {
+                b.setStatus("Confirmed"); 
+                em.merge(b);
+            }
+            em.getTransaction().commit();
         } finally {
             em.close();
         }

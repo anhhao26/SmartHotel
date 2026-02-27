@@ -4,7 +4,7 @@ import com.smarthotel.model.Customer;
 import com.smarthotel.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import java.util.List;   // thêm dòng này
+import java.util.List;
 
 public class CustomerDAO {
 
@@ -17,7 +17,6 @@ public class CustomerDAO {
         }
     }
 
-    // ✅ THÊM METHOD NÀY
     public List<Customer> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -33,6 +32,10 @@ public class CustomerDAO {
         try {
             em.getTransaction().begin();
             em.persist(c);
+            
+            // LỆNH QUAN TRỌNG: Ép JPA đẩy lệnh INSERT xuống DB ngay lập tức để lấy ID tự tăng
+            em.flush(); 
+            
             em.getTransaction().commit();
             return c;
         } catch (Exception ex) {

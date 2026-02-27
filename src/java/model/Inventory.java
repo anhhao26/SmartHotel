@@ -34,8 +34,18 @@ public class Inventory {
 
     @Column(name = "IsActive")
     private Boolean isActive;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SupplierID")
+    private Supplier supplier;
+    
+    @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<ImportHistory> importHistoryList;
 
-    // --- GETTERS & SETTERS ---
+    public Supplier getSupplier() { return supplier; }
+    public void setSupplier(Supplier supplier) { this.supplier = supplier; }
+    public java.util.List<ImportHistory> getImportHistoryList() { return importHistoryList; }
+    public void setImportHistoryList(java.util.List<ImportHistory> importHistoryList) { this.importHistoryList = importHistoryList; }
     public Integer getItemID() { return itemID; }
     public void setItemID(Integer itemID) { this.itemID = itemID; }
 
