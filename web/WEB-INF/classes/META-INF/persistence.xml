@@ -14,12 +14,13 @@
     <class>com.smarthotel.model.Inventory</class>
     <class>com.smarthotel.model.Invoice</class>
     <class>com.smarthotel.model.InvoiceItem</class>
-
     <class>com.smarthotel.model.RoomType</class>
     <class>com.smarthotel.model.Supplier</class>
     <class>com.smarthotel.model.ImportHistory</class>
     <class>com.smarthotel.model.Voucher</class>
-
+    
+    <class>com.smarthotel.model.RoomImage</class>
+    
     <properties>
       <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
       <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=ASMDB_nhom5;encrypt=true;trustServerCertificate=true;"/>
@@ -27,7 +28,8 @@
       <property name="jakarta.persistence.jdbc.password" value="123456"/>
 
       <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
-      <property name="hibernate.hbm2ddl.auto" value="validate"/> <property name="hibernate.show_sql" value="false"/>
+      <property name="hibernate.hbm2ddl.auto" value="validate"/> 
+      <property name="hibernate.show_sql" value="false"/>
       <property name="hibernate.format_sql" value="true"/>
     </properties>
   </persistence-unit>

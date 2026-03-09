@@ -1,6 +1,7 @@
 package com.smarthotel.model;
 
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Rooms")
@@ -26,7 +27,25 @@ public class Room {
     @JoinColumn(name = "RoomTypeID")
     private RoomType roomType;
 
+    // THÊM: Liên kết 1-N với RoomImage
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<RoomImage> images;
+
     public Room() {}
+
+    // Lấy ảnh bìa chính
+    public String getPrimaryImageUrl() {
+        if (images != null && !images.isEmpty()) {
+            for (RoomImage img : images) {
+                if (img.isPrimary()) {
+                    return img.getImageUrl();
+                }
+            }
+        }
+        return "https://via.placeholder.com/400x300?text=Chua+Co+Anh"; 
+    }
+
+    public void setPrimaryImageUrl(String primaryImageUrl) {}
 
     public Integer getRoomID() { return roomID; }
     public void setRoomID(Integer roomID) { this.roomID = roomID; }
@@ -49,4 +68,7 @@ public class Room {
 
     public RoomType getRoomType() { return roomType; }
     public void setRoomType(RoomType roomType) { this.roomType = roomType; }
+
+    public List<RoomImage> getImages() { return images; }
+    public void setImages(List<RoomImage> images) { this.images = images; }
 }

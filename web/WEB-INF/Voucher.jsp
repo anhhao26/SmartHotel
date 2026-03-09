@@ -2,122 +2,186 @@
 <%@taglib prefix="c" uri="jakarta.tags.core" %>
 <%@taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Quản lý Khuyến mãi (Voucher) - SmartHotel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, sans-serif; padding-bottom: 50px; color: #333;}
-        .navbar-custom { background-color: #212529; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        
-        .custom-card { border: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); background: #fff; margin-bottom: 25px;}
-        .card-header { background-color: #fff; border-bottom: 1px solid #f1f3f5; font-weight: 800; font-size: 1.1rem; padding: 15px 20px;}
-        
-        .form-control, .form-select { border-radius: 8px; border: 1px solid #ced4da; background-color: #f8f9fa;}
-        .form-control:focus { background-color: #fff; border-color: #198754; box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15); }
-        .form-label { font-weight: 600; color: #495057; font-size: 13px; margin-bottom: 5px; text-transform: uppercase;}
-        
-        .table th { background-color: #f8f9fa; color: #6c757d; font-weight: 700; text-transform: uppercase; font-size: 13px; border-bottom: 2px solid #dee2e6;}
-        .table td { vertical-align: middle; font-weight: 500; border-bottom: 1px solid #f1f3f5;}
-        
-        .btn-custom { font-weight: bold; border-radius: 8px; padding: 10px 20px; transition: 0.3s; }
-        .btn-custom:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
-    </style>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>SmartHotel Voucher Management</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#144aeb", "primary-hover": "#0f3ab5",
+                        "background-light": "#f6f6f8", "background-dark": "#101522",
+                        secondary: "#475569", success: "#22c55e", danger: "#ef4444",
+                    },
+                    fontFamily: { display: ["Manrope", "sans-serif"], },
+                },
+            },
+        }
+    </script>
 </head>
-<body>
+<body class="bg-background-light text-slate-900 font-display antialiased min-h-screen flex flex-col overflow-x-hidden">
     
-    <nav class="navbar navbar-dark navbar-custom mb-4 px-4 py-3">
-        <a class="navbar-brand fw-bold" href="<%=request.getContextPath()%>/admin">⬅ VỀ BẢNG ĐIỀU KHIỂN</a>
-    </nav>
+    <header class="sticky top-0 z-50 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-2xl">hotel_class</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-900 leading-tight">SmartHotel</h1>
+                <p class="text-xs text-slate-500 font-medium">Voucher Management System</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="<%=request.getContextPath()%>/admin" class="font-bold text-sm text-slate-500 hover:text-primary flex items-center"><span class="material-symbols-outlined text-[18px] mr-1">arrow_back</span> Dashboard</a>
+        </div>
+    </header>
 
-    <div class="container">
-        <h2 class="fw-bold mb-4" style="color: #212529;">HỆ THỐNG QUẢN LÝ VOUCHER</h2>
-        
-        <c:if test="${not empty errorMessage}"><div class="alert alert-danger fw-bold text-center shadow-sm rounded-3">${errorMessage}</div></c:if>
-        <c:if test="${not empty successMessage}"><div class="alert alert-success fw-bold text-center shadow-sm rounded-3">${successMessage}</div></c:if>
-        
-        <div class="card custom-card">
-            <div class="card-header text-success">✨ PHÁT HÀNH MÃ GIẢM GIÁ MỚI</div>
-            <div class="card-body p-4">
-                <form action="<%=request.getContextPath()%>/VoucherServlet" method="POST">
-                    <input type="hidden" name="action" value="save">
-                    <div class="row g-4 mb-4">
-                        <div class="col-md-3">
-                            <label class="form-label text-primary">Mã Code *</label>
-                            <input type="text" name="voucherCode" class="form-control border-primary fw-bold" required placeholder="VD: SUMMER2026">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label text-danger">Số tiền giảm (VNĐ) *</label>
-                            <input type="number" name="discountValue" class="form-control border-danger fw-bold text-danger" required placeholder="100000">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Đơn tối thiểu (VNĐ)</label>
-                            <input type="number" name="minOrderValue" class="form-control" value="0">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Giới hạn số lượt dùng</label>
-                            <input type="number" name="usageLimit" class="form-control fw-bold" value="50">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Ngày giờ bắt đầu</label>
-                            <input type="datetime-local" name="startDate" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-warning">Ngày giờ kết thúc</label>
-                            <input type="datetime-local" name="endDate" class="form-control border-warning" required>
-                        </div>
-                    </div>
-                    <div class="text-end border-top pt-3">
-                        <button type="reset" class="btn btn-light fw-bold me-2 btn-custom border">Làm mới</button>
-                        <button type="submit" class="btn btn-success btn-custom">Lưu Voucher</button>
-                    </div>
-                </form>
+    <main class="flex-1 p-6 lg:px-8 lg:py-8 max-w-[1600px] mx-auto w-full">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Voucher Dashboard</h2>
+                <p class="text-slate-500 mt-1">Manage promotional codes and track performance.</p>
             </div>
         </div>
 
-        <div class="card custom-card">
-            <div class="card-header text-dark">📋 DANH SÁCH VOUCHER ĐANG HOẠT ĐỘNG</div>
-            <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr class="text-center">
-                            <th>Mã Code</th>
-                            <th>Mức Giảm (VNĐ)</th>
-                            <th>Đơn Tối thiểu</th>
-                            <th>Hiệu lực từ</th>
-                            <th>Hết hạn vào</th>
-                            <th>Lượt Dùng</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${voucherList}" var="v">
-                            <tr class="text-center">
-                                <td><span class="badge bg-primary fs-6 px-3 py-2">${v.voucherCode}</span></td>
-                                <td class="text-danger fw-bold fs-5"><fmt:formatNumber value="${v.discountValue}" pattern="#,###"/></td>
-                                <td><fmt:formatNumber value="${v.minOrderValue}" pattern="#,###"/></td>
-                                <td class="text-muted"><fmt:formatDate value="${v.startDate}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                <td class="text-muted"><fmt:formatDate value="${v.endDate}" pattern="dd/MM/yyyy HH:mm"/></td>
-                                <td><span class="badge bg-secondary fs-6">${v.usedCount} / ${v.usageLimit}</span></td>
-                                <td>
-                                    <a href="<%=request.getContextPath()%>/VoucherServlet?action=delete&code=${v.voucherCode}" 
-                                       class="btn btn-sm btn-outline-danger fw-bold" 
-                                       onclick="return confirm('Bạn có chắc muốn vô hiệu hóa mã này?');">Xóa Mã</a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-                <c:if test="${empty voucherList}">
-                    <div class="alert alert-warning text-center m-4 fw-bold border-0 bg-light text-muted">
-                        Chưa có mã giảm giá nào đang hoạt động!
+        <c:if test="${not empty errorMessage}"><div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl font-bold">${errorMessage}</div></c:if>
+        <c:if test="${not empty successMessage}"><div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl font-bold">${successMessage}</div></c:if>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 mb-8">
+            <div class="xl:col-span-4 flex flex-col gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-full">
+                    <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-lg text-slate-900">Issue New Voucher</h3>
+                            <p class="text-sm text-slate-500">Create a promotional code</p>
+                        </div>
+                        <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">confirmation_number</span>
+                        </div>
                     </div>
-                </c:if>
+                    
+                    <form action="<%=request.getContextPath()%>/VoucherServlet" method="POST" class="p-6 flex flex-col gap-5">
+                        <input type="hidden" name="action" value="save">
+                        
+                        <label class="flex flex-col gap-2">
+                            <span class="text-sm font-semibold text-slate-700">Voucher Code *</span>
+                            <div class="relative">
+                                <input name="voucherCode" required class="w-full h-11 pl-10 pr-4 rounded-lg border-slate-200 focus:border-primary focus:ring-primary text-slate-900 font-bold uppercase" placeholder="SUMMER2026" type="text"/>
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">tag</span>
+                            </div>
+                        </label>
+                        
+                        <label class="flex flex-col gap-2">
+                            <span class="text-sm font-semibold text-slate-700">Discount Value (VNĐ) *</span>
+                            <div class="relative">
+                                <input name="discountValue" required class="w-full h-11 pl-10 pr-4 rounded-lg border-slate-200 focus:border-primary focus:ring-primary text-danger font-bold" placeholder="100000" type="number"/>
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">payments</span>
+                            </div>
+                        </label>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex flex-col gap-2">
+                                <span class="text-sm font-semibold text-slate-700">Valid From</span>
+                                <input name="startDate" required class="w-full h-11 px-3 rounded-lg border-slate-200 focus:border-primary text-slate-900 text-sm" type="datetime-local"/>
+                            </label>
+                            <label class="flex flex-col gap-2">
+                                <span class="text-sm font-semibold text-slate-700">Valid Until</span>
+                                <input name="endDate" required class="w-full h-11 px-3 rounded-lg border-slate-200 focus:border-primary text-slate-900 text-sm" type="datetime-local"/>
+                            </label>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex flex-col gap-2">
+                                <span class="text-sm font-semibold text-slate-700">Min Order (VNĐ)</span>
+                                <input name="minOrderValue" value="0" class="w-full h-11 px-4 rounded-lg border-slate-200 focus:border-primary text-slate-900" type="number"/>
+                            </label>
+                            <label class="flex flex-col gap-2">
+                                <span class="text-sm font-semibold text-slate-700">Usage Limit</span>
+                                <input name="usageLimit" value="50" class="w-full h-11 px-4 rounded-lg border-slate-200 focus:border-primary text-slate-900 font-bold" type="number"/>
+                            </label>
+                        </div>
+                        
+                        <div class="mt-4 pt-4 border-t border-slate-100 flex gap-3">
+                            <button type="submit" class="w-full h-12 bg-primary hover:bg-primary-hover text-white rounded-lg font-bold shadow-md shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-[20px]">send</span> Generate Voucher
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="xl:col-span-8 flex flex-col gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-full flex flex-col">
+                    <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-slate-50/30">
+                        <div>
+                            <h3 class="font-bold text-lg text-slate-900">Active Vouchers</h3>
+                            <p class="text-sm text-slate-500">List of currently valid promotional codes</p>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto flex-1">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-100 text-xs uppercase tracking-wider text-slate-500 font-semibold">
+                                    <th class="px-6 py-4">Voucher Code</th>
+                                    <th class="px-6 py-4">Discount</th>
+                                    <th class="px-6 py-4">Validity Period</th>
+                                    <th class="px-6 py-4 w-1/4">Usage Progress</th>
+                                    <th class="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-sm">
+                                <c:forEach items="${voucherList}" var="v">
+                                    <tr class="group hover:bg-slate-50 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                                                    <span class="material-symbols-outlined text-xl">sell</span>
+                                                </div>
+                                                <span class="font-bold text-primary bg-primary/5 px-2.5 py-1 rounded text-sm font-mono border border-primary/10">${v.voucherCode}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="font-bold text-danger text-base"><fmt:formatNumber value="${v.discountValue}" pattern="#,###"/> đ</span>
+                                            <span class="block text-xs text-slate-400 mt-1">Min: <fmt:formatNumber value="${v.minOrderValue}" pattern="#,###"/></span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex flex-col gap-1 text-xs text-slate-600 font-medium">
+                                                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm text-green-500">play_circle</span> <fmt:formatDate value="${v.startDate}" pattern="dd/MM/yy HH:mm"/></span>
+                                                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm text-red-500">stop_circle</span> <fmt:formatDate value="${v.endDate}" pattern="dd/MM/yy HH:mm"/></span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex justify-between text-xs mb-1.5 font-medium">
+                                                <span class="text-slate-600">${v.usedCount} redeemed</span>
+                                                <span class="text-slate-400">Limit: ${v.usageLimit}</span>
+                                            </div>
+                                            <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                                                <div class="h-full bg-primary rounded-full shadow-[0_0_10px_rgba(20,74,235,0.4)]" style="width: ${(v.usedCount / v.usageLimit) * 100}%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <a href="<%=request.getContextPath()%>/VoucherServlet?action=delete&code=${v.voucherCode}" onclick="return confirm('Xác nhận xóa mã này?');" class="text-slate-400 hover:text-danger transition-colors p-2 hover:bg-white rounded-lg inline-block shadow-sm">
+                                                <span class="material-symbols-outlined">delete</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                <c:if test="${empty voucherList}">
+                                    <tr><td colspan="5" class="py-12 text-center text-slate-500 font-bold">Chưa có mã giảm giá nào hoạt động.</td></tr>
+                                </c:if>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </main>
 </body>
 </html>

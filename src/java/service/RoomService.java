@@ -43,12 +43,34 @@ public class RoomService {
 
     public boolean addNewRoom(String roomNumber, int typeId, int floor, double price) {
         if (roomNumber == null || roomNumber.trim().isEmpty() || floor < 0 || price <= 0) return false;
-        if (roomDAO.findByRoomNumber(roomNumber) != null) return false; // Chặn trùng mã phòng
+        if (roomDAO.findByRoomNumber(roomNumber) != null) return false; 
         return roomDAO.addRoom(roomNumber, typeId, floor, price);
     }
 
     public boolean updateRoomPrice(String roomNumber, double newPrice) {
         if (roomNumber == null || newPrice <= 0) return false;
         return roomDAO.updateRoomPrice(roomNumber, newPrice);
+    }
+    
+    public boolean deleteRoom(String roomNumber) {
+        if (roomNumber == null || roomNumber.trim().isEmpty()) return false;
+        return roomDAO.deleteRoom(roomNumber);
+    }
+
+    public boolean updateRoomInfo(String roomNumber, int typeId, double price) {
+        return roomDAO.updateRoomInfo(roomNumber, typeId, price);
+    }
+
+    public boolean addRoomImage(String roomNumber, String imageUrl, boolean isPrimary) {
+        if (roomNumber == null || imageUrl == null || imageUrl.trim().isEmpty()) return false;
+        return roomDAO.addRoomImage(roomNumber, imageUrl, isPrimary);
+    }
+
+    public boolean deleteRoomImage(int imageId) { 
+        return roomDAO.deleteRoomImage(imageId); 
+    }
+    
+    public boolean setPrimaryImage(String roomNumber, String imageUrl) { 
+        return roomDAO.setPrimaryImage(roomNumber, imageUrl); 
     }
 }

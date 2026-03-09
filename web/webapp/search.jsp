@@ -1,76 +1,81 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Xác nhận Đặt Phòng</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-    .booking-card { background: white; width: 450px; padding: 40px 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 5px solid #0d6efd; }
-    h3 { text-align: center; color: #0d6efd; font-weight: 800; margin-bottom: 25px; }
-    
-    .form-floating > label { color: #6c757d; font-weight: 500; }
-    .form-control { border-radius: 8px; background-color: #f8f9fa; border: 1px solid #ced4da; box-shadow: none !important;}
-    .form-control:focus { border-color: #0d6efd; background-color: #fff; }
-    
-    .voucher-input { border: 2px dashed #198754 !important; color: #198754; font-weight: bold; text-transform: uppercase; }
-    .voucher-input::placeholder { color: #a3cfbb; font-weight: normal; text-transform: none;}
-    
-    .btn-submit { background-color: #0d6efd; color: white; width: 100%; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 16px; border: none; transition: 0.3s; margin-top: 10px;}
-    .btn-submit:hover { background-color: #0b5ed7; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3); }
-    
-    .error-msg { color: #dc3545; text-align: center; font-weight: bold; margin-top: 15px; background: #f8d7da; padding: 10px; border-radius: 5px; display: ${empty error ? 'none' : 'block'}; }
-</style>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Xác nhận Đặt Phòng - SmartHotel</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: "#1069f9", "background-light": "#f6f8f7" }, fontFamily: { display: ["Plus Jakarta Sans", "sans-serif"] }, }, }, }
+    </script>
 </head>
-<body>
-
-<div class="booking-card">
-    <h3><i class="bi bi-calendar-check"></i> Xác Nhận Đặt Phòng</h3>
-
-    <form action="${pageContext.request.contextPath}/booking" method="post" onsubmit="loading()">
-        
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control fw-bold text-primary" name="roomId" value="${param.roomId}" readonly required placeholder="Phòng">
-            <label>Mã phòng bạn đã chọn</label>
-        </div>
-
-        <div class="row g-2 mb-3">
-            <div class="col-6">
-                <div class="form-floating">
-                    <input type="date" class="form-control" name="checkIn" required placeholder="Check In">
-                    <label>Ngày nhận (Check-in)</label>
-                </div>
+<body class="bg-background-light font-display text-slate-900 min-h-screen flex flex-col antialiased">
+    
+    <header class="w-full bg-white border-b border-slate-200 px-6 py-4 shadow-sm">
+        <div class="max-w-[1200px] mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2 text-slate-900">
+                <span class="material-symbols-outlined text-4xl text-primary">hotel_class</span>
+                <h2 class="text-xl font-bold tracking-tight">SmartHotel</h2>
             </div>
-            <div class="col-6">
-                <div class="form-floating">
-                    <input type="date" class="form-control" name="checkOut" required placeholder="Check Out">
-                    <label>Ngày trả (Check-out)</label>
+            <a href="${pageContext.request.contextPath}/rooms" class="font-bold text-sm text-slate-500 hover:text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span> Chọn phòng khác
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center py-12 px-4">
+        <div class="max-w-xl w-full bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+            
+            <div class="bg-primary/10 p-6 sm:p-8 border-b border-primary/20 text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white text-primary mb-4 shadow-md">
+                    <span class="material-symbols-outlined text-3xl">calendar_month</span>
                 </div>
+                <h2 class="text-3xl font-black text-slate-900 tracking-tight">Thiết lập Đặt Phòng</h2>
+                <p class="text-slate-600 font-medium mt-2">Vui lòng chọn ngày lưu trú và áp dụng mã giảm giá (nếu có).</p>
+            </div>
+
+            <div class="p-6 sm:p-8">
+                <% String error = (String) request.getAttribute("error"); if (error != null) { %>
+                    <div class="mb-6 bg-red-50 text-red-600 p-4 rounded-xl font-bold border border-red-100 flex items-center gap-2">
+                        <span class="material-symbols-outlined">error</span> <%= error %>
+                    </div>
+                <% } %>
+
+                <form action="${pageContext.request.contextPath}/booking" method="post" onsubmit="this.querySelector('button[type=submit]').innerHTML='Đang xử lý hóa đơn...'; this.querySelector('button[type=submit]').disabled=true;" class="space-y-6">
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Mã Phòng Đã Chọn</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary">meeting_room</span>
+                            <input type="text" class="w-full pl-12 pr-4 py-3 bg-blue-50 border-blue-200 rounded-xl font-black text-primary text-lg" name="roomId" value="${param.roomId}" readonly required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Ngày Nhận Phòng (Check-in)</label>
+                            <input type="date" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-primary focus:ring-primary font-semibold text-slate-700" name="checkIn" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Ngày Trả Phòng (Check-out)</label>
+                            <input type="date" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-primary focus:ring-primary font-semibold text-slate-700" name="checkOut" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-emerald-600 mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">local_offer</span> Mã Giảm Giá (Voucher)</label>
+                        <input type="text" class="w-full px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl focus:border-emerald-500 focus:ring-emerald-500 font-bold text-emerald-700 uppercase placeholder:text-emerald-300 placeholder:normal-case placeholder:font-medium" name="voucherCode" placeholder="Nhập mã voucher tại đây (nếu có)...">
+                    </div>
+
+                    <button type="submit" class="w-full py-4 bg-primary hover:bg-blue-700 text-white font-black text-lg rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.98] mt-4 flex items-center justify-center gap-2">
+                        XÁC NHẬN ĐẶT PHÒNG <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                </form>
             </div>
         </div>
-
-        <div class="form-floating mb-4">
-            <input type="text" class="form-control voucher-input" name="voucherCode" placeholder="Nhập mã giảm giá...">
-            <label class="text-success"><i class="bi bi-ticket-perforated"></i> Mã Giảm Giá (Voucher) nếu có</label>
-        </div>
-
-        <button type="submit" id="btn" class="btn-submit">Xác Nhận & Thanh Toán</button>
-        
-        <div class="text-center mt-3">
-            <a href="${pageContext.request.contextPath}/rooms" class="text-muted text-decoration-none small hover-primary">⬅ Quay lại chọn phòng khác</a>
-        </div>
-    </form>
-
-    <div class="error-msg">${error}</div>
-</div>
-
-<script>
-    function loading(){ 
-        let b = document.getElementById("btn"); 
-        b.innerHTML = "Đang xử lý hóa đơn..."; 
-        b.style.opacity = "0.7"; 
-        b.disabled = true;
-    }
-</script>
+    </main>
 </body>
 </html>

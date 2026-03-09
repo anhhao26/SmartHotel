@@ -89,12 +89,9 @@ public class BookingServlet extends HttpServlet {
 
             if (rs.equals("OK")) {
                 
-                // ==========================================
-                // FIX LỖI: ĐỒNG BỘ TRẠNG THÁI PHÒNG XUỐNG DB
-                room.setStatus("Occupied"); // Đổi trạng thái thành Có khách
-                roomDAO.update(room);       // Lưu ngay xuống Database
-                // ==========================================
-
+                // ĐÃ SỬA: KHÔNG khóa phòng ở đây nữa. 
+                // Phòng vẫn là Available cho đến khi thanh toán VNPay thành công.
+                
                 req.setAttribute("booking", b);
                 req.getRequestDispatcher("webapp/payment.jsp").forward(req, resp);
             } else {
