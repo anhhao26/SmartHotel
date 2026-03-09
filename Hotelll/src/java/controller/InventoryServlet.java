@@ -1,4 +1,4 @@
-package com.smarthotel.controller;
+package controller;
 
 import com.smarthotel.model.Inventory;
 import com.smarthotel.model.Supplier;
