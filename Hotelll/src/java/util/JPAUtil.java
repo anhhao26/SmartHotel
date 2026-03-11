@@ -9,7 +9,7 @@ public class JPAUtil {
 
     private static EntityManagerFactory buildFactory() {
         try {
-            return Persistence.createEntityManagerFactory("HotelllPU");
+            return Persistence.createEntityManagerFactory("SmartHotelPU");
         } catch (Throwable ex) {
             System.err.println("Initial EntityManagerFactory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);

@@ -1,18 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package service;
+package com.smarthotel.service;
 
-/**
- *
- * @author ntpho
- */
+import com.smarthotel.dao.ImportHistoryDAO;
 import com.smarthotel.model.ImportHistory;
 import java.util.List;
 
-public interface ImportHistoryService {
-    List<ImportHistory> findAll();
-    // Hàm thống kê lấy Object mảng (Sản phẩm, Tổng số lượng)
-    List<Object[]> getTopImportedProducts(int month, int year);
+public class ImportHistoryService {
+    private ImportHistoryDAO dao = new ImportHistoryDAO();
+
+    public List<ImportHistory> findAll() { return dao.findAll(); }
+    
+    public List<Object[]> getTopImportedProducts(int month, int year) {
+        return dao.getTopImportedProducts(month, year);
+    }
 }

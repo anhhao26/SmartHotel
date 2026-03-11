@@ -6,13 +6,11 @@ import com.smarthotel.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.LockModeType;
-import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.Date;
 
 public class InventoryDAO {
 
-    // --- HÀM CỦA HÀO DÙNG CHO CHECKOUT ---
     public Inventory findWithPessimisticLock(int id, EntityManager em) {
         return em.find(Inventory.class, id, LockModeType.PESSIMISTIC_WRITE);
     }
@@ -30,7 +28,6 @@ public class InventoryDAO {
         } finally { em.close(); }
     }
 
-    // --- HÀM CỦA BẠN KIA DÙNG CHO KHO ---
     public List<Inventory> findActiveOnly() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
