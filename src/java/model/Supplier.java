@@ -24,11 +24,10 @@ public class Supplier {
     private String category;
 
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
-    private List<Inventory> productList; // Dùng Inventory của Hào
+    private List<Inventory> productList; 
 
     public Supplier() {}
 
-    // Getters and Setters
     public int getSupplierID() { return supplierID; }
     public void setSupplierID(int supplierID) { this.supplierID = supplierID; }
     public String getSupplierName() { return supplierName; }

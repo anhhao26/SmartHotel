@@ -4,17 +4,20 @@ import com.smarthotel.model.Inventory;
 import com.smarthotel.model.Supplier;
 import com.smarthotel.service.InventoryService;
 import com.smarthotel.service.SupplierService;
+import com.smarthotel.service.ImportHistoryService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
+import java.time.LocalDate;
 
 @WebServlet(name = "InventoryServlet", urlPatterns = {"/products"})
 public class InventoryServlet extends HttpServlet {
 
     private final InventoryService inventoryService = new InventoryService();
     private final SupplierService supplierService = new SupplierService();
+    private final ImportHistoryService historyService = new ImportHistoryService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,6 +33,7 @@ public class InventoryServlet extends HttpServlet {
                 case "newSupplier": showSupplierForm(request, response); break;
                 case "editSupplier": showEditSupplierForm(request, response); break;
                 case "deleteSupplier": deleteSupplier(request, response); break;
+                case "history": showImportHistory(request, response); break; 
                 default: listProducts(request, response); break;
             }
         } catch (Exception ex) { throw new ServletException(ex); }
@@ -54,7 +58,6 @@ public class InventoryServlet extends HttpServlet {
         } catch (Exception ex) { throw new ServletException(ex); }
     }
 
-    // --- CÁC HÀM HIỂN THỊ VIEW ---
     private void listProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String showHidden = request.getParameter("showHidden");
         List<Inventory> listProducts;
@@ -65,12 +68,12 @@ public class InventoryServlet extends HttpServlet {
         }
         request.setAttribute("listProducts", listProducts);
         request.setAttribute("isShowHidden", "true".equals(showHidden));
-        request.getRequestDispatcher("Product/product-list.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/Product/product-list.jsp").forward(request, response);
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("listSuppliers", supplierService.findAll());
-        request.getRequestDispatcher("Product/product-form.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/Product/product-form.jsp").forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -78,30 +81,51 @@ public class InventoryServlet extends HttpServlet {
         if (id == -1) { response.sendRedirect("products"); return; }
         request.setAttribute("product", inventoryService.findById(id));
         request.setAttribute("listSuppliers", supplierService.findAll());
-        request.getRequestDispatcher("Product/product-form.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/Product/product-form.jsp").forward(request, response);
     }
 
     private void showImportForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = parseIdSafe(request.getParameter("id"));
         if (id == -1) { response.sendRedirect("products"); return; }
         request.setAttribute("product", inventoryService.findById(id));
-        request.getRequestDispatcher("Product/import-form.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/Product/import-form.jsp").forward(request, response);
     }
 
     private void listSuppliers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("listSuppliers", supplierService.findAll());
-        request.getRequestDispatcher("Product/supplier-list.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/Product/supplier-list.jsp").forward(request, response);
     }
 
     private void showSupplierForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("Product/supplier-form.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/Product/supplier-form.jsp").forward(request, response);
     }
 
     private void showEditSupplierForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = parseIdSafe(request.getParameter("id"));
         if (id == -1) { response.sendRedirect("products?action=listSuppliers"); return; }
         request.setAttribute("supplier", supplierService.findById(id));
-        request.getRequestDispatcher("Product/supplier-form.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/Product/supplier-form.jsp").forward(request, response);
+    }
+
+    private void showImportHistory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String monthStr = request.getParameter("monthPicker");
+        int month, year;
+
+        if (monthStr != null && !monthStr.isEmpty()) {
+            String[] parts = monthStr.split("-");
+            year = Integer.parseInt(parts[0]);
+            month = Integer.parseInt(parts[1]);
+        } else {
+            LocalDate now = LocalDate.now();
+            year = now.getYear();
+            month = now.getMonthValue();
+            monthStr = String.format("%04d-%02d", year, month); 
+        }
+
+        List<Object[]> stats = historyService.getTopImportedProducts(month, year);
+        request.setAttribute("importStats", stats);
+        request.setAttribute("selectedMonth", monthStr);
+        request.getRequestDispatcher("WEB-INF/Product/import-history.jsp").forward(request, response);
     }
 
     private void saveSupplier(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -125,7 +149,6 @@ public class InventoryServlet extends HttpServlet {
         }
     }
 
-    // --- CÁC HÀM XỬ LÝ POST ---
     private void insertProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Inventory newProduct = new Inventory();
         newProduct.setItemName(request.getParameter("name"));

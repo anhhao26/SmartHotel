@@ -1,6 +1,8 @@
 package controller;
 
 import com.smarthotel.dao.BookingDAO;
+import com.smarthotel.model.Booking;
+import com.smarthotel.util.EmailUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,8 +31,25 @@ public class VNPayReturnServlet extends HttpServlet {
                 int bookingId = Integer.parseInt(bookingIdStr);
                 BookingDAO bDao = new BookingDAO();
                 
-                // Gọi hàm confirm để đổi trạng thái Đơn hàng và KHÓA PHÒNG
+                // 1. Gọi hàm confirm để đổi trạng thái Đơn hàng và KHÓA PHÒNG
                 bDao.confirm(bookingId);
+                
+                // ==========================================
+                // 2. GỬI EMAIL XÁC NHẬN (TẠM BỎ THREAD CHẠY NGẦM ĐỂ BẮT LỖI)
+                // ==========================================
+                Booking confirmedBooking = bDao.find(bookingId);
+                if (confirmedBooking != null) {
+                    System.out.println(">>>>> BẮT ĐẦU CHẠY HÀM GỬI MAIL CHO: " + confirmedBooking.getCustomer().getEmail() + " <<<<<");
+                    boolean isSent = EmailUtil.sendPaymentSuccessEmail(confirmedBooking);
+                    if (isSent) {
+                        System.out.println(">>>>> GỬI EMAIL THÀNH CÔNG! <<<<<");
+                    } else {
+                        System.out.println(">>>>> GỬI EMAIL THẤT BẠI! HÃY TÌM DÒNG LỖI MÀU ĐỎ BÊN TRÊN <<<<<");
+                    }
+                } else {
+                    System.out.println(">>>>> KHÔNG TÌM THẤY BOOKING ĐỂ GỬI MAIL <<<<<");
+                }
+                // ==========================================
                 
                 response.sendRedirect(request.getContextPath() + "/guest/history.jsp?msg=payment_success");
             } catch (Exception e) {

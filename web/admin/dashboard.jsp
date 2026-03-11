@@ -39,6 +39,9 @@
             <div class="px-4 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tổng quan</div>
             <a class="flex items-center px-6 py-3 bg-primary bg-opacity-10 text-primary border-r-4 border-primary" href="#"><span class="material-icons-round mr-3">dashboard</span><span class="font-medium">Dashboard</span></a>
             <div class="px-4 mt-8 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Quản lý</div>
+            
+            <a class="flex items-center px-6 py-3 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" href="<%=request.getContextPath()%>/products"><span class="material-icons-round mr-3" style="color: #F59E0B;">inventory_2</span><span class="font-medium">Kho & Vật Tư</span></a>
+            
             <a class="flex items-center px-6 py-3 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" href="<%=request.getContextPath()%>/admin/customers"><span class="material-icons-round mr-3">groups</span><span class="font-medium">Khách hàng (CRM)</span></a>
             <a class="flex items-center px-6 py-3 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" href="<%=request.getContextPath()%>/RoomServlet"><span class="material-icons-round mr-3">meeting_room</span><span class="font-medium">Phòng & Sơ đồ</span></a>
             <a class="flex items-center px-6 py-3 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" href="<%=request.getContextPath()%>/VoucherServlet"><span class="material-icons-round mr-3">local_offer</span><span class="font-medium">Vouchers</span></a>
@@ -97,6 +100,20 @@
                 <span class="w-1 h-6 bg-primary rounded-full mr-3"></span> Truy cập nhanh Module
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                
+                <div class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-soft border border-gray-200 dark:border-gray-700 flex flex-col hover:border-accent transition-all duration-300 group h-full">
+                    <div class="h-2 bg-accent w-full"></div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl"><span class="material-icons-round text-accent text-3xl">inventory_2</span></div>
+                            <span class="text-xs font-bold text-accent bg-yellow-100 dark:bg-yellow-900/40 px-2 py-1 rounded">MODULE 2</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Kho & Vật Tư</h4>
+                        <p class="text-text-muted-light dark:text-text-muted-dark text-sm mb-6 flex-1">Kiểm soát hàng tồn kho, quản lý danh sách nhà cung cấp và hóa đơn nhập xuất.</p>
+                        <a href="<%=request.getContextPath()%>/products" class="w-full py-3 bg-accent hover:bg-yellow-600 text-white font-medium rounded-lg shadow-md transition-all flex justify-center items-center group-hover:translate-y-[-2px]">Mở Quản Lý Kho <span class="material-icons-round ml-2 text-sm">arrow_forward</span></a>
+                    </div>
+                </div>
+
                 <div class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-soft border border-gray-200 dark:border-gray-700 flex flex-col hover:border-primary transition-all duration-300 group h-full">
                     <div class="h-2 bg-primary w-full"></div>
                     <div class="p-6 flex-1 flex flex-col">

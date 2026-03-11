@@ -19,7 +19,6 @@ public class Inventory {
     @Column(name = "Quantity")
     private Integer quantity;
 
-    // ĐÃ FIX: Chuyển từ MinLevel thành MinStock cho khớp với CSDL
     @Column(name = "MinStock")
     private Integer minStock;
 

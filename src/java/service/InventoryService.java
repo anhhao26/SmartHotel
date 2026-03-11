@@ -12,7 +12,6 @@ public class InventoryService {
     public Inventory findById(int id) { return inventoryDAO.find(id); }
 
     public void createNewInventory(Inventory p) {
-        // Hàng tiêu dùng nội bộ thì giá bán phải = 0
         if (p.getIsTradeGood() != null && !p.getIsTradeGood()) {
             p.setSellingPrice(0.0);
         }
@@ -27,10 +26,7 @@ public class InventoryService {
     }
 
     public void importStock(int itemId, int quantityToAdd, double newCostPrice) {
-        if (quantityToAdd <= 0 || newCostPrice < 0) {
-            System.out.println("CẢNH BÁO BẢO MẬT: Nhập số lượng âm hoặc giá nhập không hợp lệ!");
-            return;
-        }
+        if (quantityToAdd <= 0 || newCostPrice < 0) return;
         inventoryDAO.importStock(itemId, quantityToAdd, newCostPrice);
     }
 

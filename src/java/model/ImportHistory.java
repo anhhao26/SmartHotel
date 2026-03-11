@@ -25,12 +25,11 @@ public class ImportHistory {
     private double totalCost;
 
     @ManyToOne
-    @JoinColumn(name = "ItemID", nullable = false) // Đã sửa trỏ về ItemID của Inventory Hào
+    @JoinColumn(name = "ItemID", nullable = false) 
     private Inventory inventory;
 
     public ImportHistory() {}
 
-    // Getters and setters
     public int getImportID() { return importID; }
     public void setImportID(int importID) { this.importID = importID; }
     public Date getImportDate() { return importDate; }
