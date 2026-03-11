@@ -123,7 +123,7 @@
                         </div>
                     </div>
 
-                    <form action="${pageContext.request.contextPath}/checkout" method="post" class="space-y-5">
+                    <form action="${pageContext.request.contextPath}/checkout" method="post" class="space-y-5" onsubmit="this.querySelector('button[type=submit]').innerHTML='Đang chuyển hướng VNPay...'; this.querySelector('button[type=submit]').disabled=true;">
                         <input type="hidden" name="action" value="checkout">
                         <input type="hidden" name="bid" id="bid_checkout_input">
                         <input type="hidden" name="rid" id="rid_checkout_input">
@@ -137,13 +137,13 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-1">Giá phòng thanh toán (VNĐ)</label>
-                            <input type="number" name="price" value="1000000" required class="w-full py-3 px-4 text-2xl font-black text-secondary bg-red-50 border-red-200 rounded-xl focus:ring-secondary focus:border-secondary transition-all">
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Tổng tiền phụ phí thanh toán (VNĐ)</label>
+                            <input type="number" name="price" id="totalPriceInput" value="0" readonly class="w-full py-3 px-4 text-2xl font-black text-secondary bg-red-50 border-red-200 rounded-xl focus:ring-secondary focus:border-secondary transition-all outline-none">
                         </div>
 
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
-                                <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[18px]">wine_bar</span> Minibar / Dịch vụ</h4>
+                                <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[18px]">wine_bar</span> Minibar / Dịch vụ sử dụng thêm</h4>
                             </div>
                             <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
                                 <div class="max-h-[220px] overflow-y-auto no-scrollbar">
@@ -154,10 +154,14 @@
                                         <tbody class="divide-y divide-slate-100">
                                             <% for (Inventory it : invList) { %>
                                             <tr class="hover:bg-slate-50 transition-colors">
-                                                <td class="px-4 py-3"><input type="checkbox" name="itemId" value="<%= it.getItemID() %>" class="w-5 h-5 rounded border-slate-300 text-secondary focus:ring-secondary cursor-pointer"></td>
+                                                <td class="px-4 py-3">
+                                                    <input type="checkbox" name="itemId" value="<%= it.getItemID() %>" data-price="<%= it.getSellingPrice() %>" onchange="calculateTotal()" class="item-checkbox w-5 h-5 rounded border-slate-300 text-secondary focus:ring-secondary cursor-pointer">
+                                                </td>
                                                 <td class="px-4 py-3 text-slate-700 font-bold"><%= it.getItemName() %></td>
                                                 <td class="px-4 py-3 text-slate-500 text-center font-medium"><%= String.format("%,.0f", it.getSellingPrice()) %>đ</td>
-                                                <td class="px-4 py-3 text-right"><input type="number" name="qty_<%=it.getItemID()%>" value="1" min="1" class="w-16 rounded border-slate-200 p-1 text-center font-bold"></td>
+                                                <td class="px-4 py-3 text-right">
+                                                    <input type="number" id="qty_<%=it.getItemID()%>" name="qty_<%=it.getItemID()%>" value="1" min="1" onchange="calculateTotal()" onkeyup="calculateTotal()" class="w-16 rounded border-slate-200 p-1 text-center font-bold">
+                                                </td>
                                             </tr>
                                             <% } %>
                                         </tbody>
@@ -167,7 +171,7 @@
                         </div>
 
                         <button type="submit" id="btn_checkout" class="w-full py-4 bg-secondary hover:bg-red-600 text-white font-bold rounded-xl shadow-lg shadow-secondary/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                            <span class="material-symbols-outlined">receipt_long</span> XUẤT HÓA ĐƠN & TRẢ PHÒNG
+                            <span class="material-symbols-outlined">receipt_long</span> XUẤT HÓA ĐƠN & THANH TOÁN VNPay
                         </button>
                     </form>
                 </div>
@@ -211,6 +215,31 @@
             document.getElementById('room_checkout_display').innerText = "Phòng: " + p[1];
             document.getElementById('name_checkout_display').innerText = p[3];
             btn.disabled = false;
+        }
+
+        // ==========================================
+        // HÀM JS MỚI: TỰ ĐỘNG TÍNH TỔNG TIỀN DỊCH VỤ
+        // ==========================================
+        function calculateTotal() {
+            let total = 0;
+            // Lấy tất cả các checkbox có class "item-checkbox"
+            let checkboxes = document.querySelectorAll('.item-checkbox');
+            
+            checkboxes.forEach(function(cb) {
+                if (cb.checked) {
+                    // Nếu được tích chọn -> Lấy giá tiền từ data-price
+                    let price = parseFloat(cb.getAttribute('data-price'));
+                    // Lấy số lượng tương ứng
+                    let qtyInput = document.getElementById('qty_' + cb.value);
+                    let qty = parseInt(qtyInput.value) || 1;
+                    
+                    // Cộng dồn vào tổng
+                    total += price * qty;
+                }
+            });
+            
+            // Cập nhật lên ô input tổng tiền
+            document.getElementById('totalPriceInput').value = total;
         }
     </script>
 </body>

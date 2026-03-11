@@ -114,6 +114,31 @@ public class BookingDAO {
             em.close();
         }
     }
+    
+    // Thêm thư viện này ở đầu file nếu chưa có: import java.util.Date;
+
+    public boolean isRoomAvailable(String roomNumber, java.util.Date checkIn, java.util.Date checkOut) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            // Đếm số lượng đơn đặt phòng của phòng này bị TRÙNG LỊCH
+            // Chỉ tính những đơn đang Pending (chờ), Confirmed (Đã chốt) hoặc Checked-in (Đang ở)
+            String jpql = "SELECT COUNT(b) FROM Booking b WHERE b.room.roomNumber = :rn " +
+                          "AND b.status IN ('Pending', 'Confirmed', 'Checked-in') " +
+                          "AND b.checkInDate < :newCheckOut " +
+                          "AND b.checkOutDate > :newCheckIn";
+            
+            Long count = em.createQuery(jpql, Long.class)
+                           .setParameter("rn", roomNumber)
+                           .setParameter("newCheckOut", checkOut)
+                           .setParameter("newCheckIn", checkIn)
+                           .getSingleResult();
+            
+            // Nếu count == 0 nghĩa là không đụng hàng ai -> Phòng trống trong khoảng tgian đó -> Trả về true
+            return count == 0;
+        } finally {
+            em.close();
+        }
+    }
 
     // ĐÃ FIX VÀ NÂNG CẤP: Hàm này được gọi khi VNPay trả về thành công
     // Nó sẽ đổi Booking -> Confirmed, Room -> Occupied VÀ cộng dồn tiền cho Customer
@@ -127,10 +152,11 @@ public class BookingDAO {
                 // 1. Cập nhật hóa đơn thành Đã Thanh Toán
                 b.setStatus("Confirmed"); 
                 
-                // 2. CHÍNH THỨC KHÓA PHÒNG
-                if (b.getRoom() != null) {
-                    b.getRoom().setStatus("Occupied");
-                }
+                // 2. KHÔNG ĐỔI TRẠNG THÁI PHÒNG NỮA THEO LOGIC MỚI
+                // Mình comment đoạn này lại để phòng luôn hiển thị là Available
+                // if (b.getRoom() != null) {
+                //     b.getRoom().setStatus("Occupied");
+                // }
                 
                 // 3. TÍNH TỔNG TIỀN CHI TIÊU VÀ CỘNG ĐIỂM CHO KHÁCH
                 if (b.getCustomer() != null) {

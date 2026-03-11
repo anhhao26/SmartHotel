@@ -1,5 +1,6 @@
 package com.smarthotel.controller;
 
+import com.smarthotel.dao.BookingDAO;
 import com.smarthotel.dao.CustomerDAO;
 import com.smarthotel.dao.RoomDAO;
 import com.smarthotel.dao.VoucherDAO;
@@ -22,6 +23,7 @@ public class BookingServlet extends HttpServlet {
     private final BookingService bookingService = new BookingService();
     private final RoomDAO roomDAO = new RoomDAO();
     private final CustomerDAO customerDAO = new CustomerDAO();
+    private final BookingDAO bookingDAO = new BookingDAO(); // THÊM KHAI BÁO DAO
     
     // TÍCH HỢP VOUCHER
     private final VoucherService voucherService = new VoucherService();
@@ -54,6 +56,28 @@ public class BookingServlet extends HttpServlet {
             b.setCheckInDate(sdf.parse(req.getParameter("checkIn")));
             b.setCheckOutDate(sdf.parse(req.getParameter("checkOut")));
             b.setStatus("Pending");
+
+            // =========================================================
+            // ĐOẠN CODE THÊM MỚI: KIỂM TRA TÍNH HỢP LỆ & TRÙNG LỊCH
+            // =========================================================
+            java.util.Date checkInDate = b.getCheckInDate();
+            java.util.Date checkOutDate = b.getCheckOutDate();
+
+            // 1. Kiểm tra Ngày trả phải sau Ngày nhận
+            if (!checkOutDate.after(checkInDate)) {
+                req.setAttribute("error", "Ngày trả phòng phải sau ngày nhận phòng!");
+                req.getRequestDispatcher("webapp/search.jsp").forward(req, resp);
+                return;
+            }
+
+            // 2. Kiểm tra Trùng lịch đặt phòng
+            boolean isAvailable = bookingDAO.isRoomAvailable(roomNumberInput, checkInDate, checkOutDate);
+            if (!isAvailable) {
+                req.setAttribute("error", "Phòng này đã có người đặt trong khoảng thời gian bạn chọn. Vui lòng chọn ngày khác!");
+                req.getRequestDispatcher("webapp/search.jsp").forward(req, resp);
+                return;
+            }
+            // =========================================================
 
             // TÍNH TIỀN GỐC
             double pricePerNight = room.getPrice(); // Giá phòng tự định nghĩa

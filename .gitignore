@@ -40,3 +40,4 @@ Thumbs.db
 
 # --- NGOẠI LỆ (QUAN TRỌNG: Giữ lại thư viện) ---
 !libs/*.jar
+/Hotelll/nbproject/private/

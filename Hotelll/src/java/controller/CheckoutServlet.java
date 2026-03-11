@@ -1,5 +1,7 @@
 package com.smarthotel.controller;
 
+import com.smarthotel.dao.BookingDAO;
+import com.smarthotel.model.Booking;
 import com.smarthotel.model.CartItem;
 import com.smarthotel.service.BillingService;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,6 +15,7 @@ import java.util.List;
 @WebServlet(name = "CheckoutServlet", urlPatterns = {"/checkout"})
 public class CheckoutServlet extends HttpServlet {
     private final BillingService billingService = new BillingService();
+    private final BookingDAO bookingDAO = new BookingDAO();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -21,6 +24,8 @@ public class CheckoutServlet extends HttpServlet {
             if ("checkin".equalsIgnoreCase(action)) {
                 int bid = Integer.parseInt(req.getParameter("bid"));
                 boolean ok = billingService.processCheckIn(bid);
+                
+                // ĐƯỜNG DẪN CHUẨN: /reception/home.jsp
                 if (ok) resp.sendRedirect(req.getContextPath() + "/reception/home.jsp?msg=Check-in Success");
                 else resp.getWriter().println("Check-in Failed!");
                 return;
@@ -47,8 +52,22 @@ public class CheckoutServlet extends HttpServlet {
                 }
 
                 boolean ok = billingService.processCheckOut(bid, cid, rid, items, price);
-                if (ok) resp.sendRedirect(req.getContextPath() + "/reception/home.jsp?msg=Payment Success - Room is Cleaning");
-                else resp.getWriter().println("Payment Failed (Rollback)!");
+                
+                if (ok) {
+                    if (price > 0) {
+                        Booking b = bookingDAO.find(bid);
+                        b.setTotalAmount(price); 
+                        req.setAttribute("booking", b);
+                        
+                        // ĐƯỜNG DẪN CHUẨN: /webapp/payment.jsp
+                        req.getRequestDispatcher("/webapp/payment.jsp").forward(req, resp);
+                    } else {
+                        // ĐƯỜNG DẪN CHUẨN: /reception/home.jsp
+                        resp.sendRedirect(req.getContextPath() + "/reception/home.jsp?msg=Checkout Success - Room is Cleaning");
+                    }
+                } else {
+                    resp.getWriter().println("Payment Failed (Rollback)!");
+                }
                 return;
             }
 

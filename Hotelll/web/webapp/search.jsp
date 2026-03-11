@@ -39,7 +39,7 @@
 
             <div class="p-6 sm:p-8">
                 <% String error = (String) request.getAttribute("error"); if (error != null) { %>
-                    <div class="mb-6 bg-red-50 text-red-600 p-4 rounded-xl font-bold border border-red-100 flex items-center gap-2">
+                    <div class="mb-6 bg-red-50 text-red-600 p-4 rounded-xl font-bold border border-red-100 flex items-center gap-2 animate-pulse">
                         <span class="material-symbols-outlined">error</span> <%= error %>
                     </div>
                 <% } %>
@@ -57,11 +57,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Ngày Nhận Phòng (Check-in)</label>
-                            <input type="date" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-primary focus:ring-primary font-semibold text-slate-700" name="checkIn" required>
+                            <input type="date" id="checkInDate" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-primary focus:ring-primary font-semibold text-slate-700" name="checkIn" required>
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Ngày Trả Phòng (Check-out)</label>
-                            <input type="date" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-primary focus:ring-primary font-semibold text-slate-700" name="checkOut" required>
+                            <input type="date" id="checkOutDate" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-primary focus:ring-primary font-semibold text-slate-700" name="checkOut" required>
                         </div>
                     </div>
 
@@ -77,5 +77,39 @@
             </div>
         </div>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkInInput = document.getElementById('checkInDate');
+            const checkOutInput = document.getElementById('checkOutDate');
+
+            // 1. Lấy ngày hôm nay theo chuẩn YYYY-MM-DD
+            const today = new Date().toISOString().split('T')[0];
+
+            // 2. Không cho phép chọn ngày nhận phòng nhỏ hơn hôm nay
+            checkInInput.setAttribute('min', today);
+            
+            // Tạm thời thiết lập ngày trả phòng tối thiểu cũng là hôm nay
+            checkOutInput.setAttribute('min', today);
+
+            // 3. Khi khách hàng thay đổi Ngày Nhận Phòng
+            checkInInput.addEventListener('change', function() {
+                const selectedCheckIn = new Date(this.value);
+                
+                // Ngày trả phòng ít nhất phải là ngày hôm sau của ngày nhận phòng
+                const nextDay = new Date(selectedCheckIn);
+                nextDay.setDate(nextDay.getDate() + 1);
+                const minCheckOut = nextDay.toISOString().split('T')[0];
+                
+                checkOutInput.setAttribute('min', minCheckOut);
+
+                // Nếu khách đã chọn ngày trả phòng TRƯỚC ĐÓ mà nó lại nhỏ hơn hoặc bằng ngày nhận phòng MỚI
+                // -> Xóa sạch ô ngày trả phòng bắt chọn lại
+                if (checkOutInput.value && checkOutInput.value <= this.value) {
+                    checkOutInput.value = '';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

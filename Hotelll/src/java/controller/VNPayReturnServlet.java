@@ -31,27 +31,27 @@ public class VNPayReturnServlet extends HttpServlet {
                 int bookingId = Integer.parseInt(bookingIdStr);
                 BookingDAO bDao = new BookingDAO();
                 
-                // 1. Gọi hàm confirm để đổi trạng thái Đơn hàng và KHÓA PHÒNG
+                // 1. Gọi hàm confirm để đổi trạng thái Đơn hàng
                 bDao.confirm(bookingId);
                 
                 // ==========================================
-                // 2. GỬI EMAIL XÁC NHẬN (TẠM BỎ THREAD CHẠY NGẦM ĐỂ BẮT LỖI)
+                // 2. GỬI EMAIL CHẠY NGẦM (Giúp web mượt, không bị đơ)
                 // ==========================================
                 Booking confirmedBooking = bDao.find(bookingId);
                 if (confirmedBooking != null) {
-                    System.out.println(">>>>> BẮT ĐẦU CHẠY HÀM GỬI MAIL CHO: " + confirmedBooking.getCustomer().getEmail() + " <<<<<");
-                    boolean isSent = EmailUtil.sendPaymentSuccessEmail(confirmedBooking);
-                    if (isSent) {
-                        System.out.println(">>>>> GỬI EMAIL THÀNH CÔNG! <<<<<");
-                    } else {
-                        System.out.println(">>>>> GỬI EMAIL THẤT BẠI! HÃY TÌM DÒNG LỖI MÀU ĐỎ BÊN TRÊN <<<<<");
-                    }
-                } else {
-                    System.out.println(">>>>> KHÔNG TÌM THẤY BOOKING ĐỂ GỬI MAIL <<<<<");
+                    new Thread(() -> {
+                        try {
+                            EmailUtil.sendPaymentSuccessEmail(confirmedBooking);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
                 }
                 // ==========================================
                 
-                response.sendRedirect(request.getContextPath() + "/guest/history.jsp?msg=payment_success");
+                // 3. CHUYỂN HƯỚNG VỀ TRANG ROOMS ĐỂ TRÁNH MẤT SESSION VÀ HIỆN THÔNG BÁO
+                response.sendRedirect(request.getContextPath() + "/rooms?success=true");
+                
             } catch (Exception e) {
                 e.printStackTrace();
                 response.setContentType("text/html;charset=UTF-8");
@@ -62,7 +62,7 @@ public class VNPayReturnServlet extends HttpServlet {
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().println("<div style='text-align:center; margin-top:50px; font-family:sans-serif;'>");
             response.getWriter().println("<h2 style='color:red;'>Giao dịch thanh toán thất bại hoặc đã bị hủy!</h2>");
-            response.getWriter().println("<br><a href='" + request.getContextPath() + "/guest/profile.jsp' style='padding:10px 20px; background:#11d493; color:white; text-decoration:none; border-radius:5px;'>Quay lại Hồ Sơ</a>");
+            response.getWriter().println("<br><a href='" + request.getContextPath() + "/rooms' style='padding:10px 20px; background:#1069f9; color:white; text-decoration:none; border-radius:5px;'>Quay lại Chọn phòng</a>");
             response.getWriter().println("</div>");
         }
     }

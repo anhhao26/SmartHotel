@@ -64,6 +64,17 @@
                 </div>
             </div>
 
+            <c:if test="${param.success == 'true'}">
+                <div class="mb-6 p-5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center gap-4 shadow-sm animate-pulse">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined text-3xl">check_circle</span>
+                    </div>
+                    <div>
+                        <h4 class="text-emerald-700 font-extrabold text-lg">Đặt phòng và Thanh toán thành công!</h4>
+                        <p class="text-emerald-600/80 text-sm font-semibold mt-0.5">Cảm ơn bạn đã lựa chọn SmartHotel. Hóa đơn chi tiết đã được gửi đến email của bạn.</p>
+                    </div>
+                </div>
+            </c:if>
             <c:if test="${not empty errorMessage}"><div class="mb-4 p-4 rounded-lg bg-red-100 text-red-700 font-bold border border-red-200">${errorMessage}</div></c:if>
             <c:if test="${not empty successMessage}"><div class="mb-4 p-4 rounded-lg bg-green-100 text-green-700 font-bold border border-green-200">${successMessage}</div></c:if>
 
@@ -284,7 +295,7 @@
             document.getElementById(modalId).classList.add('hidden'); 
         }
         
-        // 1. Mở Modal Đổi Trạng Thái (Code Gốc của bạn)
+        // 1. Mở Modal Đổi Trạng Thái
         function openStatusModal(roomId, currentStatus) {
             document.getElementById('modalRoomId').value = roomId;
             document.getElementById('displayRoomId').innerText = roomId;
@@ -295,21 +306,17 @@
 
         // 2. Mở Modal Siêu Quản Lý Phòng & Hình Ảnh
         function openManageModal(roomId, typeId, price, primaryImg, element) {
-            // Nạp dữ liệu form Info
             document.getElementById('manageRoomId').value = roomId;
             document.getElementById('displayManageRoomId').innerText = roomId;
             document.getElementById('manageTypeId').value = typeId;
             document.getElementById('managePrice').value = price;
             
-            // Nạp ID cho form xóa phòng và form upload
             document.getElementById('deleteRoomId').value = roomId;
             document.getElementById('uploadRoomId').value = roomId;
 
-            // Xử lý nạp danh sách ảnh vào Gallery
             const gallery = document.getElementById('manageImageGallery');
             gallery.innerHTML = ''; 
             
-            // Tìm data ảnh đã giấu ở thẻ phòng (room-card)
             const imageNodes = element.closest('.room-card').querySelectorAll('.room-images-data span');
             
             if (imageNodes.length === 0) {
@@ -351,7 +358,6 @@
             openTailwindModal('manageModal');
         }
 
-        // Các hàm xử lý gọi Submit Form ngầm
         function setPrimaryImage(roomId, url) {
             document.getElementById('primaryRoomId').value = roomId;
             document.getElementById('primaryImageUrl').value = url;

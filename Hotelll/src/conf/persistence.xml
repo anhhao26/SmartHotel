@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.1" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+  <persistence-unit name="HotelllPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.smarthotel.model.Room</class>
+    <class>com.smarthotel.model.RoomImage</class>
+    <class>com.smarthotel.model.RoomType</class>
+    <class>com.smarthotel.model.Voucher</class>
+    <class>com.smarthotel.model.Account</class>
+    <class>com.smarthotel.model.Customer</class>
+    <class>com.smarthotel.model.Booking</class>
+    <class>com.smarthotel.model.ImportHistory</class>
+    <class>com.smarthotel.model.Inventory</class>
+    <class>com.smarthotel.model.Invoice</class>
+    <class>com.smarthotel.model.InvoiceItem</class>
+    <class>com.smarthotel.model.Supplier</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=ASMDB_nhom5; databaseName=ASMDB_nhom5; encrypt=true; trustServerCertificate=true"/>
+      <property name="jakarta.persistence.jdbc.user" value="sa"/>
+      <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+      <property name="jakarta.persistence.jdbc.password" value="123456"/>
+      <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+    </properties>
+  </persistence-unit>
+</persistence>
