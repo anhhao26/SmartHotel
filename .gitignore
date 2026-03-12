@@ -40,3 +40,17 @@ Thumbs.db
 
 # --- NGOẠI LỆ (QUAN TRỌNG: Giữ lại thư viện) ---
 !libs/*.jar
+/Hotelll/nbproject/private/
+
+# ==========================================
+# --- PYTHON (API CHATBOT & PREDICT) ---
+# ==========================================
+# Bỏ qua thư mục môi trường ảo (Rất nặng, không đẩy lên Git)
+ai_prediction_api/venv/
+ai_prediction_api/__pycache__/
+*.pyc
+.pytest_cache/
+
+# BẢO MẬT: TUYỆT ĐỐI BỎ QUA FILE CHỨA MẬT KHẨU & API KEY
+ai_prediction_api/.env
+.env

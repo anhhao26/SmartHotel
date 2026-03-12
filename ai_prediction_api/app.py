@@ -2,6 +2,24 @@ import os
 from flask import Flask, jsonify
 from flask_cors import CORS
 import pyodbc
+from flask import request
+import google.generativeai as genai
+from google.api_core.exceptions import ResourceExhausted
+from dotenv import load_dotenv
+
+# Load các biến môi trường từ file .env
+load_dotenv()
+
+# ==========================================
+# CẤU HÌNH NHIỀU API KEY (LUÂN PHIÊN KHI HẾT HẠN MỨC)
+# ==========================================
+# Lấy danh sách key từ file .env (cách nhau bởi dấu phẩy)
+api_keys_env = os.environ.get("GEMINI_API_KEYS", os.environ.get("GEMINI_API_KEY", ""))
+GEMINI_API_KEYS = [k.strip() for k in api_keys_env.split(",") if k.strip()]
+current_key_index = 0
+
+if GEMINI_API_KEYS:
+    genai.configure(api_key=GEMINI_API_KEYS[current_key_index])
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -29,6 +47,7 @@ if DB_USER and DB_PASS:
         f"Database={DB_NAME};"
         f"UID={DB_USER};"
         f"PWD={DB_PASS};"
+        r"TrustServerCertificate=yes;"
     )
 else:
     # Chuỗi kết nối dùng Windows Authentication (Chạy cục bộ)
@@ -50,6 +69,70 @@ def execute_query(query):
     finally:
         conn.close()
     return df
+
+def get_hotel_context():
+    """Hàm lấy thông tin mô tả khách sạn và tình trạng phòng từ DB để huấn luyện AI"""
+    try:
+        # 1. Lấy thông tin phòng
+        query_rooms = """
+            SELECT t.TypeName, t.PricePerNight, COUNT(r.RoomID) as AvailableCount
+            FROM RoomTypes t
+            LEFT JOIN Rooms r ON t.RoomTypeID = r.RoomTypeID AND r.Status = 'Available'
+            GROUP BY t.TypeName, t.PricePerNight
+        """
+        df_rooms = execute_query(query_rooms)
+        rooms_info = []
+        total_available = 0
+        for index, row in df_rooms.iterrows():
+            price = row['PricePerNight']
+            count = int(row['AvailableCount'])
+            total_available += count
+            
+            if pd.notna(price):
+                formatted_price = "{:,.0f} VNĐ".format(float(price))
+            else:
+                formatted_price = "Liên hệ"
+                
+            rooms_info.append(f"- Loại phòng: {row['TypeName']} | Giá: {formatted_price} | Hiện còn trống: {count} phòng")
+        
+        rooms_str = "\n".join(rooms_info)
+
+        # 2. Lấy thông tin hàng hóa (Mặt hàng thương mại / Đang bán)
+        query_inventory = """
+            SELECT ItemName, SellingPrice, Quantity 
+            FROM Inventory 
+            WHERE IsTradeGood = 1 AND Quantity > 0
+        """
+        df_inv = execute_query(query_inventory)
+        items_info = []
+        for index, row in df_inv.iterrows():
+            selling_price = row['SellingPrice']
+            qty = int(row['Quantity'])
+            if pd.notna(selling_price):
+                formatted_price = "{:,.0f} VNĐ".format(float(selling_price))
+            else:
+                formatted_price = "Liên hệ"
+            items_info.append(f"- Hàng hóa: {row['ItemName']} | Giá bán: {formatted_price} | Còn: {qty} sản phẩm")
+            
+        items_str = "\n".join(items_info)
+        if not items_info:
+            items_str = "- Hiện tại khách sạn không kinh doanh hoặc tạm hết hàng hóa/quà lưu niệm."
+
+        context = f"""
+Thông tin về SmartHotel:
+1. Hiện trạng phòng (Tổng số CÒN TRỐNG: {total_available} phòng):
+{rooms_str}
+
+2. Danh sách dịch vụ/hàng hóa đang bán tại khách sạn:
+{items_str}
+
+- Các dịch vụ khác: Hồ bơi, Nhà hàng, Spa.
+- Check-in: 14:00, Check-out: 12:00.
+"""
+        return context
+    except Exception as e:
+        print("LDB:", e)
+        return "SmartHotel là một khách sạn cao cấp. Lỗi kết nối CSDL khi kiểm tra phòng trống."
 
 def predict_time_series(df, target_column, is_integer_output=False):
     """
@@ -197,6 +280,76 @@ def predict_bookings():
         return jsonify({"status": "error", "message": str(ve)}), 400
     except Exception as e:
         return jsonify({"status": "error", "message": f"Lỗi hệ thống: {str(e)}"}), 500
+
+# ==========================================
+# API 3: XỬ LÝ CHATBOT AI
+# ==========================================
+@app.route('/api/chat', methods=['POST', 'OPTIONS'])
+def chat():
+    # CORS (Xử lý preflight request từ Vue/React/Fetch API)
+    if request.method == "OPTIONS":
+        return jsonify({"status": "success"}), 200
+
+    try:
+        data = request.json
+        user_message = data.get("message", "")
+        if not user_message:
+            return jsonify({"status": "error", "message": "Tin nhắn không được bỏ trống"}), 400
+
+        if not GEMINI_API_KEYS:
+            return jsonify({"status": "error", "message": "Chưa cấu hình GEMINI_API_KEYS"}), 500
+
+        # Lấy thông tin ngữ cảnh khách sạn từ Database
+        hotel_context = get_hotel_context()
+
+        system_prompt = f"""Bạn là trợ lý ảo lịch sự của khách sạn SmartHotel. 
+Quy tắc: 
+1. Chỉ trả lời các câu hỏi liên quan đến khách sạn, dịch vụ, giá phòng. 
+2. KHÔNG trả lời hay yêu cầu mã CCCD, thẻ tín dụng, thông tin cá nhân của khách. 
+3. Dưới đây là thông tin hiện tại của hệ thống khách sạn mà bạn cần ghi nhớ để tư vấn:
+{hotel_context}"""
+
+        global current_key_index
+        attempts = 0
+        total_keys = len(GEMINI_API_KEYS)
+        
+        while attempts < total_keys:
+            try:
+                # Thử gọi API với key hiện tại
+                model = genai.GenerativeModel('gemini-2.5-flash', system_instruction=system_prompt)
+                response = model.generate_content(user_message, generation_config={"temperature": 0.7, "max_output_tokens": 300})
+                
+                reply = response.text.strip()
+                return jsonify({
+                    "status": "success",
+                    "reply": reply
+                })
+            
+            except ResourceExhausted:
+                # Nếu bị lỗi hết hạn mức (Quota 429), chuyển sang key tiếp theo
+                print(f"Key thứ {current_key_index + 1} hết hạn mức, đang đổi sang key khác...")
+                current_key_index = (current_key_index + 1) % total_keys
+                genai.configure(api_key=GEMINI_API_KEYS[current_key_index])
+                attempts += 1
+            except Exception as e:
+                # Các lỗi khác (Không phải do quota) thì ném ra ngay
+                raise e
+
+        # Nếu vòng lặp kết thúc mà vẫn fail -> Tất cả key đều hết hạn mức
+        return jsonify({
+            "status": "error", 
+            "reply": "Rất tiếc, hệ thống tổng đài AI hiện tại đang quá tải (Tất cả tài khoản đều đã hết hạn mức). Vui lòng thử lại sau.",
+            "message": "Hệ thống AI quá tải / Hết hạn mức API."
+        }), 429
+
+    except Exception as e:
+        print(f"Lỗi AI: {str(e)}")
+        return jsonify({
+            "status": "error", 
+            "reply": "Xin lỗi, hệ thống AI đang bảo trì. Vui lòng liên hệ lễ tân.",
+            "message": "Không gọi được AI Server. Bị lỗi hoặc sai khóa API.",
+            "details": str(e)
+        }), 500
 
 if __name__ == '__main__':
     # THIẾT LẬP DEPLOY MODE

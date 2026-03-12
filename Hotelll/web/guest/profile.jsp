@@ -200,5 +200,106 @@
         <p>© 2026 SmartHotel Management System. All rights reserved.</p>
     </div>
 </footer>
+                        <!-- Nút nổi mở Chat Box -->
+<button id="chatbot-toggle" class="fixed bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition z-50 flex items-center justify-center">
+    <span class="material-icons-round">chat</span>
+</button>
+
+<!-- Khung Chat Box (Ẩn mặc định) -->
+<div id="chatbot-window" class="fixed bottom-24 right-6 w-[360px] bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 hidden flex-col overflow-hidden z-50 h-[500px]">
+    <!-- Header -->
+    <div class="bg-primary text-white p-3 flex justify-between items-center rounded-t-lg shadow-sm z-10">
+        <span class="font-bold flex items-center gap-2"><span class="material-icons-round text-lg">smart_toy</span> SmartHotel AI</span>
+        <button id="chatbot-close" class="text-white hover:text-gray-200 transition-colors"><span class="material-icons-round text-sm">close</span></button>
+    </div>
+    <!-- Body chứa nội dung chat -->
+    <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-gray-50/50 dark:bg-gray-900/50">
+        <!-- AI Greeting -->
+        <div class="flex gap-2 w-full flex-row">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-secondary text-white shadow-sm mt-1">
+                <span class="material-icons-round text-[18px]">smart_toy</span>
+            </div>
+            <div class="p-3 rounded-xl text-sm max-w-[80%] break-words whitespace-pre-wrap bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-tl-none shadow-sm border border-gray-100 dark:border-gray-700 leading-relaxed font-medium">Xin chào! Tôi là trợ lý ảo thông minh của SmartHotel. Tôi có thể giúp gì cho quý khách hôm nay?</div>
+        </div>
+    </div>
+    <!-- Input Area -->
+    <div class="p-3 border-t border-gray-200 dark:border-gray-700 flex gap-2 bg-white dark:bg-gray-800">
+        <input type="text" id="chat-input" class="flex-1 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:text-white" placeholder="Nhập tin nhắn...">
+        <button id="chat-send" class="bg-primary text-white px-3 py-2 rounded-md hover:bg-blue-700 flex items-center justify-center">
+            <span class="material-icons-round text-sm">send</span>
+        </button>
+    </div>
+</div>
+<script>
+    const toggleBtn = document.getElementById('chatbot-toggle');
+    const closeBtn = document.getElementById('chatbot-close');
+    const chatWindow = document.getElementById('chatbot-window');
+    const sendBtn = document.getElementById('chat-send');
+    const chatInput = document.getElementById('chat-input');
+    const messagesDiv = document.getElementById('chat-messages');
+
+    // Đóng/Mở Chat Box
+    toggleBtn.addEventListener('click', () => { chatWindow.classList.toggle('hidden'); chatWindow.classList.toggle('flex'); });
+    closeBtn.addEventListener('click', () => { chatWindow.classList.add('hidden'); chatWindow.classList.remove('flex'); });
+
+    // Nối tin nhắn UI
+    function appendMessage(text, isUser) {
+        const msgContainer = document.createElement('div');
+        msgContainer.className = 'flex gap-2 w-full mt-2 ' + (isUser ? 'flex-row-reverse' : 'flex-row');
+        
+        // Avatar
+        const avatar = document.createElement('div');
+        avatar.className = 'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-sm mt-1 ' + (isUser ? 'bg-primary text-white' : 'bg-secondary text-white');
+        avatar.innerHTML = '<span class="material-icons-round text-[18px]">' + (isUser ? 'person' : 'smart_toy') + '</span>';
+        
+        // Bong bóng chat
+        const bubble = document.createElement('div');
+        bubble.className = 'p-3 text-sm max-w-[80%] break-words whitespace-pre-wrap leading-relaxed shadow-sm ' + (isUser ? 'bg-primary text-white rounded-2xl rounded-tr-sm font-medium' : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl rounded-tl-sm border border-gray-100 dark:border-gray-700');
+        
+        // Parse format cơ bản (In đậm, In nghiêng) an toàn với XSS
+        let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        let formattedText = safeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<i>$1</i>');
+        bubble.innerHTML = formattedText;
+        
+        msgContainer.appendChild(avatar);
+        msgContainer.appendChild(bubble);
+        messagesDiv.appendChild(msgContainer);
+        
+        // Cuộn mượt mà
+        messagesDiv.scrollTo({ top: messagesDiv.scrollHeight, behavior: 'smooth' });
+    }
+
+    // Gửi tin nhắn qua API Python (đang chạy ở cổng 5000)
+    sendBtn.addEventListener('click', async () => {
+        const text = chatInput.value.trim();
+        if (!text) return;
+        
+        appendMessage(text, true); // Hiện tin nhắn người dùng
+        chatInput.value = '';
+
+        try {
+            // Gọi Python Flask đang chạy ở cổng 5000 chứ không phải 8000
+            const response = await fetch('http://localhost:5000/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                appendMessage(data.reply, false); // Hiện tin nhắn AI
+            } else {
+                appendMessage("Lỗi từ AI: " + data.message, false);
+            }
+        } catch (error) {
+            appendMessage("Lỗi kết nối đến Server AI (Hãy chắc chắn bạn đang chạy 'python app.py')", false);
+        }
+    });
+
+    // Bắt sự kiện bàn phím (Bấm phím Enter để Gửi)
+    chatInput.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') sendBtn.click();
+    });
+</script>
+
 </body>
 </html>
