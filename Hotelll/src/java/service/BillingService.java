@@ -16,7 +16,7 @@ public class BillingService {
     /**
      * Process check-in: 
      * - Cập nhật booking.status = "Checked-in"
-     * - Cập nhật room.status = "Occupied" (Theo đúng yêu cầu Module 4 & 7)
+     * - KHÔNG CẬP NHẬT room.status nữa để phòng luôn "Available" trên web khách
      */
     public boolean processCheckIn(int bookingId) {
         EntityManager em = JPAUtil.getEntityManager();
@@ -32,12 +32,12 @@ public class BillingService {
             b.setStatus("Checked-in"); 
             em.merge(b);
 
-            // SỬA LỖI 1: Lấy Object Room thông qua hàm getRoom() thay vì getRoomID()
-            Room rm = b.getRoom();
-            if (rm != null) {
-                rm.setStatus("Occupied");
-                em.merge(rm);
-            }
+            // ĐÃ COMMENT LẠI ĐỂ KHÔNG KHÓA PHÒNG:
+            // Room rm = b.getRoom();
+            // if (rm != null) {
+            //     rm.setStatus("Occupied");
+            //     em.merge(rm);
+            // }
 
             em.getTransaction().commit();
             return true;

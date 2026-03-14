@@ -32,6 +32,22 @@ public class Booking {
 
     @Column(name = "TotalAmount")
     private Double totalAmount;
+    
+    // Khai báo biến
+    @Column(name = "CreatedAt")
+    @Temporal(jakarta.persistence.TemporalType.TIMESTAMP)
+    private java.util.Date createdAt;
+
+    @Column(name = "ConfirmedAt")
+    @Temporal(jakarta.persistence.TemporalType.TIMESTAMP)
+    private java.util.Date confirmedAt;
+
+    // Thêm các hàm Get/Set
+    public java.util.Date getCreatedAt() { return createdAt; }
+    public void setCreatedAt(java.util.Date createdAt) { this.createdAt = createdAt; }
+    
+    public java.util.Date getConfirmedAt() { return confirmedAt; }
+    public void setConfirmedAt(java.util.Date confirmedAt) { this.confirmedAt = confirmedAt; }
 
     // getters/setters
     public Integer getBookingID() { return bookingID; }
