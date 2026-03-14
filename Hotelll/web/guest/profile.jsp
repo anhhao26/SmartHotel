@@ -62,7 +62,7 @@
 <nav class="sticky top-0 z-50 bg-primary shadow-lg dark:border-b dark:border-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
-            <a href="<%=request.getContextPath()%>/” class="flex items-center gap-2">
+            <a href="<%=request.getContextPath()%>/" class="flex items-center gap-2">
                 <span class="material-icons-round text-white text-3xl">domain</span>
                 <span class="font-display font-bold text-2xl text-white tracking-wide">SmartHotel</span>
             </a>
@@ -238,14 +238,18 @@
     const chatInput = document.getElementById('chat-input');
     const messagesDiv = document.getElementById('chat-messages');
 
+    // Lưu trữ lịch sử chat để AI nhớ ngữ cảnh
+    let chatHistory = [];
+
     // Đóng/Mở Chat Box
     toggleBtn.addEventListener('click', () => { chatWindow.classList.toggle('hidden'); chatWindow.classList.toggle('flex'); });
     closeBtn.addEventListener('click', () => { chatWindow.classList.add('hidden'); chatWindow.classList.remove('flex'); });
 
     // Nối tin nhắn UI
-    function appendMessage(text, isUser) {
+    function appendMessage(text, isUser, isTyping = false) {
         const msgContainer = document.createElement('div');
         msgContainer.className = 'flex gap-2 w-full mt-2 ' + (isUser ? 'flex-row-reverse' : 'flex-row');
+        if (isTyping) msgContainer.id = 'typing-indicator';
         
         // Avatar
         const avatar = document.createElement('div');
@@ -256,10 +260,17 @@
         const bubble = document.createElement('div');
         bubble.className = 'p-3 text-sm max-w-[80%] break-words whitespace-pre-wrap leading-relaxed shadow-sm ' + (isUser ? 'bg-primary text-white rounded-2xl rounded-tr-sm font-medium' : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl rounded-tl-sm border border-gray-100 dark:border-gray-700');
         
-        // Parse format cơ bản (In đậm, In nghiêng) an toàn với XSS
-        let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        let formattedText = safeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<i>$1</i>');
-        bubble.innerHTML = formattedText;
+        if (isTyping) {
+            bubble.innerHTML = '<div class="flex gap-1 items-center h-5"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-pulse"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.2s"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.4s"></div></div>';
+        } else {
+            // Parse format cơ bản an toàn với XSS
+            let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            // Fix lỗi markdown danh sách: Nếu thấy * ở đầu dòng thì đổi thành •
+            let formattedText = safeText.replace(/(^|\n)\*\s+/g, '$1• ');
+            // Sau đó mới format in đậm, in nghiêng
+            formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<i>$1</i>');
+            bubble.innerHTML = formattedText;
+        }
         
         msgContainer.appendChild(avatar);
         msgContainer.appendChild(bubble);
@@ -269,29 +280,52 @@
         messagesDiv.scrollTo({ top: messagesDiv.scrollHeight, behavior: 'smooth' });
     }
 
-    // Gửi tin nhắn qua API Python (đang chạy ở cổng 5000)
+    // Gửi tin nhắn qua API Python
     sendBtn.addEventListener('click', async () => {
         const text = chatInput.value.trim();
         if (!text) return;
         
         appendMessage(text, true); // Hiện tin nhắn người dùng
         chatInput.value = '';
+        
+        // Thêm tin nhắn user vào lịch sử
+        chatHistory.push({ role: 'user', parts: [text] });
+
+        // Hiện trạng thái đang gõ
+        appendMessage('', false, true);
+        sendBtn.disabled = true;
+        chatInput.disabled = true;
 
         try {
-            // Gọi Python Flask đang chạy ở cổng 5000 chứ không phải 8000
             const response = await fetch('http://localhost:5000/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text })
+                body: JSON.stringify({ 
+                    message: text,
+                    history: chatHistory.slice(0, -1) // Gửi lịch sử trước đó cho AI hiểu ngữ cảnh
+                })
             });
             const data = await response.json();
+            
+            // Xóa trạng thái đang gõ
+            document.getElementById('typing-indicator')?.remove();
+
             if (data.status === 'success') {
                 appendMessage(data.reply, false); // Hiện tin nhắn AI
+                // Thêm vào memory
+                chatHistory.push({ role: 'model', parts: [data.reply] });
             } else {
-                appendMessage("Lỗi từ AI: " + data.message, false);
+                // Hiển thị data.reply (friendly message) nếu có, thay vì data.message (lỗi kỹ thuật)
+                const errorMsg = data.reply || data.message || "Đã xảy ra lỗi không phân loại được.";
+                appendMessage("Lỗi từ AI: " + errorMsg, false);
             }
         } catch (error) {
-            appendMessage("Lỗi kết nối đến Server AI (Hãy chắc chắn bạn đang chạy 'python app.py')", false);
+            document.getElementById('typing-indicator')?.remove();
+            appendMessage("Lỗi kết nối đến Server AI (Hãy chắc chắn bạn đang chạy 'python app.py').", false);
+        } finally {
+            sendBtn.disabled = false;
+            chatInput.disabled = false;
+            chatInput.focus();
         }
     });
 

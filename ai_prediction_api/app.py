@@ -293,6 +293,8 @@ def chat():
     try:
         data = request.json
         user_message = data.get("message", "")
+        history_data = data.get("history", [])
+
         if not user_message:
             return jsonify({"status": "error", "message": "Tin nhắn không được bỏ trống"}), 400
 
@@ -309,6 +311,14 @@ Quy tắc:
 3. Dưới đây là thông tin hiện tại của hệ thống khách sạn mà bạn cần ghi nhớ để tư vấn:
 {hotel_context}"""
 
+        # Chuẩn hoá history data
+        formatted_history = []
+        for msg in history_data:
+            role = msg.get("role", "user")
+            parts = msg.get("parts", [])
+            if parts:
+                formatted_history.append({"role": role, "parts": parts})
+
         global current_key_index
         attempts = 0
         total_keys = len(GEMINI_API_KEYS)
@@ -317,7 +327,10 @@ Quy tắc:
             try:
                 # Thử gọi API với key hiện tại
                 model = genai.GenerativeModel('gemini-2.5-flash', system_instruction=system_prompt)
-                response = model.generate_content(user_message, generation_config={"temperature": 0.7, "max_output_tokens": 300})
+                
+                # Khởi tạo chat session với lịch sử hội thoại
+                chat_session = model.start_chat(history=formatted_history)
+                response = chat_session.send_message(user_message, generation_config={"temperature": 0.7, "max_output_tokens": 300})
                 
                 reply = response.text.strip()
                 return jsonify({
@@ -331,6 +344,15 @@ Quy tắc:
                 current_key_index = (current_key_index + 1) % total_keys
                 genai.configure(api_key=GEMINI_API_KEYS[current_key_index])
                 attempts += 1
+            except ValueError as ve:
+                # Xử lý block an toàn (Safety Ratings)
+                if "safety" in str(ve).lower() or "part" in str(ve).lower():
+                    return jsonify({
+                        "status": "error",
+                        "reply": "Rất xin lỗi, câu hỏi này chứa nội dung vi phạm chính sách an toàn nên tôi không thể trả lời.",
+                        "message": "Nội dung bị chặn bởi Safety Policy của Gemini."
+                    }), 400
+                raise ve
             except Exception as e:
                 # Các lỗi khác (Không phải do quota) thì ném ra ngay
                 raise e
@@ -346,8 +368,8 @@ Quy tắc:
         print(f"Lỗi AI: {str(e)}")
         return jsonify({
             "status": "error", 
-            "reply": "Xin lỗi, hệ thống AI đang bảo trì. Vui lòng liên hệ lễ tân.",
-            "message": "Không gọi được AI Server. Bị lỗi hoặc sai khóa API.",
+            "reply": "Xin lỗi, hệ thống AI đang bảo trì hoặc gặp lỗi. Vui lòng liên hệ lễ tân.",
+            "message": "Lỗi phần mềm AI Server.",
             "details": str(e)
         }), 500
 
