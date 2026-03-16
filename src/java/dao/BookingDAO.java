@@ -1,0 +1,309 @@
+package dao;
+
+import model.Booking;
+import model.Customer;
+import util.JPAUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+public class BookingDAO {
+    
+    public static class BookingShort {
+        public int bookingID;
+        public int roomID;
+        public int customerID;
+        public String customerName;
+        public Date checkInDate;
+        public Date checkOutDate;
+        public String status;
+    }
+
+    public Booking find(int id) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try { 
+            return em.find(Booking.class, id); 
+        } finally { 
+            em.close(); 
+        }
+    }
+
+    public void merge(Booking b, EntityManager em) { 
+        em.merge(b); 
+    }
+
+    public List<BookingShort> findPendingBookings() {
+        return findBookingsByStatuses(Arrays.asList("Pending", "PENDING", "Confirmed", "CONFIRMED"));
+    }
+
+    public List<BookingShort> findCheckedInBookings() {
+        return findBookingsByStatuses(Arrays.asList("Checked-in", "CHECKED-IN"));
+    }
+
+    private List<BookingShort> findBookingsByStatuses(List<String> statuses) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT b FROM Booking b WHERE b.status IN :statuses ORDER BY b.bookingID DESC";
+            TypedQuery<Booking> q = em.createQuery(jpql, Booking.class);
+            q.setParameter("statuses", statuses);
+            
+            List<Booking> list = q.getResultList();
+            List<BookingShort> out = new ArrayList<>();
+            
+            for (Booking b : list) {
+                BookingShort bs = new BookingShort();
+                bs.bookingID = b.getBookingID();
+                
+                if (b.getRoom() != null) {
+                    bs.roomID = b.getRoom().getRoomID();
+                } else {
+                    bs.roomID = 0;
+                }
+                
+                if (b.getCustomer() != null) {
+                    bs.customerID = b.getCustomer().getCustomerID();
+                    bs.customerName = b.getCustomer().getFullName();
+                } else {
+                    bs.customerID = 0;
+                    bs.customerName = "Khách vãng lai";
+                }
+                
+                bs.checkInDate = b.getCheckInDate();
+                bs.checkOutDate = b.getCheckOutDate();
+                bs.status = b.getStatus();
+                out.add(bs);
+            }
+            return out;
+        } finally {
+            em.close();
+        }
+    }
+
+    // --- CÁC HÀM XỬ LÝ ĐẶT PHÒNG ---
+    
+    public boolean saveBooking(Booking b) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            
+            // Logic chống trùng phòng
+            Long conflict = em.createQuery(
+                "SELECT COUNT(b) FROM Booking b WHERE b.room.roomID = :roomId " +
+                "AND UPPER(b.status) IN ('CONFIRMED', 'CHECKED-IN') " +
+                "AND :checkIn < b.checkOutDate AND :checkOut > b.checkInDate", Long.class)
+                .setParameter("roomId", b.getRoom().getRoomID())
+                .setParameter("checkIn", b.getCheckInDate())
+                .setParameter("checkOut", b.getCheckOutDate())
+                .getSingleResult();
+
+            if (conflict > 0) {
+                em.getTransaction().rollback();
+                return false;
+            }
+
+            em.persist(b);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+
+    // Hàm kiểm tra lịch trống cho người dùng
+    public boolean isRoomAvailable(String roomNumber, Date reqCheckIn, Date reqCheckOut) {
+        EntityManager em = JPAUtil.getEntityManager(); 
+        try {
+            String jpql = "SELECT COUNT(b) FROM Booking b WHERE b.room.roomNumber = :rn " +
+                          "AND UPPER(b.status) IN ('CONFIRMED', 'CHECKED-IN') " +
+                          "AND b.checkInDate < :reqCheckOut AND b.checkOutDate > :reqCheckIn";
+            
+            Long count = em.createQuery(jpql, Long.class)
+                           .setParameter("rn", roomNumber)
+                           .setParameter("reqCheckOut", reqCheckOut)
+                           .setParameter("reqCheckIn", reqCheckIn)
+                           .getSingleResult();
+                            
+            return count == 0; 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+
+    // ĐÃ FIX: Đổi Booking -> Confirmed, Khóa phòng Room -> Occupied, Cập nhật chi tiêu và tích điểm Customer
+    public boolean confirm(int id) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Booking b = em.find(Booking.class, id);
+            
+            if (b != null && (b.getStatus().equalsIgnoreCase("Pending") || b.getStatus().equalsIgnoreCase("PENDING"))) {
+                // 1. Cập nhật hóa đơn thành Đã Thanh Toán
+                b.setStatus("Confirmed"); 
+                b.setConfirmedAt(new Date());
+                
+                // 2. CHÍNH THỨC KHÓA PHÒNG
+                if (b.getRoom() != null) {
+                    b.getRoom().setStatus("Occupied");
+                }
+                
+                // 3. TÍNH TỔNG TIỀN CHI TIÊU VÀ CỘNG ĐIỂM CHO KHÁCH
+                if (b.getCustomer() != null) {
+                    Customer customer = b.getCustomer();
+                    double currentSpending = customer.getTotalSpending() != null ? customer.getTotalSpending() : 0.0;
+                    customer.setTotalSpending(currentSpending + b.getTotalAmount());
+                    int currentPoints = customer.getPoints() != null ? customer.getPoints() : 0;
+                    int addedPoints = (int) (b.getTotalAmount() / 100000);
+                    customer.setPoints(currentPoints + addedPoints);
+                }
+                
+                em.merge(b);
+                em.getTransaction().commit();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<Booking> findByCustomerId(int customerId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT b FROM Booking b WHERE b.customer.customerID = :cid ORDER BY b.bookingID DESC";
+            TypedQuery<Booking> query = em.createQuery(jpql, Booking.class);
+            query.setParameter("cid", customerId);
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>(); 
+        } finally {
+            em.close();
+        }
+    }
+
+    // --- NEW: CÁC HÀM CẬP NHẬT TRẠNG THÁI CHO ADMIN ---
+    
+    public boolean updateBookingStatus(int bookingId, String status) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Booking b = em.find(Booking.class, bookingId);
+            if (b != null) {
+                b.setStatus(status);
+                em.merge(b);
+                em.getTransaction().commit();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean update(Booking b) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.merge(b);
+            em.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean updateBookingAndRoomStatus(int bookingId, String bStatus, String rStatus) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Booking b = em.find(Booking.class, bookingId);
+            if (b != null) {
+                b.setStatus(bStatus);
+                if (b.getRoom() != null) {
+                    b.getRoom().setStatus(rStatus);
+                }
+                em.merge(b);
+                em.getTransaction().commit();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+
+    // --- DASHBOARD AND NOTIFICATION HELPERS ---
+    
+    public double getTotalRevenueThisMonth() {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            LocalDateTime firstDayOfMonth = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+            Date date = Date.from(firstDayOfMonth.atZone(ZoneId.systemDefault()).toInstant());
+            
+            String jpql = "SELECT SUM(b.totalAmount) FROM Booking b WHERE b.status IN ('Confirmed', 'Checked-in') AND b.checkInDate >= :startDate";
+            Double revenue = em.createQuery(jpql, Double.class)
+                               .setParameter("startDate", date)
+                               .getSingleResult();
+            return revenue != null ? revenue : 0.0;
+        } finally {
+            em.close();
+        }
+    }
+
+    public long getActiveServiceRequestsCount() {
+        return 24; // Placeholder
+    }
+
+    public double getOccupancyRate() {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            long totalRooms = em.createQuery("SELECT COUNT(r) FROM Room r", Long.class).getSingleResult();
+            if (totalRooms == 0) return 0.0;
+            
+            long occupiedRooms = em.createQuery("SELECT COUNT(r) FROM Room r WHERE r.status = 'Occupied'", Long.class).getSingleResult();
+            return (double) occupiedRooms / totalRooms * 100;
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Booking> getRecentNotifications(int limit) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT b FROM Booking b LEFT JOIN FETCH b.customer LEFT JOIN FETCH b.room LEFT JOIN FETCH b.room.roomType ORDER BY b.bookingID DESC";
+            return em.createQuery(jpql, Booking.class)
+                     .setMaxResults(limit)
+                     .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+}

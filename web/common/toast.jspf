@@ -1,0 +1,127 @@
+<%-- 
+    Standardized Toast Notification System for SmartHotel Luxury Cyber Theme
+    Usage: Call showToast('Message', 'type') from any JS. Types: 'success', 'error', 'info', 'warning'
+--%>
+<style>
+    #toast-container {
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        pointer-events: none;
+    }
+
+    .premium-toast {
+        background: rgba(2, 3, 8, 0.9);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        padding: 1.25rem 2rem;
+        border-radius: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        transform: translateX(120%);
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        pointer-events: auto;
+        min-width: 350px;
+    }
+
+    .premium-toast.show {
+        transform: translateX(0);
+    }
+
+    .toast-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .toast-content {
+        flex: 1;
+    }
+
+    .toast-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-bottom: 2px;
+    }
+
+    .toast-message {
+        font-family: 'Outfit', sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Types */
+    .toast-success .toast-icon { background: rgba(0, 255, 157, 0.1); color: #00ff9d; }
+    .toast-success .toast-title { color: #00ff9d; }
+
+    .toast-error .toast-icon { background: rgba(255, 0, 60, 0.1); color: #ff003c; }
+    .toast-error .toast-title { color: #ff003c; }
+
+    .toast-warning .toast-icon { background: rgba(255, 191, 0, 0.1); color: #ffbf00; }
+    .toast-warning .toast-title { color: #ffbf00; }
+
+    .toast-info .toast-icon { background: rgba(212, 175, 55, 0.1); color: #d4af37; }
+    .toast-info .toast-title { color: #d4af37; }
+</style>
+
+<div id="toast-container"></div>
+
+<script>
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `premium-toast toast-${type}`;
+        
+        const icons = {
+            success: 'check_circle',
+            error: 'error',
+            warning: 'warning',
+            info: 'info'
+        };
+
+        const titles = {
+            success: 'Thành Công',
+            error: 'Lỗi Hệ Thống',
+            warning: 'Cảnh Báo',
+            info: 'Thông Báo'
+        };
+
+        toast.innerHTML = `
+            <div class="toast-icon">
+                <span class="material-symbols-outlined">\${icons[type] || 'info'}</span>
+            </div>
+            <div class="toast-content">
+                <div class="toast-title">\${titles[type] || 'Notification'}</div>
+                <div class="toast-message">\${message}</div>
+            </div>
+        `;
+
+        container.appendChild(toast);
+
+        // Force reflow
+        toast.offsetHeight;
+        toast.classList.add('show');
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                container.removeChild(toast);
+            }, 500);
+        }, 5000);
+    }
+</script>
+
