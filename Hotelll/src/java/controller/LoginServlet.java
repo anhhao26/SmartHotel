@@ -1,7 +1,7 @@
 package controller;
 
-import com.smarthotel.model.Account;
-import com.smarthotel.service.AuthService;
+import model.Account;
+import service.AuthService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -63,6 +63,15 @@ public class LoginServlet extends HttpServlet {
         if ("RECEPTIONIST".equals(role) || "STAFF".equals(role)) {
             resp.sendRedirect(base + "/reception"); 
             return;
+        }
+
+        String redirect = req.getParameter("redirect");
+        if (redirect != null && !redirect.isEmpty()) {
+            if ("booking".equals(redirect)) {
+                String roomId = req.getParameter("roomId");
+                resp.sendRedirect(base + "/webapp/search.jsp?roomId=" + roomId);
+                return;
+            }
         }
 
         resp.sendRedirect(base + "/guest/profile.jsp");

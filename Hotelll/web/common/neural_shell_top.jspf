@@ -1,0 +1,278 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%
+    String currentRole = (String) session.getAttribute("ROLE");
+    boolean isAdmin = currentRole != null && (currentRole.equalsIgnoreCase("ADMIN") || currentRole.equalsIgnoreCase("SUPERADMIN") || currentRole.equalsIgnoreCase("MANAGER"));
+%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/command_base.css">
+<style>
+    :root {
+        --hotel-gold: #B89A6C;
+        --hotel-cream: #FAF9F6;
+        --hotel-bone: #FDFCFB;
+        --hotel-text: #2C2722;
+    }
+    .sidebar-item {
+        transition: all 0.3s ease;
+        color: #70685F;
+        border-left: 3px solid transparent;
+        font-family: 'Inter', sans-serif;
+    }
+    .sidebar-item:hover {
+        background: rgba(184, 154, 108, 0.05); color: var(--hotel-gold); padding-left: 2.2rem;
+    }
+    .sidebar-item.active {
+        background: rgba(184, 154, 108, 0.1); color: var(--hotel-gold); border-left-color: var(--hotel-gold);
+        font-weight: 600;
+    }
+    .boutique-glass {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    html, body {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+    }
+</style>
+<aside class="w-72 h-screen boutique-glass flex-shrink-0 flex flex-col z-50 border-r border-hotel-gold/10 sticky top-0">
+    <div class="h-28 flex items-center px-8 border-b border-hotel-gold/10 relative overflow-hidden bg-hotel-bone">
+        <div class="w-12 h-12 rounded-xl bg-hotel-gold/10 flex items-center justify-center text-hotel-gold border border-hotel-gold/20 mr-4">
+            <span class="material-symbols-outlined text-3xl">local_hotel</span>
+        </div>
+        <div>
+            <h1 class="font-serif text-lg font-bold tracking-widest uppercase text-hotel-text leading-tight">Smart<br/>Hotel</h1>
+            <p class="text-[8px] text-hotel-gold font-bold tracking-[0.2em] uppercase opacity-70">Management</p>
+        </div>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto py-10 space-y-1 no-scrollbar">
+        <p class="px-8 mb-4 text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] opacity-40">Tổng Quan</p>
+        
+        <c:if test="<%= isAdmin %>">
+            <a href="${pageContext.request.contextPath}/admin" class="sidebar-item ${(not empty param.active ? param.active : active) == 'dashboard' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+                <span class="material-symbols-outlined mr-4 text-[20px]">analytics</span> Dashboard
+            </a>
+        </c:if>
+        
+        <p class="px-8 mt-12 mb-4 text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] opacity-40">Vận Hành</p>
+        
+        <c:if test="<%= isAdmin %>">
+            <a href="${pageContext.request.contextPath}/admin/customers" class="sidebar-item ${(not empty param.active ? param.active : active) == 'crm' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+                <span class="material-symbols-outlined mr-4 text-[20px]">face</span> Quản Lý Khách
+            </a>
+        </c:if>
+        
+        <a href="${pageContext.request.contextPath}/RoomServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'rooms' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+            <span class="material-symbols-outlined mr-4 text-[20px]">bed</span> Sơ Đồ Phòng
+        </a>
+
+        <c:if test="<%= isAdmin %>">
+            <a href="${pageContext.request.contextPath}/admin/bookings" class="sidebar-item ${(not empty param.active ? param.active : active) == 'bookings' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+                <span class="material-symbols-outlined mr-4 text-[20px]">calendar_month</span> Quản Lý Đặt Phòng
+            </a>
+        </c:if>
+ 
+        <a href="${pageContext.request.contextPath}/reception" class="sidebar-item ${(not empty param.active ? param.active : active) == 'reception' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+            <span class="material-symbols-outlined mr-4 text-[20px]">concierge</span> Tiếp Tân
+        </a>
+        
+        <c:if test="<%= isAdmin %>">
+            <a href="${pageContext.request.contextPath}/products" class="sidebar-item ${(not empty param.active ? param.active : active) == 'inventory' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+                <span class="material-symbols-outlined mr-4 text-[20px]">inventory</span> Logistics
+            </a>
+ 
+            <p class="px-8 mt-12 mb-4 text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] opacity-40">Phân Tích</p>
+            
+            <a href="${pageContext.request.contextPath}/predict-revenue" class="sidebar-item ${(not empty param.active ? param.active : active) == 'ai' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em] text-hotel-gold hover:font-bold">
+                <span class="material-symbols-outlined mr-4 text-[20px]">query_stats</span> Dự Báo Doanh Thu
+            </a>
+        </c:if>
+    </nav>
+
+    <div class="p-8 border-t border-hotel-gold/10 bg-hotel-bone">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-xl border border-hotel-gold/20 p-0.5 shadow-sm">
+                <img src="https://ui-avatars.com/api/?name=<%= session.getAttribute("USER") != null ? session.getAttribute("USER") : "User" %>&background=B89A6C&color=FFFFFF&bold=true" class="rounded-lg" alt="User">
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-hotel-text uppercase tracking-widest"><%= session.getAttribute("USER") != null ? session.getAttribute("USER") : "Guest" %></p>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
+                    <p class="text-[8px] text-hotel-gold font-bold uppercase tracking-widest">Đang Hoạt Động</p>
+                </div>
+            </div>
+        </div>
+        <a href="${pageContext.request.contextPath}/logout" class="flex items-center justify-center w-full py-4 rounded-xl bg-white border border-hotel-gold/10 text-hotel-muted text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-hotel-gold hover:text-white hover:border-hotel-gold transition-all">
+            Đăng Xuất <span class="material-symbols-outlined text-sm ml-2">logout</span>
+        </a>
+    </div>
+</aside>
+
+<main class="flex-1 flex flex-col relative h-screen overflow-hidden bg-hotel-cream">
+    <header class="h-28 boutique-glass flex items-center justify-between px-12 z-40 border-b border-hotel-gold/10 relative">
+        <div class="flex items-center gap-4 relative">
+            <form action="${pageContext.request.contextPath}/RoomServlet" method="get" class="hidden md:flex items-center bg-white border border-hotel-gold/10 rounded-2xl px-6 py-3.5 w-[450px] group focus-within:border-hotel-gold focus-within:shadow-lg focus-within:shadow-hotel-gold/5 transition-all">
+                <span class="material-symbols-outlined text-hotel-gold opacity-50 group-focus-within:opacity-100 transition-opacity">search</span>
+                <input id="searchInput" name="search" class="bg-transparent border-none focus:ring-0 text-[11px] ml-4 w-full text-hotel-text placeholder-hotel-muted font-bold uppercase tracking-[0.2em]" placeholder="Hệ thống truy vấn thông tin..." type="text"/>
+            </form>
+        </div>
+        <div class="flex items-center gap-6">
+            <!-- Chuông thông báo (Click to toggle) -->
+            <div class="relative" id="notifContainer">
+                <button id="notifBell" onclick="toggleNotif()" class="w-12 h-12 rounded-xl bg-white border border-hotel-gold/10 flex items-center justify-center text-hotel-muted hover:text-hotel-gold hover:border-hotel-gold transition-all relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <c:if test="${not empty notifications}">
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full ring-2 ring-white font-bold">${fn:length(notifications)}</span>
+                    </c:if>
+                    <c:if test="${empty notifications}">
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-hotel-gold/60 text-white text-[8px] flex items-center justify-center rounded-full ring-2 ring-white font-bold">0</span>
+                    </c:if>
+                </button>
+
+                <!-- Dropdown Thông báo Real-time -->
+                <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-2xl border border-hotel-gold/10 z-[200] overflow-hidden" style="box-shadow:0 25px 50px -12px rgba(0,0,0,0.12)">
+                    <div class="p-5 border-b border-hotel-gold/5 flex justify-between items-center bg-hotel-bone">
+                        <h4 class="text-[10px] font-bold text-hotel-text uppercase tracking-widest flex items-center gap-2">
+                            <span class="material-symbols-outlined text-hotel-gold text-sm">notifications_active</span>
+                            Thông báo gần đây
+                        </h4>
+                        <span class="px-2 py-0.5 bg-hotel-gold/10 text-hotel-gold text-[8px] font-bold rounded-full uppercase tracking-wider">${fn:length(notifications)} Mới</span>
+                    </div>
+
+                    <div class="max-h-[380px] overflow-y-auto divide-y divide-hotel-gold/5">
+                        <c:choose>
+                            <c:when test="${not empty notifications}">
+                                <c:forEach var="n" items="${notifications}">
+                                    <div class="p-4 hover:bg-hotel-cream/60 transition-colors cursor-pointer">
+                                        <div class="flex gap-3 items-start">
+                                            <%-- Icon màu dựa vào status --%>
+                                            <c:choose>
+                                                <c:when test="${n.status == 'Pending'}">
+                                                    <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0 border border-orange-100">
+                                                        <span class="material-symbols-outlined text-lg">pending_actions</span>
+                                                    </div>
+                                                </c:when>
+                                                <c:when test="${n.status == 'Confirmed' or n.status == 'Checked-in'}">
+                                                    <div class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center flex-shrink-0 border border-green-100">
+                                                        <span class="material-symbols-outlined text-lg">check_circle</span>
+                                                    </div>
+                                                </c:when>
+                                                <c:when test="${n.status == 'Cancelled'}">
+                                                    <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0 border border-red-100">
+                                                        <span class="material-symbols-outlined text-lg">cancel</span>
+                                                    </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0 border border-blue-100">
+                                                        <span class="material-symbols-outlined text-lg">hotel</span>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
+
+                                            <div class="flex-1 min-w-0">
+                                                <%-- Nội dung thông báo --%>
+                                                <c:choose>
+                                                    <c:when test="${n.status == 'Pending'}">
+                                                        <p class="text-[11px] font-semibold text-hotel-text leading-snug">
+                                                            Phòng <c:out value="${n.room.roomNumber}"/> - <c:out value="${n.customer.fullName}"/> vừa đặt phòng <c:out value="${n.room.roomType.typeName}"/>
+                                                        </p>
+                                                    </c:when>
+                                                    <c:when test="${n.status == 'Confirmed' or n.status == 'Checked-in'}">
+                                                        <p class="text-[11px] font-semibold text-hotel-text leading-snug">
+                                                            Thanh toán <fmt:formatNumber value="${n.totalAmount / 1000000}" pattern="#,##0.##"/>M VND từ phòng <c:out value="${n.room.roomNumber}"/> - Thành công
+                                                        </p>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <p class="text-[11px] font-semibold text-hotel-text leading-snug">
+                                                            Đặt phòng #<c:out value="${n.bookingID}"/> - <c:out value="${n.customer.fullName}"/> (<c:out value="${n.status}"/>)
+                                                        </p>
+                                                    </c:otherwise>
+                                                </c:choose>
+
+                                                <%-- Trạng thái badge --%>
+                                                <div class="flex items-center gap-2 mt-1.5">
+                                                    <p class="text-[9px] text-hotel-muted">Gần đây</p>
+                                                    <span class="text-hotel-muted/30">•</span>
+                                                    <c:choose>
+                                                        <c:when test="${n.status == 'Pending'}">
+                                                            <p class="text-[9px] text-orange-500 font-bold uppercase tracking-tight">Chờ xác nhận</p>
+                                                        </c:when>
+                                                        <c:when test="${n.status == 'Confirmed'}">
+                                                            <p class="text-[9px] text-green-600 font-bold uppercase tracking-tight">Đã xác nhận</p>
+                                                        </c:when>
+                                                        <c:when test="${n.status == 'Checked-in'}">
+                                                            <p class="text-[9px] text-green-600 font-bold uppercase tracking-tight">Đã nhận phòng</p>
+                                                        </c:when>
+                                                        <c:when test="${n.status == 'Cancelled'}">
+                                                            <p class="text-[9px] text-red-500 font-bold uppercase tracking-tight">Đã huỷ</p>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <p class="text-[9px] text-hotel-gold font-bold uppercase tracking-tight"><c:out value="${n.status}"/></p>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="p-12 text-center">
+                                    <span class="material-symbols-outlined text-4xl text-hotel-gold/20 block mb-3">notifications_off</span>
+                                    <p class="text-[10px] text-hotel-muted font-bold uppercase tracking-widest opacity-40">Chưa có thông báo</p>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+
+                    <a href="${pageContext.request.contextPath}/admin/bookings" class="flex items-center justify-center gap-2 w-full py-4 text-center bg-hotel-bone text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em] hover:bg-hotel-gold hover:text-white transition-all">
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        Xem tất cả thông báo
+                    </a>
+                </div>
+            </div>
+
+            <script>
+                function toggleNotif() {
+                    const dd = document.getElementById('notifDropdown');
+                    dd.classList.toggle('hidden');
+                }
+                document.addEventListener('click', function(e) {
+                    const container = document.getElementById('notifContainer');
+                    if (container && !container.contains(e.target)) {
+                        const dd = document.getElementById('notifDropdown');
+                        if (dd) dd.classList.add('hidden');
+                    }
+                });
+            </script>
+
+            <!-- Profile Area -->
+            <div class="flex items-center gap-5 pl-6 border-l border-hotel-gold/10">
+                <div class="text-right">
+                    <p class="text-[10px] font-bold text-hotel-text uppercase tracking-widest"><%= session.getAttribute("USER") != null ? session.getAttribute("USER") : "User" %></p>
+                    <div class="flex items-center justify-end gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <p class="text-[8px] text-hotel-gold font-bold uppercase tracking-widest">Đang Hoạt Động</p>
+                    </div>
+                </div>
+                <div class="w-12 h-12 rounded-xl border border-hotel-gold/20 p-0.5 shadow-sm">
+                    <img src="https://ui-avatars.com/api/?name=<%= session.getAttribute("USER") != null ? session.getAttribute("USER") : "User" %>&background=B89A6C&color=FFFFFF&bold=true" class="rounded-lg" alt="User">
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="flex-1 overflow-y-auto p-12 space-y-12">
+<%@ include file="/common/toast.jspf" %>
+

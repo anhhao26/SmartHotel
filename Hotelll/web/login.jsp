@@ -1,90 +1,237 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>SmartHotel - Login</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { primary: "#135bec", "primary-dark": "#0e45b5", "background-light": "#f6f6f8", "surface-light": "#ffffff", "text-main": "#0d121b", "text-sub": "#4c669a", "border-light": "#e7ebf3", },
-                    fontFamily: { display: ["Plus Jakarta Sans", "sans-serif"], },
-                },
-            },
-        }
-    </script>
-</head>
-<body class="font-display bg-background-light text-text-main min-h-screen flex flex-col antialiased">
-    
-    <header class="w-full border-b border-border-light bg-surface-light px-6 py-4">
-        <div class="mx-auto flex max-w-7xl items-center justify-between">
-            <div class="flex items-center gap-3 text-primary">
-                <span class="material-symbols-outlined text-3xl">hotel_class</span>
-                <h2 class="text-text-main text-xl font-bold">SmartHotel</h2>
-            </div>
-            <div class="flex items-center gap-4">
-                <span class="text-text-sub text-sm">Chưa có tài khoản?</span>
-                <a href="<%=request.getContextPath()%>/guest/register.jsp" class="text-primary text-sm font-bold hover:underline">Đăng Ký</a>
-            </div>
-        </div>
-    </header>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+        <!DOCTYPE html>
+        <html lang="vi">
 
-    <main class="flex-1 flex flex-col md:flex-row h-[calc(100vh-80px)] overflow-hidden">
-<div class="relative w-full md:w-1/2 lg:w-3/5 h-64 md:h-auto bg-cover bg-center overflow-hidden" style="background-image: url('${pageContext.request.contextPath}/images/2690968.jpg');">            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-8 md:p-16 lg:p-24">
-                <h1 class="text-3xl md:text-5xl font-bold text-white mb-4">Trải nghiệm sự thanh lịch <br/>trong từng kỳ nghỉ.</h1>
-                <p class="text-gray-200 text-sm md:text-base max-w-md">Hãy để SmartHotel mang lại cho bạn những phút giây thư giãn tuyệt vời nhất.</p>
-            </div>
-        </div>
+        <head>
+            <meta charset="utf-8" />
+            <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+            <title>SmartHotel - Đăng Nhập Hội Viên</title>
 
-        <div class="w-full md:w-1/2 lg:w-2/5 flex items-center justify-center p-6 md:p-12 lg:p-16 bg-surface-light overflow-y-auto">
-            <div class="w-full max-w-md space-y-8">
-                <div class="text-center md:text-left space-y-2">
-                    <h2 class="text-3xl font-bold text-text-main tracking-tight">Đăng Nhập</h2>
-                    <p class="text-text-sub">Vui lòng nhập thông tin để tiếp tục.</p>
+            <!-- Premium Google Fonts -->
+            <link
+                href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap"
+                rel="stylesheet">
+            <link
+                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+                rel="stylesheet" />
+
+            <script src="https://cdn.tailwindcss.com"></script>
+            <script>
+                tailwind.config = {
+                    theme: {
+                        extend: {
+                            colors: {
+                                hotel: {
+                                    gold: "#B89A6C",
+                                    cream: "#FAF9F6",
+                                    bone: "#FDFCFB",
+                                    text: "#2C2722",
+                                    muted: "#70685F",
+                                }
+                            },
+                            fontFamily: {
+                                serif: ["Cormorant Garamond", "serif"],
+                                sans: ["Inter", "sans-serif"],
+                            }
+                        },
+                    },
+                }
+            </script>
+            <style>
+                body {
+                    background-color: #FAF9F6;
+                    color: #2C2722;
+                }
+
+                .input-elegant {
+                    background: #FFFFFF;
+                    border: 1px solid rgba(184, 154, 108, 0.1);
+                    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                    font-family: 'Inter', sans-serif;
+                }
+
+                .input-elegant:focus {
+                    outline: none;
+                    border-color: #B89A6C;
+                    background: #FFFFFF;
+                    box-shadow: 0 15px 30px -10px rgba(184, 154, 108, 0.15);
+                    transform: translateY(-2px);
+                }
+
+                .btn-hotel-gold {
+                    background: #B89A6C;
+                    color: white;
+                    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                    box-shadow: 0 10px 25px -5px rgba(184, 154, 108, 0.4);
+                    letter-spacing: 0.2em;
+                }
+
+                .btn-hotel-gold:hover {
+                    background: #2C2722;
+                    transform: translateY(-3px);
+                    box-shadow: 0 20px 40px -10px rgba(44, 39, 34, 0.3);
+                }
+
+                .social-light {
+                    background: #FFFFFF;
+                    border: 1px solid rgba(184, 154, 108, 0.1);
+                    transition: all 0.3s ease;
+                }
+
+                .social-light:hover {
+                    border-color: #B89A6C;
+                    background: #FDFCFB;
+                    transform: translateY(-3px);
+                    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+                }
+
+                .label-premium {
+                    font-family: 'Inter', sans-serif;
+                    font-size: 10px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.25em;
+                    color: #70685F;
+                    margin-bottom: 0.75rem;
+                    display: block;
+                    opacity: 0.8;
+                }
+            </style>
+        </head>
+
+        <body class="font-sans antialiased min-h-screen relative overflow-hidden bg-hotel-cream">
+
+            <main class="flex w-full h-screen overflow-hidden">
+
+                <!-- Left Half: Cinematic Imagery -->
+                <div class="hidden lg:flex w-[50%] relative overflow-hidden">
+                    <div class="absolute inset-0 bg-black/10 z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=2670&auto=format&fit=crop"
+                        class="absolute inset-0 w-full h-full object-cover grayscale-[0.2]" alt="SmartHotel Entrance">
+
+                    <div
+                        class="relative z-20 flex flex-col justify-end p-20 h-full max-w-2xl bg-gradient-to-t from-hotel-text/80 to-transparent">
+                        <div class="mb-6">
+                            <span class="text-hotel-gold text-xs font-bold uppercase tracking-[0.4em]">SmartHotel
+                                Boutique</span>
+                        </div>
+                        <h1 class="text-6xl font-serif text-white leading-tight mb-6">
+                            Hành trình <br> <span class="italic text-hotel-gold">Tận Hưởng.</span>
+                        </h1>
+                        <p class="text-white/70 text-sm font-light leading-relaxed tracking-wider uppercase">
+                            Đăng nhập để tiếp tục trải nghiệm không gian nghỉ dưỡng tinh tế và các dịch vụ cá nhân hóa
+                            đỉnh cao.
+                        </p>
+                    </div>
                 </div>
 
+                <!-- Right Half: Login Portal -->
+                <div class="w-full lg:w-[50%] flex flex-col relative bg-hotel-cream items-center justify-center p-8 overflow-y-auto min-h-screen">
+
+                    <div class="w-full max-w-md pt-12 lg:pt-0 space-y-8">
+                        <!-- Branding & Header -->
+                        <div class="text-center space-y-3">
+                            <a href="${pageContext.request.contextPath}/" class="inline-flex items-center gap-3 mb-2">
+                                <span class="material-symbols-outlined text-hotel-gold text-3xl">local_hotel</span>
+                                <h2 class="font-serif text-xl font-bold tracking-widest uppercase text-hotel-text">
+                                    SmartHotel</h2>
+                            </a>
+                            <h3 class="text-4xl font-serif font-bold text-hotel-text italic">Hành trình mới.</h3>
+                            <p class="text-hotel-muted text-[9px] font-bold uppercase tracking-[0.4em] opacity-60">Xác
+                                thực quyền truy cập hội viên</p>
+                        </div>
+                        <form action="${pageContext.request.contextPath}/login" method="post" class="space-y-8">
+
+                            <!-- Username Field -->
+                            <div class="space-y-2">
+                                <label class="label-premium ml-2">Tên Đăng Nhập</label>
+                                <div class="relative group">
+                                    <span
+                                        class="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-hotel-gold opacity-30 group-focus-within:opacity-100 transition-opacity">person</span>
+                                    <input
+                                        class="w-full h-20 pl-14 pr-8 input-elegant rounded-xl text-[16px] font-semibold text-hotel-text placeholder:text-hotel-muted/20"
+                                        name="username" required type="text" placeholder="Nhập tên đăng nhập của bạn" />
+                                </div>
+                            </div>
+
+                            <!-- Password Field -->
+                            <div class="space-y-2">
+                                <label class="label-premium ml-2">Mật Khẩu</label>
+                                <div class="relative group">
+                                    <span
+                                        class="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-hotel-gold opacity-30 group-focus-within:opacity-100 transition-opacity">lock</span>
+                                    <input
+                                        class="w-full h-20 pl-14 pr-8 input-elegant rounded-xl text-[16px] font-semibold text-hotel-text tracking-[0.5em] placeholder:tracking-normal placeholder:text-hotel-muted/20"
+                                        name="password" required type="password" placeholder="••••••••" />
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="pt-6">
+                                <button type="submit"
+                                    class="w-full h-18 px-[30px] rounded-2xl font-bold text-[14px] tracking-[0.4em] uppercase btn-hotel-gold flex items-center justify-center gap-6 group shadow-2xl hover:shadow-hotel-gold/40">
+                                    VÀO SẢNH HỘI VIÊN <span
+                                        class="material-symbols-outlined text-xl group-hover:translate-x-3 transition-transform">east</span>
+                                </button>
+                            </div>
+
+                            <!-- Divider -->
+                            <div class="relative flex items-center py-4">
+                                <div class="flex-grow border-t border-hotel-gold/10"></div>
+                                <span
+                                    class="flex-shrink-0 mx-6 text-hotel-muted text-[8px] font-bold tracking-[0.3em] uppercase opacity-40">Hoặc
+                                    tiếp tục với</span>
+                                <div class="flex-grow border-t border-hotel-gold/10"></div>
+                            </div>
+
+                            <!-- Social Login -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/Hotelll/login/google&response_type=code&client_id=899831105462-9sidfcfujl3lbktmp5akimbnc2dc6ehi.apps.googleusercontent.com&prompt=consent"
+                                    class="social-light flex justify-center items-center h-16 rounded-sm gap-3 font-bold text-[9px] uppercase tracking-widest text-hotel-muted hover:text-hotel-gold">
+                                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google"
+                                        class="w-5 h-5" />
+                                    Google
+                                </a>
+                                <a href="https://www.facebook.com/dialog/oauth?client_id=969411312109569&redirect_uri=http://localhost:8080/Hotelll/login/facebook&scope=email,public_profile"
+                                    class="social-light flex justify-center items-center h-16 rounded-sm gap-3 font-bold text-[9px] uppercase tracking-widest text-hotel-muted hover:text-[#1877F2]">
+                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                                    </svg>
+                                    Facebook
+                                </a>
+                            </div>
+                        </form>
+
+                        <div class="pt-6 text-center border-t border-hotel-gold/5">
+                            <p class="text-[11px] font-bold text-hotel-muted uppercase tracking-[0.2em] mb-4">
+                                Chưa có tài khoản?
+                            </p>
+                            <a href="${pageContext.request.contextPath}/guest/register.jsp"
+                                class="inline-flex items-center justify-center px-12 h-14 border border-hotel-gold/30 rounded-xl text-hotel-gold hover:bg-hotel-gold hover:text-white font-bold text-[10px] tracking-widest uppercase transition-all shadow-sm">
+                                Đăng ký tham gia hội viên
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Footer Small -->
+                    <div class="absolute bottom-8 text-[8px] text-hotel-muted uppercase tracking-[0.4em] opacity-40">
+                        © 2026 SmartHotel Management • Harmony Interface V4
+                    </div>
+                </div>
+            </main>
+
+            <%-- Error Handling with Toast --%>
                 <c:if test="${not empty param.err}">
-                    <div class="bg-red-50 text-red-600 p-4 rounded-xl text-sm font-bold border border-red-100 flex items-center gap-2">
-                        <span class="material-symbols-outlined">error</span> ${param.err}
-                    </div>
+                    <script>window.onload = () => showToast("${param.err}", "error");</script>
                 </c:if>
-                <% String err = (String) request.getAttribute("err"); if (err != null) { %>
-                    <div class="bg-red-50 text-red-600 p-4 rounded-xl text-sm font-bold border border-red-100 flex items-center gap-2">
-                        <span class="material-symbols-outlined">error</span> <%= err %>
-                    </div>
-                <% } %>
+                <% String authErr=(String) request.getAttribute("err"); if (authErr !=null) { %>
+                    <script>window.onload = () => showToast("<%= authErr %>", "error");</script>
+                    <% } %>
 
-                <form action="${pageContext.request.contextPath}/login" method="post" class="space-y-6 mt-4">
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-semibold text-text-main">Tên đăng nhập (Username)</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-sub"><span class="material-symbols-outlined text-[20px]">person</span></div>
-                            <input class="block w-full pl-10 pr-4 py-3 border border-border-light rounded-xl focus:ring-primary focus:border-primary" name="username" required type="text" placeholder="Nhập username..."/>
-                        </div>
-                    </div>
+                        <%@ include file="/common/toast.jspf" %>
+        </body>
 
-                    <div class="space-y-1.5">
-                        <label class="block text-sm font-semibold text-text-main">Mật khẩu (Password)</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-sub"><span class="material-symbols-outlined text-[20px]">lock</span></div>
-                            <input class="block w-full pl-10 pr-4 py-3 border border-border-light rounded-xl focus:ring-primary focus:border-primary" name="password" required type="password" placeholder="••••••••"/>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-md text-sm font-bold text-white bg-primary hover:bg-primary-dark transition-all transform active:scale-95">Đăng Nhập</button>
-                </form>
-
-                <div class="pt-6 flex items-center justify-center gap-2 text-xs text-text-sub opacity-70">
-                    <span class="material-symbols-outlined text-[16px]">lock</span> Mọi thông tin đều được bảo mật an toàn.
-                </div>
-            </div>
-        </div>
-    </main>
-</body>
-</html>
+        </html>

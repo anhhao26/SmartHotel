@@ -1,9 +1,9 @@
-package com.smarthotel.service;
+package service;
 
-import com.smarthotel.dao.InventoryDAO;
-import com.smarthotel.dao.BookingDAO;
-import com.smarthotel.model.*;
-import com.smarthotel.util.JPAUtil;
+import dao.InventoryDAO;
+import dao.BookingDAO;
+import model.*;
+import util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import java.util.Date;
@@ -16,7 +16,7 @@ public class BillingService {
     /**
      * Process check-in: 
      * - Cập nhật booking.status = "Checked-in"
-     * - Cập nhật room.status = "Occupied" (Theo đúng yêu cầu Module 4 & 7)
+     * - ĐỔI LẠI THÀNH OCCUPIED: Vì khách đã thực sự xách vali vào phòng
      */
     public boolean processCheckIn(int bookingId) {
         EntityManager em = JPAUtil.getEntityManager();
@@ -30,15 +30,15 @@ public class BillingService {
             }
             
             b.setStatus("Checked-in"); 
-            em.merge(b);
 
-            // SỬA LỖI 1: Lấy Object Room thông qua hàm getRoom() thay vì getRoomID()
+            // ĐÃ MỞ KHÓA: Đổi trạng thái phòng thành Đang có khách (Occupied)
             Room rm = b.getRoom();
             if (rm != null) {
                 rm.setStatus("Occupied");
                 em.merge(rm);
             }
-
+            
+            em.merge(b);
             em.getTransaction().commit();
             return true;
         } catch (Exception ex) {
@@ -100,7 +100,6 @@ public class BillingService {
             // 3) Tính tiền items từ Minibar & Trừ kho
             if (items != null) {
                 for (CartItem ci : items) {
-                    // SỬA LỖI 2: Dùng getItemID() (chữ D viết hoa) theo đúng model của bạn
                     int iid = ci.getItemID();
                     int qty = ci.getQuantity();
 
@@ -142,7 +141,7 @@ public class BillingService {
                 em.merge(rm);
             }
 
-            // 5) Update Customer (CRM - Loyalty)
+            // 5) Update Customer (CRM - Loyalty) CHỈ CỘNG ĐIỂM Ở ĐÂY ĐỂ KHÔNG BỊ NHÂN ĐÔI
             if (cust != null) {
                 double prevTotal = cust.getTotalSpending() == null ? 0.0 : cust.getTotalSpending();
                 double newTotal = prevTotal + subtotal;

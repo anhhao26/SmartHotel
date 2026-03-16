@@ -1,8 +1,8 @@
-package com.smarthotel.dao;
+package dao;
 
-import com.smarthotel.model.Inventory;
-import com.smarthotel.model.ImportHistory;
-import com.smarthotel.util.JPAUtil;
+import model.Inventory;
+import model.ImportHistory;
+import util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.LockModeType;
@@ -31,7 +31,7 @@ public class InventoryDAO {
     public List<Inventory> findActiveOnly() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            return em.createQuery("SELECT i FROM Inventory i WHERE i.isActive = true ORDER BY i.itemID ASC", Inventory.class).getResultList();
+            return em.createQuery("SELECT i FROM Inventory i WHERE i.isActive = true AND i.quantity >= 0 ORDER BY i.itemID ASC", Inventory.class).getResultList();
         } finally { em.close(); }
     }
 
@@ -56,11 +56,13 @@ public class InventoryDAO {
     }
 
     public void importStock(int itemId, int quantityToAdd, double newCostPrice) {
+        if (quantityToAdd <= 0) return;
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction trans = em.getTransaction();
         try {
             trans.begin();
-            Inventory p = em.find(Inventory.class, itemId);
+            // Use pessimistic lock to prevent concurrent update issues
+            Inventory p = findWithPessimisticLock(itemId, em);
             if (p != null) {
                 p.setCostPrice(newCostPrice);
                 p.setQuantity(p.getQuantity() + quantityToAdd);
@@ -74,10 +76,13 @@ public class InventoryDAO {
                 
                 em.persist(history);
                 em.merge(p);
+                trans.commit();
+            } else {
+                trans.rollback();
             }
-            trans.commit();
         } catch (Exception e) {
-            trans.rollback(); e.printStackTrace();
+            if (trans.isActive()) trans.rollback();
+            e.printStackTrace();
         } finally { em.close(); }
     }
 

@@ -1,339 +1,426 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="com.smarthotel.service.CustomerService" %>
-<%@ page import="com.smarthotel.model.Customer" %>
-<!DOCTYPE html>
-<html class="light" lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>SmartHotel - Guest Portal</title>
-    <meta content="Manage your SmartHotel profile and book your next stay." name="description"/>
-    <link href="https://fonts.googleapis.com" rel="preconnect"/>
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#2563EB", 
-                        secondary: "#D97706", 
-                        "background-light": "#F3F4F6",
-                        "background-dark": "#111827",
-                        "surface-light": "#FFFFFF",
-                        "surface-dark": "#1F2937",
-                        "text-light": "#1F2937",
-                        "text-dark": "#F9FAFB",
-                        "accent-gold": "#F59E0B",
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "sans-serif"],
-                        display: ["Playfair Display", "serif"],
-                    },
-                    borderRadius: { DEFAULT: "0.5rem", },
-                },
-            },
-        };
-    </script>
-    <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
-    </style>
-</head>
-<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 min-h-screen flex flex-col">
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page import="service.CustomerService" %>
+<%@ page import="model.Customer" %>
+                <!DOCTYPE html>
+                <html lang="vi">
 
-<%
-  Object o = session.getAttribute("acc");
-  if (o == null) { response.sendRedirect(request.getContextPath()+"/login.jsp"); return; }
-  Integer cid = (Integer) session.getAttribute("CUST_ID");
-  if (cid == null) { response.sendRedirect(request.getContextPath()+"/login.jsp"); return; }
+                <head>
+                    <meta charset="utf-8" />
+                    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+                    <title>SmartHotel - Hồ Sơ Hội Viên</title>
 
-  CustomerService cs = new CustomerService();
-  Customer cus = cs.getById(cid);
-  if (cus == null) { out.println("<div class='p-4 text-center text-red-500 font-bold'>Không tìm thấy thông tin khách!</div>"); return; }
-  
-  boolean isVip = cus.getMemberType() != null && cus.getMemberType().toUpperCase().contains("VIP");
-%>
+                    <!-- Premium Fonts -->
+                    <link
+                        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@100;300;400;500;700;900&display=swap"
+                        rel="stylesheet">
+                    <link
+                        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+                        rel="stylesheet" />
+                    <script src="https://unpkg.com/alpinejs" defer></script>
 
-<nav class="sticky top-0 z-50 bg-primary shadow-lg dark:border-b dark:border-gray-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-            <a href="<%=request.getContextPath()%>/" class="flex items-center gap-2">
-                <span class="material-icons-round text-white text-3xl">domain</span>
-                <span class="font-display font-bold text-2xl text-white tracking-wide">SmartHotel</span>
-            </a>
-            <div class="flex items-center gap-4">
-                <div class="hidden md:flex items-center gap-2 text-white/90 text-sm">
-                    <span>Welcome, <%= cus.getFullName() %></span>
-                </div>
-                <a href="<%=request.getContextPath()%>/logout" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors border border-white/20">
-                    Sign Out
-                </a>
-            </div>
-        </div>
-    </div>
-</nav>
+                    <script src="https://cdn.tailwindcss.com"></script>
+                    <script>
+                        tailwind.config = {
+                            theme: {
+                                extend: {
+                                    colors: {
+                                        hotel: {
+                                            gold: "#B89A6C",
+                                            cream: "#FAF9F6",
+                                            bone: "#FDFCFB",
+                                            text: "#2C2722",
+                                            muted: "#70685F",
+                                            chocolate: "#4A4238",
+                                        }
+                                    },
+                                    fontFamily: {
+                                        serif: ["Cormorant Garamond", "serif"],
+                                        sans: ["Inter", "Be Vietnam Pro", "sans-serif"],
+                                    }
+                                },
+                            },
+                        }
+                    </script>
+                    <style>
+                        body {
+                            background-color: #FAF9F6;
+                            color: #2C2722;
+                        }
 
-<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-    <div class="mb-8">
-        <h1 class="text-3xl font-display font-bold text-gray-900 dark:text-white">Guest Portal</h1>
-        <p class="text-gray-500 dark:text-gray-400 mt-1">Quản lý thông tin cá nhân và lịch sử đặt phòng của bạn.</p>
-    </div>
+                        .card-elegant {
+                            background: #FFFFFF;
+                            border: 1px solid rgba(184, 154, 108, 0.15);
+                            box-shadow: 0 20px 40px -15px rgba(74, 66, 56, 0.08);
+                            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+                        }
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div class="lg:col-span-4 space-y-6">
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden">
-                <div class="relative h-24 bg-gradient-to-r from-primary to-blue-600">
-                    <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2">
-                        <div class="w-20 h-20 rounded-full bg-surface-light dark:bg-surface-dark border-4 border-surface-light dark:border-surface-dark flex items-center justify-center shadow-md">
-                            <span class="material-icons-round text-4xl text-gray-400 dark:text-gray-500">person</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="pt-12 pb-6 px-6 text-center">
-                    <h2 class="text-xl font-bold text-primary dark:text-blue-400"><%= cus.getFullName() %></h2>
-                    
-                    <div class="mt-2 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium <%= isVip ? "bg-secondary text-white" : "bg-gray-200 text-gray-700" %> shadow-sm">
-                        <span class="material-icons-round text-sm mr-1"><%= isVip ? "stars" : "badge" %></span> 
-                        <%= cus.getMemberType() != null ? cus.getMemberType() : "Standard Member" %>
-                    </div>
-                    
-                    <div class="mt-6 grid grid-cols-2 gap-4 border-t border-gray-100 dark:border-gray-700 pt-6">
-                        <div class="text-center">
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Điểm thưởng</p>
-                            <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= cus.getPoints() %> Pts</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Tổng chi tiêu</p>
-                            <p class="text-lg font-bold text-red-500 dark:text-red-400"><%= String.format("%,.0f", cus.getTotalSpending()) %> ₫</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        .card-elegant:hover {
+                            border-color: #B89A6C;
+                            transform: translateY(-8px);
+                            box-shadow: 0 30px 60px -20px rgba(184, 154, 108, 0.15);
+                        }
 
-            <div class="bg-accent-gold/10 dark:bg-accent-gold/5 rounded-xl border border-accent-gold/30 p-6 text-center">
-                <span class="material-icons-round text-4xl text-accent-gold mb-2">hotel</span>
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Sẵn sàng cho kỳ nghỉ mới?</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Khám phá các hạng phòng cao cấp và tận hưởng kỳ nghỉ của bạn.</p>
-                <a href="<%=request.getContextPath()%>/rooms" class="w-full bg-accent-gold hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded shadow-md transition-colors flex items-center justify-center gap-2">
-                    <span class="material-icons-round text-sm">search</span> Khám Phá Phòng
-                </a>
-                <a href="<%=request.getContextPath()%>/guest/history.jsp" class="w-full mt-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 font-medium py-2 px-4 rounded shadow-sm transition-colors flex items-center justify-center">
-                    Xem Lịch Sử Đặt Phòng
-                </a>
-            </div>
-        </div>
+                        .input-elegant {
+                            background: #FDFCFB;
+                            border: 1px solid rgba(184, 154, 108, 0.1);
+                            color: #2C2722;
+                            transition: all 0.4s ease;
+                        }
 
-        <div class="lg:col-span-8">
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden min-h-[500px]">
-                <div class="border-b border-gray-200 dark:border-gray-700">
-                    <nav class="-mb-px flex">
-                        <button class="w-full py-4 px-1 text-center border-b-2 border-primary text-primary font-medium text-sm flex items-center justify-center gap-2 bg-primary/5">
-                            <span class="material-icons-round text-lg">badge</span> Chi Tiết Hồ Sơ
-                        </button>
-                    </nav>
-                </div>
-                
-                <div class="p-6 sm:p-8">
-                    <form action="${pageContext.request.contextPath}/updateProfile" method="post" class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Họ và Tên</label>
-                                <input name="fullName" value="<%= cus.getFullName() %>" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2 px-3 font-bold" type="text" required/>
+                        .input-elegant:focus {
+                            outline: none;
+                            border-color: #B89A6C;
+                            background: #FFFFFF;
+                            box-shadow: 0 0 20px rgba(184, 154, 108, 0.1);
+                        }
+
+                        .avatar-frame {
+                            position: relative;
+                            padding: 8px;
+                            background: linear-gradient(135deg, #B89A6C 0%, #FAF9F6 100%);
+                            border-radius: 50%;
+                        }
+
+                        .btn-hotel-gold {
+                            background: #B89A6C;
+                            color: white;
+                            transition: all 0.4s ease;
+                        }
+
+                        .btn-hotel-gold:hover {
+                            background: #2C2722;
+                            transform: translateY(-2px);
+                            box-shadow: 0 10px 20px rgba(184, 154, 108, 0.2);
+                        }
+
+                        .nav-item {
+                            position: relative;
+                            transition: all 0.3s;
+                        }
+
+                        .nav-item::after {
+                            content: '';
+                            position: absolute;
+                            bottom: -4px;
+                            left: 0;
+                            width: 0;
+                            height: 1.5px;
+                            background: #B89A6C;
+                            transition: all 0.3s;
+                        }
+
+                        .nav-item:hover::after {
+                            width: 100%;
+                        }
+
+                        ::-webkit-scrollbar-thumb {
+                            background: #B89A6C;
+                            border-radius: 10px;
+                        }
+
+                        .label-premium {
+                            font-family: 'Inter', sans-serif;
+                            font-size: 10px;
+                            font-weight: 700;
+                            text-transform: uppercase;
+                            letter-spacing: 0.25em;
+                            color: #70685F;
+                            margin-bottom: 0.5rem;
+                            display: block;
+                            opacity: 0.8;
+                        }
+                    </style>
+                </head>
+
+                <body class="font-sans antialiased min-h-screen relative bg-hotel-cream">
+
+
+                <% Object logSession = session.getAttribute("acc"); if (logSession == null) { response.sendRedirect(request.getContextPath() + "/login.jsp"); return; } Integer cid = (Integer) session.getAttribute("CUST_ID"); if (cid == null) { response.sendRedirect(request.getContextPath() + "/login.jsp"); return; } service.CustomerService cs = new service.CustomerService(); model.Customer cus = cs.getById(cid); if (cus == null) { out.print("<div class='p-24 text-center text-hotel-gold font-serif text-3xl italic tracking-tight'>Không tìm thấy thông tin hội viên.</div>"); return; } %>
+
+
+                        <!-- Premium Navigation -->
+                        <header
+                            class="sticky top-0 z-50 w-full border-b border-hotel-gold/10 bg-white/80 backdrop-blur-xl">
+                            <div class="mx-auto flex h-24 max-w-[1700px] items-center justify-between px-12 md:px-24">
+                                <a href="<%=request.getContextPath()%>/" class="flex items-center gap-5 group">
+                                    <div
+                                        class="w-12 h-12 rounded-sm bg-hotel-gold/5 border border-hotel-gold/20 flex items-center justify-center transition-transform duration-500">
+                                        <span class="material-symbols-outlined text-hotel-gold text-3xl">hotel</span>
+                                    </div>
+                                    <div>
+                                        <h2
+                                            class="text-hotel-text text-xl font-serif font-bold tracking-tight uppercase leading-none">
+                                            SmartHotel</h2>
+                                        <span class="text-[8px] font-bold text-hotel-gold uppercase tracking-widest">HỒ
+                                            SƠ HỘI VIÊN</span>
+                                    </div>
+                                </a>
+
+                                <nav class="hidden lg:flex items-center gap-16">
+                                    <a href="<%=request.getContextPath()%>/rooms"
+                                        class="nav-item text-[10px] font-bold uppercase tracking-widest text-hotel-muted hover:text-hotel-gold">KHÁCH
+                                        SẠN</a>
+                                    <a href="<%=request.getContextPath()%>/guest/history.jsp"
+                                        class="nav-item text-[10px] font-bold uppercase tracking-widest text-hotel-muted hover:text-hotel-gold">LỊCH
+                                        SỬ</a>
+                                    <div class="h-6 w-[1px] bg-hotel-gold/20"></div>
+                                    <a href="<%=request.getContextPath()%>/logout"
+                                        class="flex items-center gap-3 text-red-500/60 hover:text-red-600 transition-all group">
+                                        <span class="text-[10px] font-bold uppercase tracking-widest">ĐĂNG XUẤT</span>
+                                        <span
+                                            class="material-symbols-outlined text-xl group-hover:rotate-90 transition-transform">logout</span>
+                                    </a>
+                                </nav>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">CCCD / Passport</label>
-                                <input name="cccd" value="<%= cus.getCccdPassport()!=null?cus.getCccdPassport():"" %>" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2 px-3" type="text"/>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Số Điện Thoại</label>
-                                <div class="mt-1 relative rounded-md shadow-sm">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span class="material-icons-round text-gray-400 text-sm">phone</span></div>
-                                    <input name="phone" value="<%= cus.getPhone()!=null?cus.getPhone():"" %>" class="block w-full pl-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-gray-900 dark:text-white focus:border-primary focus:ring-primary sm:text-sm py-2 px-3" type="text"/>
+                        </header>
+
+                        <main class="max-w-[1700px] mx-auto px-12 md:px-24 py-24 w-full">
+
+                            <div class="flex flex-col lg:flex-row gap-20">
+
+                                <!-- Left Pillar: Member Profile -->
+                                <div class="w-full lg:w-[450px] space-y-12">
+
+                                    <!-- Avatar Card -->
+                                    <div class="card-elegant rounded-sm p-16 relative overflow-hidden bg-white">
+                                        <div class="flex flex-col items-center space-y-10 relative z-10">
+                                            <div class="relative w-56 h-56 group/avatar">
+                                                <div class="avatar-frame w-full h-full">
+                                                    <div
+                                                        class="w-full h-full rounded-full bg-hotel-bone border-2 border-white flex items-center justify-center relative overflow-hidden p-1 shadow-inner">
+                                                        <span
+                                                            class="material-symbols-outlined text-9xl text-hotel-gold/10">person</span>
+                                                        <div
+                                                            class="absolute inset-0 bg-hotel-gold/10 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer backdrop-blur-sm">
+                                                            <span
+                                                                class="material-symbols-outlined text-hotel-gold text-4xl">photo_camera</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-hotel-gold border-4 border-white flex items-center justify-center shadow-lg">
+                                                    <span
+                                                        class="material-symbols-outlined text-sm text-white font-bold">verified</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="text-center space-y-4">
+                                                <h2
+                                                    class="text-4xl font-serif font-bold text-hotel-text tracking-tight uppercase leading-tight">
+                                                    <%= cus.getFullName() !=null ? cus.getFullName() : "CHƯA CẬP NHẬT"
+                                                        %>
+                                                </h2>
+                                                <div
+                                                    class="inline-flex items-center px-8 py-2.5 rounded-sm border border-hotel-gold/30 bg-hotel-gold/5">
+                                                    <span
+                                                        class="text-[10px] font-bold text-hotel-gold uppercase tracking-widest">
+                                                        <%= cus.getMemberType() !=null ?
+                                                            cus.getMemberType().toUpperCase() : "HỘI VIÊN TIÊU CHUẨN" %>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Member Metrics -->
+                                            <div
+                                                class="grid grid-cols-2 gap-6 w-full pt-12 border-t border-hotel-gold/10">
+                                                <div class="text-center">
+                                                    <p
+                                                        class="text-[9px] text-hotel-muted font-bold tracking-widest uppercase mb-2">
+                                                        ĐIỂM THƯỞNG</p>
+                                                    <p class="text-3xl font-serif font-bold text-hotel-gold">
+                                                        <%= cus.getPoints() !=null ? cus.getPoints() : 0 %>
+                                                    </p>
+                                                </div>
+                                                <div class="text-center">
+                                                    <p
+                                                        class="text-[9px] text-hotel-muted font-bold tracking-widest uppercase mb-2">
+                                                        CHI TIÊU</p>
+                                                    <p class="text-2xl font-serif font-bold text-hotel-text">
+                                                        <%= cus.getTotalSpending() !=null ? String.format("%,.0f",
+                                                            cus.getTotalSpending()) : "0" %><span
+                                                                class="text-xs ml-1 text-hotel-gold font-sans">đ</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Strategic Shortcuts -->
+                                    <div
+                                        class="card-elegant rounded-sm p-12 space-y-8 border-l-4 border-l-hotel-gold relative bg-white">
+                                        <h3
+                                            class="text-xs font-serif font-bold text-hotel-text uppercase tracking-widest flex items-center gap-3">
+                                            <span class="w-2 h-2 rounded-full bg-hotel-gold"></span>
+                                            TIỆN ÍCH NHANH
+                                        </h3>
+                                        <div class="grid grid-cols-1 gap-4">
+                                            <a href="<%=request.getContextPath()%>/rooms"
+                                                class="w-full h-18 py-5 rounded-sm bg-hotel-gold text-white font-bold text-[10px] tracking-widest uppercase flex items-center justify-center gap-4 hover:bg-hotel-text transition-all active:scale-95 group">
+                                                KHÁM PHÁ PHÒNG <span
+                                                    class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">king_bed</span>
+                                            </a>
+                                            <a href="<%=request.getContextPath()%>/guest/history.jsp"
+                                                class="w-full h-18 py-5 rounded-sm border border-hotel-gold/20 text-hotel-muted font-bold text-[10px] tracking-widest uppercase flex items-center justify-center gap-4 hover:bg-hotel-gold/5 hover:text-hotel-gold transition-all group">
+                                                LỊCH SỬ ĐẶT PHÒNG <span
+                                                    class="material-symbols-outlined text-lg">calendar_month</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Pillar: Infomation Nucleus -->
+                                <div class="flex-1 space-y-12">
+
+                                    <div class="card-elegant rounded-sm overflow-hidden bg-white">
+                                        <div
+                                            class="px-16 py-10 bg-hotel-gold/5 border-b border-hotel-gold/10 flex items-center justify-between">
+                                            <div class="flex items-center gap-5">
+                                                <span
+                                                    class="material-symbols-outlined text-hotel-gold text-3xl">badge</span>
+                                                <div>
+                                                    <h3
+                                                        class="text-[11px] font-bold text-hotel-text uppercase tracking-widest">
+                                                        THÔNG TIN CƠ BẢN</h3>
+                                                    <p
+                                                        class="text-[8px] text-hotel-gold font-bold uppercase tracking-widest mt-1">
+                                                        Trạng thái: Đã xác thực thông tin</p>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="flex items-center gap-2 text-hotel-gold font-bold text-[9px] tracking-widest opacity-60">
+                                                Dữ liệu bảo mật <span
+                                                    class="material-symbols-outlined text-xs">verified_user</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="p-16 lg:p-20">
+                                            <form action="${pageContext.request.contextPath}/updateProfile"
+                                                method="post" class="space-y-16">
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+                                                    <div class="space-y-1 group">
+                                                        <label class="label-premium ml-1 group-focus-within:text-hotel-gold transition-colors">Danh xưng hội viên (Full Name)</label>
+                                                        <input name="fullName"
+                                                            value="<%= cus.getFullName() != null ? cus.getFullName() : "" %>"
+                                                            required
+                                                            class="w-full h-18 px-10 rounded-xl input-elegant font-serif font-bold text-2xl tracking-tight text-hotel-text border-hotel-gold/10"
+                                                            type="text" />
+                                                    </div>
+
+                                                    <div class="space-y-1 group">
+                                                        <label class="label-premium ml-1 group-focus-within:text-hotel-gold transition-colors">Định danh pháp lý (ID / Passport)</label>
+                                                        <input name="cccd"
+                                                            value="<%= cus.getCccdPassport() != null ? cus.getCccdPassport() : "" %>"
+                                                            class="w-full h-18 px-10 rounded-xl input-elegant font-bold text-xl tracking-widest uppercase text-hotel-text border-hotel-gold/10"
+                                                            type="text" placeholder="CHƯA CẬP NHẬT" />
+                                                    </div>
+
+                                                    <div class="space-y-1 group">
+                                                        <label class="label-premium ml-1 group-focus-within:text-hotel-gold transition-colors">Liên lạc di động (Phone)</label>
+                                                        <div class="relative">
+                                                            <input name="phone"
+                                                                value="<%= cus.getPhone() != null ? cus.getPhone() : "" %>"
+                                                                class="w-full h-18 px-10 rounded-xl input-elegant font-bold text-xl tracking-wide text-hotel-text border-hotel-gold/10"
+                                                                type="text" />
+                                                            <span
+                                                                class="material-symbols-outlined absolute right-10 top-1/2 -translate-y-1/2 text-hotel-gold/30 group-focus-within:text-hotel-gold transition-colors">phone_iphone</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="space-y-1 group">
+                                                        <label class="label-premium ml-1 group-focus-within:text-hotel-gold transition-colors">Địa chỉ thư điện tử (Email)</label>
+                                                        <div class="relative">
+                                                            <input name="email"
+                                                                value="<%= cus.getEmail() != null ? cus.getEmail() : "" %>"
+                                                                class="w-full h-18 px-10 rounded-xl input-elegant font-bold text-lg text-hotel-text border-hotel-gold/10"
+                                                                type="email" />
+                                                            <span
+                                                                class="material-symbols-outlined absolute right-10 top-1/2 -translate-y-1/2 text-hotel-gold/30 group-focus-within:text-hotel-gold transition-colors">mail</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="space-y-1 group">
+                                                        <label class="label-premium ml-1 group-focus-within:text-hotel-gold transition-colors">Quốc tịch (Nationality)</label>
+                                                        <input name="nationality"
+                                                            value="<%= cus.getNationality() != null ? cus.getNationality() : "" %>"
+                                                            class="w-full h-18 px-10 rounded-xl input-elegant font-bold text-xl uppercase tracking-widest text-hotel-text border-hotel-gold/10"
+                                                            type="text" placeholder="VIỆT NAM" />
+                                                    </div>
+
+                                                    <div class="space-y-1 group">
+                                                        <label class="label-premium ml-1 group-focus-within:text-hotel-gold transition-colors">Ngày sinh nhật (Birth Date)</label>
+                                                        <% String birthVal="" ; if (cus.getDateOfBirth() !=null) {
+                                                            birthVal=new
+                                                            java.text.SimpleDateFormat("yyyy-MM-dd").format(cus.getDateOfBirth());
+                                                            } %>
+                                                            <input name="dob" value="<%= birthVal %>"
+                                                                class="w-full h-18 px-10 rounded-xl input-elegant font-bold text-hotel-muted text-xl border-hotel-gold/10"
+                                                                type="date" />
+                                                    </div>
+
+                                                    <div class="md:col-span-2 space-y-1 group">
+                                                        <label class="label-premium ml-1 group-focus-within:text-hotel-gold transition-colors">Địa chỉ liên hệ (Permanent Address)</label>
+                                                        <input name="address"
+                                                            value="<%= cus.getAddress() != null ? cus.getAddress() : "" %>"
+                                                            class="w-full h-18 px-10 rounded-xl input-elegant font-bold text-lg text-hotel-text border-hotel-gold/10"
+                                                            type="text" placeholder="CHƯA CẬP NHẬT" />
+                                                    </div>
+
+                                                    <div class="md:col-span-2 space-y-1 group">
+                                                        <label class="label-premium ml-1 group-focus-within:text-hotel-gold transition-colors">Đặc quyền & Ghi chú (Preferences)</label>
+                                                        <textarea name="preferences" rows="5"
+                                                            class="w-full p-10 rounded-xl input-elegant font-bold text-lg resize-none placeholder:text-hotel-muted/20 text-hotel-text border-hotel-gold/10"
+                                                            placeholder="VD: Phòng hướng biển, ít tiếng ồn, trà xanh..."><%= cus.getPreferences() != null ? cus.getPreferences() : "" %></textarea>
+                                                    </div>
+                                                </div>
+
+                                                <div class="pt-12 flex justify-end">
+                                                    <button type="submit"
+                                                        class="h-24 px-20 rounded-sm bg-hotel-gold text-white font-bold text-[11px] tracking-widest uppercase hover:bg-hotel-text transition-all flex items-center gap-5 active:scale-95 group">
+                                                        LƯU THÔNG TIN <span
+                                                            class="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform">content_copy</span>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                                <div class="mt-1 relative rounded-md shadow-sm">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span class="material-icons-round text-gray-400 text-sm">email</span></div>
-                                    <input name="email" value="<%= cus.getEmail()!=null?cus.getEmail():"" %>" class="block w-full pl-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-gray-900 dark:text-white focus:border-primary focus:ring-primary sm:text-sm py-2 px-3" type="email"/>
+                        </main>
+
+                        <footer class="bg-white border-t border-hotel-gold/10 py-24 mt-32">
+                            <div
+                                class="max-w-[1700px] mx-auto px-24 flex flex-col md:flex-row justify-between items-center gap-12">
+                                <div class="flex flex-col items-center md:items-start gap-4">
+                                    <div class="flex items-center gap-4 text-hotel-gold">
+                                        <span class="material-symbols-outlined text-3xl">hotel</span>
+                                        <h4
+                                            class="font-serif font-bold text-2xl tracking-tight uppercase text-hotel-text">
+                                            SmartHotel</h4>
+                                    </div>
+                                    <p class="text-[10px] font-bold text-hotel-muted uppercase tracking-widest">© 2026
+                                        SmartHotel - Tôn vinh trải nghiệm nghỉ dưỡng thượng lưu</p>
+                                </div>
+
+                                <div class="flex gap-16">
+                                    <div class="space-y-4 text-center md:text-right">
+                                        <p class="text-[8px] font-bold text-hotel-muted uppercase tracking-widest">HỆ
+                                            THỐNG</p>
+                                        <p class="text-[9px] font-bold text-hotel-gold uppercase tracking-widest">PHIÊN
+                                            BẢN 2.0 (MODERN LUXURY)</p>
+                                    </div>
+                                    <div class="space-y-4 text-center md:text-right">
+                                        <p class="text-[8px] font-bold text-hotel-muted uppercase tracking-widest">TRẠNG
+                                            THÁI</p>
+                                        <p
+                                            class="text-[9px] font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-2">
+                                            ĐÃ KẾT NỐI <span
+                                                class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span></p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Địa chỉ</label>
-                            <input name="address" value="<%= cus.getAddress()!=null?cus.getAddress():"" %>" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2 px-3" type="text"/>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quốc tịch</label>
-                                <input name="nationality" value="<%= cus.getNationality()!=null?cus.getNationality():"" %>" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2 px-3" type="text"/>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Ngày sinh</label>
-                                <input name="dob" value="<%= (cus.getDateOfBirth()!=null)? new java.text.SimpleDateFormat("yyyy-MM-dd").format(cus.getDateOfBirth()) : "" %>" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2 px-3" type="date"/>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sở thích / Yêu cầu (Preferences)</label>
-                            <textarea name="preferences" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm py-2 px-3" rows="3"><%= cus.getPreferences()!=null?cus.getPreferences():"" %></textarea>
-                        </div>
-                        <div class="flex justify-end pt-4">
-                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded shadow-md transition-colors flex items-center gap-2">
-                                <span class="material-icons-round text-sm">save</span> Lưu Thay Đổi
-                            </button>
-                        </div>
-                    </form>
+                        </footer>
+                        <jsp:include page="/common/chat_box.jspf" />
+                </body>
 
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
-
-<footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-700 mt-auto py-6">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500 dark:text-gray-400">
-        <p>© 2026 SmartHotel Management System. All rights reserved.</p>
-    </div>
-</footer>
-                        <!-- Nút nổi mở Chat Box -->
-<button id="chatbot-toggle" class="fixed bottom-6 right-6 bg-primary text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition z-50 flex items-center justify-center">
-    <span class="material-icons-round">chat</span>
-</button>
-
-<!-- Khung Chat Box (Ẩn mặc định) -->
-<div id="chatbot-window" class="fixed bottom-24 right-6 w-[360px] bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 hidden flex-col overflow-hidden z-50 h-[500px]">
-    <!-- Header -->
-    <div class="bg-primary text-white p-3 flex justify-between items-center rounded-t-lg shadow-sm z-10">
-        <span class="font-bold flex items-center gap-2"><span class="material-icons-round text-lg">smart_toy</span> SmartHotel AI</span>
-        <button id="chatbot-close" class="text-white hover:text-gray-200 transition-colors"><span class="material-icons-round text-sm">close</span></button>
-    </div>
-    <!-- Body chứa nội dung chat -->
-    <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-gray-50/50 dark:bg-gray-900/50">
-        <!-- AI Greeting -->
-        <div class="flex gap-2 w-full flex-row">
-            <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-secondary text-white shadow-sm mt-1">
-                <span class="material-icons-round text-[18px]">smart_toy</span>
-            </div>
-            <div class="p-3 rounded-xl text-sm max-w-[80%] break-words whitespace-pre-wrap bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-tl-none shadow-sm border border-gray-100 dark:border-gray-700 leading-relaxed font-medium">Xin chào! Tôi là trợ lý ảo thông minh của SmartHotel. Tôi có thể giúp gì cho quý khách hôm nay?</div>
-        </div>
-    </div>
-    <!-- Input Area -->
-    <div class="p-3 border-t border-gray-200 dark:border-gray-700 flex gap-2 bg-white dark:bg-gray-800">
-        <input type="text" id="chat-input" class="flex-1 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:text-white" placeholder="Nhập tin nhắn...">
-        <button id="chat-send" class="bg-primary text-white px-3 py-2 rounded-md hover:bg-blue-700 flex items-center justify-center">
-            <span class="material-icons-round text-sm">send</span>
-        </button>
-    </div>
-</div>
-<script>
-    const toggleBtn = document.getElementById('chatbot-toggle');
-    const closeBtn = document.getElementById('chatbot-close');
-    const chatWindow = document.getElementById('chatbot-window');
-    const sendBtn = document.getElementById('chat-send');
-    const chatInput = document.getElementById('chat-input');
-    const messagesDiv = document.getElementById('chat-messages');
-
-    // Lưu trữ lịch sử chat để AI nhớ ngữ cảnh
-    let chatHistory = [];
-
-    // Đóng/Mở Chat Box
-    toggleBtn.addEventListener('click', () => { chatWindow.classList.toggle('hidden'); chatWindow.classList.toggle('flex'); });
-    closeBtn.addEventListener('click', () => { chatWindow.classList.add('hidden'); chatWindow.classList.remove('flex'); });
-
-    // Nối tin nhắn UI
-    function appendMessage(text, isUser, isTyping = false) {
-        const msgContainer = document.createElement('div');
-        msgContainer.className = 'flex gap-2 w-full mt-2 ' + (isUser ? 'flex-row-reverse' : 'flex-row');
-        if (isTyping) msgContainer.id = 'typing-indicator';
-        
-        // Avatar
-        const avatar = document.createElement('div');
-        avatar.className = 'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-sm mt-1 ' + (isUser ? 'bg-primary text-white' : 'bg-secondary text-white');
-        avatar.innerHTML = '<span class="material-icons-round text-[18px]">' + (isUser ? 'person' : 'smart_toy') + '</span>';
-        
-        // Bong bóng chat
-        const bubble = document.createElement('div');
-        bubble.className = 'p-3 text-sm max-w-[80%] break-words whitespace-pre-wrap leading-relaxed shadow-sm ' + (isUser ? 'bg-primary text-white rounded-2xl rounded-tr-sm font-medium' : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl rounded-tl-sm border border-gray-100 dark:border-gray-700');
-        
-        if (isTyping) {
-            bubble.innerHTML = '<div class="flex gap-1 items-center h-5"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-pulse"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.2s"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.4s"></div></div>';
-        } else {
-            // Parse format cơ bản an toàn với XSS
-            let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            // Fix lỗi markdown danh sách: Nếu thấy * ở đầu dòng thì đổi thành •
-            let formattedText = safeText.replace(/(^|\n)\*\s+/g, '$1• ');
-            // Sau đó mới format in đậm, in nghiêng
-            formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<i>$1</i>');
-            bubble.innerHTML = formattedText;
-        }
-        
-        msgContainer.appendChild(avatar);
-        msgContainer.appendChild(bubble);
-        messagesDiv.appendChild(msgContainer);
-        
-        // Cuộn mượt mà
-        messagesDiv.scrollTo({ top: messagesDiv.scrollHeight, behavior: 'smooth' });
-    }
-
-    // Gửi tin nhắn qua API Python
-    sendBtn.addEventListener('click', async () => {
-        const text = chatInput.value.trim();
-        if (!text) return;
-        
-        appendMessage(text, true); // Hiện tin nhắn người dùng
-        chatInput.value = '';
-        
-        // Thêm tin nhắn user vào lịch sử
-        chatHistory.push({ role: 'user', parts: [text] });
-
-        // Hiện trạng thái đang gõ
-        appendMessage('', false, true);
-        sendBtn.disabled = true;
-        chatInput.disabled = true;
-
-        try {
-            const response = await fetch('http://localhost:5000/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    message: text,
-                    history: chatHistory.slice(0, -1) // Gửi lịch sử trước đó cho AI hiểu ngữ cảnh
-                })
-            });
-            const data = await response.json();
-            
-            // Xóa trạng thái đang gõ
-            document.getElementById('typing-indicator')?.remove();
-
-            if (data.status === 'success') {
-                appendMessage(data.reply, false); // Hiện tin nhắn AI
-                // Thêm vào memory
-                chatHistory.push({ role: 'model', parts: [data.reply] });
-            } else {
-                // Hiển thị data.reply (friendly message) nếu có, thay vì data.message (lỗi kỹ thuật)
-                const errorMsg = data.reply || data.message || "Đã xảy ra lỗi không phân loại được.";
-                appendMessage("Lỗi từ AI: " + errorMsg, false);
-            }
-        } catch (error) {
-            document.getElementById('typing-indicator')?.remove();
-            appendMessage("Lỗi kết nối đến Server AI (Hãy chắc chắn bạn đang chạy 'python app.py').", false);
-        } finally {
-            sendBtn.disabled = false;
-            chatInput.disabled = false;
-            chatInput.focus();
-        }
-    });
-
-    // Bắt sự kiện bàn phím (Bấm phím Enter để Gửi)
-    chatInput.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') sendBtn.click();
-    });
-</script>
-
-</body>
-</html>
+                </html>

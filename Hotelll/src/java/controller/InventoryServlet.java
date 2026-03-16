@@ -1,10 +1,10 @@
 package controller;
 
-import com.smarthotel.model.Inventory;
-import com.smarthotel.model.Supplier;
-import com.smarthotel.service.InventoryService;
-import com.smarthotel.service.SupplierService;
-import com.smarthotel.service.ImportHistoryService;
+import model.Inventory;
+import model.Supplier;
+import service.InventoryService;
+import service.SupplierService;
+import service.ImportHistoryService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;

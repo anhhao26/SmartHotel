@@ -1,107 +1,185 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%
-    String currentRole = (String) session.getAttribute("ROLE");
-    boolean isAdmin = currentRole != null && (currentRole.equalsIgnoreCase("ADMIN") || currentRole.equalsIgnoreCase("MANAGER") || currentRole.equalsIgnoreCase("SUPERADMIN"));
-%>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>SmartHotel Reception Dashboard</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#1069f9", "secondary": "#ef4444", 
-                        "background-light": "#f5f7f8", "background-dark": "#0f1723",
-                        "surface-light": "#ffffff", "surface-dark": "#1e293b",
-                        "border-light": "#e2e8f0", "border-dark": "#334155",
+﻿<%@ page contentType="text/html; charset=UTF-8" %>
+    <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+        <!DOCTYPE html>
+        <html lang="vi">
+
+        <head>
+            <meta charset="utf-8" />
+            <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+            <title>SmartHotel Reception - Trung Tâm Lễ Tân</title>
+
+            <!-- Premium Fonts -->
+            <link
+                href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@100;300;400;500;700;900&display=swap"
+                rel="stylesheet">
+            <link
+                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+                rel="stylesheet" />
+
+            <script src="https://cdn.tailwindcss.com"></script>
+            <script>
+                tailwind.config = {
+                    theme: {
+                        extend: {
+                            colors: {
+                                hotel: {
+                                    gold: "#B89A6C",
+                                    cream: "#FAF9F6",
+                                    bone: "#FDFCFB",
+                                    text: "#2C2722",
+                                    muted: "#70685F",
+                                    chocolate: "#4A4238",
+                                }
+                            },
+                            fontFamily: {
+                                serif: ["Cormorant Garamond", "serif"],
+                                sans: ["Inter", "Be Vietnam Pro", "sans-serif"],
+                            }
+                        },
                     },
-                    fontFamily: { "display": ["Manrope", "sans-serif"] },
-                },
-            },
-        }
-    </script>
-    <style>
-        body { font-family: 'Manrope', sans-serif; }
-    </style>
-</head>
-<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col font-display text-slate-900 dark:text-slate-100 transition-colors duration-200">
-    
-    <header class="sticky top-0 z-50 bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark px-6 py-4 shadow-sm">
-        <div class="mx-auto max-w-[1440px] flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <span class="material-symbols-outlined text-2xl">apartment</span>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">SmartHotel</h1>
-                    <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Reception Console v3.0</p>
+                }
+            </script>
+            <style>
+                .card-elegant {
+                    background: #FFFFFF;
+                    border: 1px solid rgba(184, 154, 108, 0.1);
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+                    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+                }
+
+                .card-elegant:hover {
+                    transform: translateY(-5px);
+                    border-color: rgba(184, 154, 108, 0.3);
+                    box-shadow: 0 20px 60px rgba(184, 154, 108, 0.08);
+                }
+
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            </style>
+        </head>
+
+        <body class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
+
+            <jsp:include page="/common/neural_shell_top.jspf">
+                <jsp:param name="active" value="reception" />
+            </jsp:include>
+
+            <!-- Reception Page Content -->
+            <div class="flex-1 h-screen overflow-y-auto pb-32">
+                <div class="max-w-6xl mx-auto px-12 animate-[fadeIn_0.8s_ease-out]">
+
+                    <!-- Welcome Section -->
+                    <div class="text-center py-20">
+                        <div
+                            class="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-[10px] font-bold tracking-[0.4em] uppercase mb-8">
+                            <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
+                            Phân Hệ Tiếp Tân Cao Cấp v4.0
+                        </div>
+                        <h2
+                            class="text-7xl font-serif font-bold text-hotel-text tracking-tight mb-6 leading-tight uppercase">
+                            Trung Tâm<br /><span class="text-hotel-gold italic">Lễ Tân.</span>
+                        </h2>
+                        <p class="text-hotel-muted text-xl font-medium italic tracking-tight max-w-2xl mx-auto">
+                            Hệ thống quản trị chuyên sâu dành cho nghiệp vụ đón tiếp,
+                            thanh toán và điều phối trải nghiệm khách lưu trú.
+                        </p>
+                    </div>
+
+                    <!-- Main Action Portal -->
+                    <div class="grid grid-cols-1 gap-12">
+
+                        <div
+                            class="card-elegant rounded-[3rem] p-16 flex flex-col md:flex-row items-center gap-16 relative overflow-hidden group">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-br from-hotel-gold/[0.02] to-transparent pointer-events-none">
+                            </div>
+
+                            <div
+                                class="w-56 h-56 rounded-[3.5rem] bg-hotel-gold/5 border border-hotel-gold/10 flex items-center justify-center text-hotel-gold group-hover:bg-hotel-gold group-hover:text-white transition-all duration-700 relative z-10 shadow-sm">
+                                <span class="material-symbols-outlined text-8xl font-light">concierge</span>
+                            </div>
+
+                            <div class="flex-1 space-y-10 relative z-10">
+                                <div class="space-y-4 text-center md:text-left">
+                                    <h3
+                                        class="text-5xl font-serif font-bold text-hotel-text tracking-tight uppercase group-hover:text-hotel-gold transition-colors">
+                                        Nghiệp Vụ <span class="italic font-normal opacity-60">Dashboard</span>
+                                    </h3>
+                                    <p class="text-hotel-muted text-lg font-medium leading-relaxed max-w-xl italic">
+                                        Xử lý quy trình nhận phòng, kết toán hóa đơn và cập nhật trạng thái phòng nghỉ
+                                        tức thời trên hệ thống.
+                                    </p>
+                                </div>
+
+                                <div class="flex flex-wrap gap-5 justify-center md:justify-start">
+                                    <div
+                                        class="px-8 py-4 rounded-xl bg-hotel-bone border border-hotel-gold/5 flex items-center gap-4 group/item hover:border-hotel-gold/30 transition-all">
+                                        <span
+                                            class="material-symbols-outlined text-hotel-gold text-2xl">receipt_long</span>
+                                        <span
+                                            class="text-[10px] font-bold text-hotel-muted group-hover/item:text-hotel-text transition-colors tracking-widest uppercase">Thanh
+                                            Toán</span>
+                                    </div>
+                                    <div
+                                        class="px-8 py-4 rounded-xl bg-hotel-bone border border-hotel-gold/5 flex items-center gap-4 group/item hover:border-hotel-gold/30 transition-all">
+                                        <span
+                                            class="material-symbols-outlined text-hotel-gold text-2xl">room_service</span>
+                                        <span
+                                            class="text-[10px] font-bold text-hotel-muted group-hover/item:text-hotel-text transition-colors tracking-widest uppercase">Dịch
+                                            Vụ</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-center md:justify-start pt-6">
+                                    <a href="${pageContext.request.contextPath}/reception/checkout.jsp"
+                                        class="inline-flex items-center gap-5 bg-hotel-gold text-white px-14 py-6 rounded-xl font-bold text-[11px] tracking-[0.3em] uppercase hover:bg-hotel-text hover:shadow-xl hover:shadow-hotel-gold/20 transition-all hover:scale-105 active:scale-95">
+                                        KHỞI CHẠY NGHIỆP VỤ <span class="material-symbols-outlined">point_of_sale</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Abstract Decor -->
+                            <div
+                                class="absolute -right-24 -bottom-24 w-96 h-96 bg-hotel-gold/[0.03] blur-[120px] rounded-full group-hover:bg-hotel-gold/[0.06] transition-all duration-1000">
+                            </div>
+                        </div>
+
+                        <!-- System Advisory -->
+                        <div
+                            class="card-elegant rounded-[3rem] p-12 border-dashed flex items-start gap-12 bg-white/50 group relative overflow-hidden">
+                            <div class="absolute inset-0 bg-hotel-gold/[0.01] pointer-events-none"></div>
+                            <div
+                                class="p-6 bg-hotel-gold/10 rounded-2xl border border-hotel-gold/20 relative z-10 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-4xl text-hotel-gold">verified_user</span>
+                            </div>
+                            <div class="space-y-4 relative z-10">
+                                <h4 class="text-[11px] font-bold text-hotel-gold uppercase tracking-[0.5em]">Thông báo
+                                    hệ thống: Quy trình Checkout</h4>
+                                <p
+                                    class="text-hotel-muted text-base font-medium leading-relaxed italic max-w-4xl uppercase tracking-widest opacity-80">
+                                    Khi kích hoạt quy trình <span class="text-hotel-text font-bold">Trả Phòng</span>, hệ
+                                    thống sẽ tự động thực hiện:
+                                    (1) Kết xuất hóa đơn điện tử, (2) Khấu trừ tồn kho Minibar,
+                                    (3) Chuyển trạng thái phòng sang <span class="text-hotel-gold font-bold">Đang Dọn
+                                        Dẹp</span> trên toàn hệ thống sơ đồ phòng.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                    <span class="relative flex h-2.5 w-2.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                    </span>
-                    <span class="text-xs font-medium text-slate-600 dark:text-slate-300">System Online</span>
-                </div>
-                
-                <div class="flex items-center gap-4 pl-6 border-l border-slate-200 dark:border-slate-700">
-                    <% if (isAdmin) { %>
-                        <a href="<%=request.getContextPath()%>/admin" class="text-sm font-bold text-slate-600 hover:text-primary transition-colors flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span> Quay lại Admin
-                        </a>
-                    <% } %>
-                    <a href="<%=request.getContextPath()%>/logout" class="flex h-9 items-center justify-center px-4 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition-colors">
-                        Đăng xuất
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
 
-    <main class="flex-1 w-full max-w-[1440px] mx-auto p-4 md:p-6 lg:p-10">
-        <div class="mb-10 text-center">
-            <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Hệ Thống Dành Cho Lễ Tân</h2>
-            <p class="text-slate-500 dark:text-slate-400 mt-2 text-lg">Xử lý các nghiệp vụ nhanh chóng, chính xác.</p>
-        </div>
+            <jsp:include page="/common/neural_shell_bottom.jspf" />
+        </body>
 
-        <div class="flex justify-center mb-10">
-            <div class="w-full max-w-2xl bg-surface-light dark:bg-surface-dark rounded-2xl p-8 shadow-lg border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors group">
-                <div class="flex items-center justify-center w-16 h-16 bg-primary/10 text-primary rounded-2xl mb-6 mx-auto group-hover:scale-110 transition-transform">
-                    <span class="material-symbols-outlined text-4xl">sync_alt</span>
-                </div>
-                <h3 class="text-2xl font-bold text-slate-900 dark:text-white text-center mb-3">Nghiệp vụ Nhận / Trả phòng</h3>
-                <p class="text-slate-500 dark:text-slate-400 text-center mb-8 leading-relaxed">
-                    Thực hiện quy trình Check-in cho khách đến, Check-out, thanh toán tiền phòng và cập nhật phí dịch vụ Minibar.
-                </p>
-                <a href="<%=request.getContextPath()%>/reception/checkout.jsp" class="flex w-full justify-center items-center py-4 bg-primary hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all active:scale-[0.98] gap-2">
-                    Vào màn hình Check-in / Check-out <span class="material-symbols-outlined">arrow_forward</span>
-                </a>
-            </div>
-        </div>
-
-        <div class="flex justify-center">
-            <div class="w-full max-w-2xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/30 rounded-xl p-5 flex items-start gap-4">
-                <span class="material-symbols-outlined text-amber-500 text-2xl mt-0.5">push_pin</span>
-                <div>
-                    <h5 class="font-bold text-amber-900 dark:text-amber-500 mb-1">Ghi chú hệ thống:</h5>
-                    <p class="text-amber-800 dark:text-amber-400/80 text-sm leading-relaxed">Khi thực hiện <b>Check-out</b>, hệ thống sẽ tự động tạo hóa đơn, trừ số lượng sản phẩm Minibar trong kho và tự động chuyển phòng sang trạng thái <b>Cleaning</b> (Đang dọn dẹp) trên Sơ đồ phòng.</p>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="mt-auto border-t border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark py-4 px-6 text-sm text-slate-500 flex justify-between">
-        <span>Server: SH-RECEPTION-01</span>
-        <span>© 2026 SmartHotel Management</span>
-    </footer>
-</body>
-</html>
+        </html>

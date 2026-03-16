@@ -1,7 +1,7 @@
-package com.smarthotel.dao;
+package dao;
 
-import com.smarthotel.model.Account;
-import com.smarthotel.util.JPAUtil;
+import model.Account;
+import util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
@@ -83,6 +83,20 @@ public class AccountDAO {
             q.setParameter("u", username);
             Long cnt = q.getSingleResult();
             return cnt != null && cnt > 0;
+        } finally {
+            em.close();
+        }
+    }
+
+    public Account findByCustomerId(Integer customerId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT a FROM Account a WHERE a.customerID = :c";
+            TypedQuery<Account> q = em.createQuery(jpql, Account.class);
+            q.setParameter("c", customerId);
+            return q.getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
         } finally {
             em.close();
         }

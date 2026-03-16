@@ -1,338 +1,254 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý Kho Khách Sạn (Module 2)</title>
+    <title>SmartHotel Logistics - Quản Lý Kho Cao Cấp</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        hotel: {
+                            gold: "#B89A6C",
+                            cream: "#FAF9F6",
+                            bone: "#FDFCFB",
+                            text: "#2C2722",
+                            muted: "#70685F",
+                            chocolate: "#4A4238",
+                        }
+                    },
+                    fontFamily: {
+                        serif: ["Cormorant Garamond", "serif"],
+                        sans: ["Inter", "Be Vietnam Pro", "sans-serif"],
+                    }
+                },
+            },
+        }
+    </script>
+
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: url('${pageContext.request.contextPath}/picture&background/warehouse.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #334155;
+        .card-elegant {
+            background: #FFFFFF;
+            border: 1px solid rgba(184, 154, 108, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
-
-        /* Thêm overlay mờ để nổi bật nội dung trên nền ảnh */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(241, 245, 249, 0.85); /* Lớp phủ màu nền cũ với độ trong suốt 85% */
-            z-index: -1;
+        .card-elegant:hover {
+            transform: translateY(-5px);
+            border-color: rgba(184, 154, 108, 0.3);
+            box-shadow: 0 20px 60px rgba(184, 154, 108, 0.08);
         }
-
-        /* Navbar Styling */
-        .navbar-custom {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            padding: 1rem 2rem;
-        }
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.4rem;
-            letter-spacing: 1px;
-            color: #ffffff !important;
-        }
-        .navbar-brand span {
-            color: #fbbf24; /* Điểm nhấn viền vàng kim của khách sạn */
-            font-weight: 600;
-        }
-
-        /* Container & Page Header */
-        .container-fluid {
-            padding: 1.5rem 3rem 3rem;
-        }
-        .page-title {
-            font-weight: 800;
-            color: #0f172a;
-            font-size: 1.8rem;
-            margin: 0;
-        }
-        .page-title i {
-            color: #3b82f6;
-        }
-
-        /* Top Action Buttons */
-        .btn-top {
-            border-radius: 8px;
-            font-weight: 600;
-            padding: 0.6rem 1.2rem;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-        }
-        .btn-top i {
-            margin-right: 8px;
-            font-size: 1.1rem;
-        }
-        .btn-top:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        /* Custom Switch toggle */
-        .custom-control-input:checked ~ .custom-control-label::before {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-        }
-        .custom-switch .custom-control-label {
-            cursor: pointer;
-            color: #475569;
-            font-weight: 600;
-            padding-top: 2px;
-        }
-
-        /* Table Card Container */
-        .card-table {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-            border-top: 4px solid #0f172a; /* Nhấn khung trên */
-        }
-
-        /* Table Customization */
-        .custom-table {
-            margin-bottom: 0;
-        }
-        .custom-table thead th {
-            background-color: #f8fafc;
-            color: #64748b;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            padding: 1.2rem 1.5rem;
-            border-bottom: 2px solid #e2e8f0;
-            border-top: none;
-        }
-        .custom-table tbody td {
-            vertical-align: middle;
-            padding: 1.2rem 1.5rem;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 0.95rem;
-            color: #334155;
-        }
-        .custom-table tbody tr {
-            transition: background-color 0.2s ease;
-        }
-        .custom-table tbody tr:hover {
-            background-color: #f8fafc;
-        }
-
-        /* Text Styles */
-        .product-id { font-weight: 700; color: #94a3b8; }
-        .product-name { font-weight: 700; color: #1e293b; }
-        .cost-tag { font-weight: 600; color: #64748b; }
-        .price-tag { font-weight: 700; color: #059669; font-size: 1.05rem; } /* Xanh ngọc sang trọng */
-
-        /* Badges */
-        .badge {
-            padding: 0.5rem 0.8rem;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-        }
-        .badge-kd { background-color: #e0e7ff; color: #4338ca; }
-        .badge-nb { background-color: #fce7f3; color: #be185d; }
-        .badge-success-soft { background-color: #d1fae5; color: #047857; }
-        .badge-secondary-soft { background-color: #f1f5f9; color: #64748b; }
-
-        /* Stock Warning Status */
-        .stock-crit {
-            background-color: #fee2e2;
-            color: #dc2626 !important;
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            font-weight: 700;
-            display: inline-block;
-        }
-        .stock-normal { font-weight: 700; color: #334155; }
-
-        /* Action Buttons Inside Table */
-        .btn-action {
-            border-radius: 6px;
-            padding: 0.4rem 0.75rem;
-            font-weight: 600;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .btn-action i { font-size: 0.9rem; }
+        .dimmed-row { opacity: 0.6; filter: grayscale(1); }
+        .table-row-hover:hover { background-color: rgba(184, 154, 108, 0.02); }
         
-        .btn-warning { background-color: #f59e0b; border-color: #f59e0b; color: #fff !important; }
-        .btn-warning:hover { background-color: #d97706; border-color: #d97706; }
-
-        /* Dimmed Row for Inactive Products */
-        .dimmed-row { background-color: #f8fafc !important; }
-        .dimmed-row .product-name,
-        .dimmed-row .product-id,
-        .dimmed-row .cost-tag,
-        .dimmed-row .price-tag,
-        .dimmed-row .stock-normal {
-            color: #94a3b8 !important;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
-<body>
+<body class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
 
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom mb-4">
-        <a class="navbar-brand" href="#">
-            <i class="fas fa-hotel mr-2 text-warning"></i>HOTEL ADMIN <span>| MODULE 2 (KHO)</span>
-        </a>
-    </nav>
+    <jsp:include page="/common/neural_shell_top.jspf">
+        <jsp:param name="active" value="inventory" />
+    </jsp:include>
 
-    <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="page-title"><i class="fas fa-boxes mr-2"></i>Danh sách Vật tư & Hàng hóa</h3>
-
-            <div class="d-flex align-items-center">
-                <form action="products" method="get" class="mr-4 mb-0" id="filterForm">
-                    <input type="hidden" name="action" value="list">
-
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="switchHidden"
-                            name="showHidden" value="true" ${isShowHidden ? 'checked' : '' }
-                            onchange="document.getElementById('filterForm').submit()">
-                        <label class="custom-control-label" for="switchHidden">
-                            Hiện cả hàng đã ẩn
-                        </label>
+    <!-- Logistics Content -->
+    <div class="flex-1 h-screen overflow-y-auto pb-32">
+        <div class="max-w-7xl mx-auto px-12 animate-[fadeIn_0.8s_ease-out]">
+            
+            <!-- Header Section -->
+            <div class="flex justify-between items-end py-12">
+                <div class="space-y-4">
+                    <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-[9px] font-bold tracking-[0.3em] uppercase">
+                        <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
+                        Hệ thống Logistics & Chuỗi cung ứng
                     </div>
-                </form>
+                    <h2 class="text-5xl font-serif font-bold text-hotel-text tracking-tight uppercase">
+                        Kho Vật Tư <span class="text-hotel-gold italic">& Hàng Hóa.</span>
+                    </h2>
+                </div>
                 
-                <a href="products?action=history" class="btn btn-top btn-outline-info mr-2">
-                    <i class="fas fa-history"></i> Báo cáo Nhập Kho
-                </a>
-                <a href="products?action=listSuppliers" class="btn btn-top btn-outline-primary mr-2">
-                    <i class="fas fa-truck"></i> Quản lý NCC
-                </a>
-                <a href="products?action=new" class="btn btn-top btn-success">
-                    <i class="fas fa-plus-circle"></i> Nhập hàng mới
-                </a>
+                <div class="flex items-center gap-4">
+                    <a href="products?action=history" class="inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-white border border-hotel-gold/20 text-hotel-muted text-[10px] font-bold tracking-widest uppercase hover:bg-hotel-gold hover:text-white transition-all shadow-sm">
+                        <span class="material-symbols-outlined text-lg">history</span> Báo Cáo
+                    </a>
+                    <a href="products?action=listSuppliers" class="inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-white border border-hotel-gold/20 text-hotel-muted text-[10px] font-bold tracking-widest uppercase hover:bg-hotel-gold hover:text-white transition-all shadow-sm">
+                        <span class="material-symbols-outlined text-lg">local_shipping</span> Nhà Cung Cấp
+                    </a>
+                    <a href="products?action=new" class="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-hotel-gold text-white text-[10px] font-bold tracking-widest uppercase hover:bg-hotel-text transition-all shadow-lg shadow-hotel-gold/20">
+                        <span class="material-symbols-outlined text-lg">add_circle</span> Nhập Hàng Mới
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <div class="card-table">
-            <div class="table-responsive">
-                <table class="table table-hover custom-table align-middle">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Loại hàng</th>
-                            <th>Đơn vị</th>
-                            <th>Tồn kho</th>
-                            <th>Giá Nhập</th>
-                            <th>Giá Bán</th>
-                            <th>Trạng thái</th>
-                            <th class="text-center" style="width: 290px;">Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach var="p" items="${listProducts}">
-                            <tr class="${p.isActive ? '' : 'dimmed-row'}">
-                                
-                                <td class="product-id">#${p.itemID}</td>
-                                
-                                <td class="product-name">${p.itemName}</td>
+            <!-- Dashboard Stats Summary (Mini) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="card-elegant p-8 rounded-[2rem] flex items-center gap-6">
+                    <div class="w-16 h-16 rounded-2xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold border border-hotel-gold/10">
+                        <span class="material-symbols-outlined text-3xl">inventory_2</span>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em] mb-1">Tổng Danh Mục</p>
+                        <h4 class="text-2xl font-serif font-bold text-hotel-text">${listProducts.size()} <span class="text-xs uppercase font-sans text-hotel-muted opacity-60">Sản phẩm</span></h4>
+                    </div>
+                </div>
+                <!-- Add more stats if needed -->
+            </div>
 
-                                <td>
-                                    <c:if test="${p.isTradeGood}">
-                                        <span class="badge badge-kd"><i class="fas fa-tags mr-1"></i>Hàng bán (KD)</span>
-                                    </c:if>
-                                    <c:if test="${!p.isTradeGood}">
-                                        <span class="badge badge-nb"><i class="fas fa-pump-soap mr-1"></i>Tiêu hao (NB)</span>
-                                    </c:if>
-                                </td>
+            <!-- Toolbar & Filter -->
+            <div class="mb-10 flex justify-between items-center bg-white/50 backdrop-blur-md p-6 rounded-3xl border border-hotel-gold/5 shadow-sm">
+                <div class="relative w-96 group">
+                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-hotel-gold/40 group-focus-within:text-hotel-gold transition-colors">search</span>
+                    <input type="text" id="quickSearch" placeholder="Tìm kiếm vật tư nhanh..." class="w-full bg-white border border-hotel-gold/10 rounded-2xl pl-12 pr-6 py-3 text-[11px] font-bold uppercase tracking-widest focus:ring-2 focus:ring-hotel-gold/20 focus:border-hotel-gold transition-all outline-none">
+                </div>
+                
+                <form action="products" method="get" id="filterForm" class="flex items-center gap-4">
+                    <input type="hidden" name="action" value="list">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="showHidden" value="true" class="sr-only peer" ${isShowHidden ? 'checked' : ''} onchange="this.form.submit()">
+                        <div class="w-11 h-6 bg-hotel-gold/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hotel-gold"></div>
+                        <span class="ms-3 text-[10px] font-bold text-hotel-muted uppercase tracking-widest">Hiển thị hàng đã ẩn</span>
+                    </label>
+                </form>
+            </div>
 
-                                <td class="font-weight-bold text-secondary">${p.unit}</td>
-
-                                <td>
-                                    <span class="${p.quantity <= 10 ? 'stock-crit' : 'stock-normal'}">
-                                        <c:if test="${p.quantity <= 10}">
-                                            <i class="fas fa-exclamation-triangle mr-1"></i>
-                                        </c:if>
-                                        ${p.quantity}
-                                    </span>
-                                </td>
-
-                                <td class="cost-tag">${p.costPrice}</td>
-                                <td class="price-tag">${p.sellingPrice}</td>
-
-                                <td>
-                                    <c:if test="${p.isActive}">
-                                        <span class="badge badge-success-soft"><i class="fas fa-check-circle mr-1"></i>Đang bán</span>
-                                    </c:if>
-                                    <c:if test="${!p.isActive}">
-                                        <span class="badge badge-secondary-soft"><i class="fas fa-ban mr-1"></i>Ngừng KD</span>
-                                    </c:if>
-                                </td>
-
-                                <td class="text-center" style="white-space: nowrap;">
-                                    <c:if test="${p.isActive}">
-                                        <a href="products?action=edit&id=${p.itemID}"
-                                            class="btn btn-action btn-info mr-1" title="Sửa thông tin">
-                                            <i class="fas fa-edit mr-1"></i>Sửa
-                                        </a>
-                                        <a href="products?action=import&id=${p.itemID}"
-                                            class="btn btn-action btn-success mr-1" title="Khởi tạo phiếu nhập">
-                                            <i class="fas fa-box-open mr-1"></i>Nhập
-                                        </a>
-
-                                        <form action="products" method="POST" style="display:inline;" class="mr-1">
-                                            <input type="hidden" name="action" value="softDelete">
-                                            <input type="hidden" name="id" value="${p.itemID}">
-                                            <button type="submit" class="btn btn-action btn-warning"
-                                                onclick="return confirm('Bạn có chắc muốn ngừng kinh doanh sản phẩm này?');" title="Ẩn hiển thị">
-                                                <i class="fas fa-eye-slash mr-1"></i>Ẩn
-                                            </button>
-                                        </form>
-                                    </c:if>
-
-                                    <c:if test="${!p.isActive}">
-                                        <form action="products" method="POST" style="display:inline;" class="mr-1">
-                                            <input type="hidden" name="action" value="restore">
-                                            <input type="hidden" name="id" value="${p.itemID}">
-                                            <button type="submit" class="btn btn-action btn-primary" title="Khôi phục trạng thái">
-                                                <i class="fas fa-undo mr-1"></i>Khôi phục
-                                            </button>
-                                        </form>
-                                    </c:if>
-
-                                    <form action="products" method="POST" style="display:inline;">
-                                        <input type="hidden" name="action" value="hardDelete">
-                                        <input type="hidden" name="id" value="${p.itemID}">
-                                        <button type="submit" class="btn btn-action btn-danger"
-                                            onclick="return confirm('Nguy hiểm: Xóa vĩnh viễn không thể khôi phục? (Toàn bộ dữ liệu liên quan sẽ biến mất!');" title="Xóa vĩnh viễn">
-                                            <i class="fas fa-trash-alt mr-1"></i>Xóa
-                                        </button>
-                                    </form>
-                                </td>
-                                
+            <!-- Inventory Table -->
+            <div class="card-elegant rounded-[2.5rem] overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-hotel-bone/50 border-b border-hotel-gold/10">
+                                <th class="px-8 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Thông tin Sản phẩm</th>
+                                <th class="px-8 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Loại & Đơn vị</th>
+                                <th class="px-8 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Tồn Kho</th>
+                                <th class="px-8 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Giá (Cost / Sell)</th>
+                                <th class="px-8 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em] text-center">Hành động</th>
                             </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="divide-y divide-hotel-gold/5">
+                            <c:forEach var="p" items="${listProducts}">
+                                <tr class="table-row-hover transition-colors ${p.isActive ? '' : 'dimmed-row'}">
+                                    <td class="px-8 py-6">
+                                        <div class="flex items-center gap-5">
+                                            <div class="w-12 h-12 rounded-xl bg-hotel-cream flex items-center justify-center text-hotel-gold border border-hotel-gold/10 font-serif font-bold italic">
+                                                #${p.itemID}
+                                            </div>
+                                            <div>
+                                                <p class="text-[12px] font-bold text-hotel-text uppercase tracking-widest mb-1">${p.itemName}</p>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="material-symbols-outlined text-[14px] text-hotel-gold opacity-60">store</span>
+                                                    <p class="text-[9px] text-hotel-muted font-bold tracking-wider">${p.supplier.supplierName}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-6">
+                                        <div class="space-y-2">
+                                            <c:choose>
+                                                <c:when test="${p.isTradeGood}">
+                                                    <span class="inline-flex px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[8px] font-bold uppercase tracking-wider border border-emerald-100">Kinh Doanh</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="inline-flex px-3 py-1 rounded-full bg-orange-50 text-orange-600 text-[8px] font-bold uppercase tracking-wider border border-orange-100">Tiêu Hao Nội Bộ</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <p class="text-[11px] font-semibold text-hotel-muted">ĐVT: ${p.unit}</p>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-6">
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-lg font-serif font-bold text-hotel-text">${p.quantity}</span>
+                                            <c:if test="${p.quantity <= 10}">
+                                                <div class="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center animate-pulse" title="Sắp hết hàng!">
+                                                    <span class="material-symbols-outlined text-lg">warning</span>
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                        <div class="w-24 h-1.5 bg-hotel-gold/10 rounded-full mt-2 overflow-hidden">
+                                            <div class="h-full bg-hotel-gold rounded-full" style="width: ${p.quantity > 100 ? 100 : p.quantity}%"></div>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-6">
+                                        <p class="text-[10px] font-bold text-hotel-muted line-through opacity-40"><fmt:formatNumber value="${p.costPrice}" pattern="#,##0"/>đ</p>
+                                        <p class="text-[13px] font-bold text-hotel-gold tracking-tighter"><fmt:formatNumber value="${p.sellingPrice}" pattern="#,##0"/>đ</p>
+                                    </td>
+                                    <td class="px-8 py-6">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <c:if test="${p.isActive}">
+                                                <a href="products?action=edit&id=${p.itemID}" class="w-10 h-10 rounded-xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-muted hover:text-hotel-gold hover:border-hotel-gold hover:shadow-lg transition-all" title="Sửa">
+                                                    <span class="material-symbols-outlined text-lg">edit_note</span>
+                                                </a>
+                                                <a href="products?action=import&id=${p.itemID}" class="w-10 h-10 rounded-xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-muted hover:text-green-600 hover:border-green-600 hover:shadow-lg transition-all" title="Nhập hàng">
+                                                    <span class="material-symbols-outlined text-lg">add_box</span>
+                                                </a>
+                                                <form action="products" method="POST" class="m-0">
+                                                    <input type="hidden" name="action" value="softDelete">
+                                                    <input type="hidden" name="id" value="${p.itemID}">
+                                                    <button type="submit" onclick="return confirm('Ngừng kinh doanh sản phẩm này?')" class="w-10 h-10 rounded-xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-muted hover:text-orange-500 hover:border-orange-500 hover:shadow-lg transition-all" title="Tạm ẩn">
+                                                        <span class="material-symbols-outlined text-lg">visibility_off</span>
+                                                    </button>
+                                                </form>
+                                            </c:if>
+
+                                            <c:if test="${!p.isActive}">
+                                                <form action="products" method="POST" class="m-0">
+                                                    <input type="hidden" name="action" value="restore">
+                                                    <input type="hidden" name="id" value="${p.itemID}">
+                                                    <button type="submit" class="w-10 h-10 rounded-xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-muted hover:text-emerald-500 hover:border-emerald-500 hover:shadow-lg transition-all" title="Khôi phục">
+                                                        <span class="material-symbols-outlined text-lg">settings_backup_restore</span>
+                                                    </button>
+                                                </form>
+                                            </c:if>
+
+                                            <form action="products" method="POST" class="m-0">
+                                                <input type="hidden" name="action" value="hardDelete">
+                                                <input type="hidden" name="id" value="${p.itemID}">
+                                                <button type="submit" onclick="return confirm('XÓA VĨNH VIỄN sản phẩm này? Thao tác không thể hoàn tác!')" class="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center text-red-400 hover:bg-red-500 hover:text-white hover:border-red-500 hover:shadow-lg transition-all" title="Xóa">
+                                                    <span class="material-symbols-outlined text-lg">delete_forever</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+            
+            <c:if test="${empty listProducts}">
+                <div class="py-32 text-center animate-pulse">
+                    <span class="material-symbols-outlined text-7xl text-hotel-gold/20 block mb-6">inventory_2</span>
+                    <h3 class="text-xl font-serif font-bold text-hotel-text uppercase tracking-[0.2em] opacity-30">Kho hàng đang trống</h3>
+                </div>
+            </c:if>
         </div>
     </div>
 
+    <script>
+        // Simple client-side quick search
+        document.getElementById('quickSearch').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const text = row.querySelector('.text-[12px]').innerText.toLowerCase();
+                row.style.display = text.includes(term) ? '' : 'none';
+            });
+        });
+    </script>
+
+    <jsp:include page="/common/neural_shell_bottom.jspf" />
 </body>
 </html>

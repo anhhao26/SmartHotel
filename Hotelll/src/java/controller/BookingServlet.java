@@ -1,14 +1,15 @@
-package com.smarthotel.controller;
+package controller;
 
-import com.smarthotel.dao.CustomerDAO;
-import com.smarthotel.dao.RoomDAO;
-import com.smarthotel.dao.VoucherDAO;
-import com.smarthotel.model.Booking;
-import com.smarthotel.model.Customer;
-import com.smarthotel.model.Room;
-import com.smarthotel.model.Voucher;
-import com.smarthotel.service.BookingService;
-import com.smarthotel.service.VoucherService;
+import dao.BookingDAO;
+import dao.CustomerDAO;
+import dao.RoomDAO;
+import dao.VoucherDAO;
+import model.Booking;
+import model.Customer;
+import model.Room;
+import model.Voucher;
+import service.BookingService;
+import service.VoucherService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -22,6 +23,7 @@ public class BookingServlet extends HttpServlet {
     private final BookingService bookingService = new BookingService();
     private final RoomDAO roomDAO = new RoomDAO();
     private final CustomerDAO customerDAO = new CustomerDAO();
+    private final BookingDAO bookingDAO = new BookingDAO(); // Bổ sung DAO để check trùng lịch
     
     // TÍCH HỢP VOUCHER
     private final VoucherService voucherService = new VoucherService();
@@ -55,8 +57,30 @@ public class BookingServlet extends HttpServlet {
             b.setCheckOutDate(sdf.parse(req.getParameter("checkOut")));
             b.setStatus("Pending");
 
+            // =========================================================
+            // KIỂM TRA TÍNH HỢP LỆ & TRÙNG LỊCH
+            // =========================================================
+            java.util.Date checkInDate = b.getCheckInDate();
+            java.util.Date checkOutDate = b.getCheckOutDate();
+
+            // 1. Kiểm tra Ngày trả phải sau Ngày nhận
+            if (!checkOutDate.after(checkInDate)) {
+                req.setAttribute("error", "Ngày trả phòng phải sau ngày nhận phòng!");
+                req.getRequestDispatcher("webapp/search.jsp").forward(req, resp);
+                return;
+            }
+
+            // 2. Kiểm tra Trùng lịch đặt phòng
+            boolean isAvailable = bookingDAO.isRoomAvailable(roomNumberInput, checkInDate, checkOutDate);
+            if (!isAvailable) {
+                req.setAttribute("error", "Phòng này đã có người đặt trong khoảng thời gian bạn chọn. Vui lòng chọn ngày khác!");
+                req.getRequestDispatcher("webapp/search.jsp").forward(req, resp);
+                return;
+            }
+            // =========================================================
+
             // TÍNH TIỀN GỐC
-            double pricePerNight = room.getPrice(); // Giá phòng tự định nghĩa
+            double pricePerNight = room.getPrice(); 
             long diff = b.getCheckOutDate().getTime() - b.getCheckInDate().getTime();
             long days = diff / (1000 * 60 * 60 * 24);
             if (days <= 0) days = 1; 
@@ -71,13 +95,13 @@ public class BookingServlet extends HttpServlet {
                 if (!"OK".equals(vCheck)) {
                     req.setAttribute("error", "LỖI VOUCHER: " + vCheck);
                     req.getRequestDispatcher("webapp/search.jsp").forward(req, resp);
-                    return; // Chặn lại không cho đặt nếu voucher sai
+                    return; 
                 }
                 
                 // Nếu OK -> Trừ tiền
                 Voucher v = voucherDAO.findById(voucherCode);
                 totalAmount = totalAmount - v.getDiscountValue().doubleValue();
-                if (totalAmount < 0) totalAmount = 0; // Không để âm tiền
+                if (totalAmount < 0) totalAmount = 0; 
                 
                 // Tăng lượt dùng voucher lên 1
                 v.setUsedCount(v.getUsedCount() + 1);
@@ -88,10 +112,7 @@ public class BookingServlet extends HttpServlet {
             String rs = bookingService.book(b);
 
             if (rs.equals("OK")) {
-                
-                // ĐÃ SỬA: KHÔNG khóa phòng ở đây nữa. 
-                // Phòng vẫn là Available cho đến khi thanh toán VNPay thành công.
-                
+                // KHÔNG khóa phòng ở đây nữa. Phòng vẫn Available cho đến khi VNPay báo thành công.
                 req.setAttribute("booking", b);
                 req.getRequestDispatcher("webapp/payment.jsp").forward(req, resp);
             } else {

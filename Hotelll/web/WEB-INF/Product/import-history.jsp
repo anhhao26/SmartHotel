@@ -1,386 +1,169 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 
 <head>
     <meta charset="UTF-8">
-    <title>Thống kê Lịch sử Nhập Kho | Quản lý Kho Khách Sạn</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Báo Cáo Nhập Kho | SmartHotel Logistics</title>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        hotel: {
+                            gold: "#B89A6C",
+                            cream: "#FAF9F6",
+                            bone: "#FDFCFB",
+                            text: "#2C2722",
+                            muted: "#70685F",
+                            chocolate: "#4A4238",
+                        }
+                    },
+                    fontFamily: {
+                        serif: ["Cormorant Garamond", "serif"],
+                        sans: ["Inter", "Be Vietnam Pro", "sans-serif"],
+                    }
+                },
+            },
+        }
+    </script>
 
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: url('${pageContext.request.contextPath}/picture&background/warehouse.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #334155;
-            padding-bottom: 3rem;
+        .card-elegant {
+            background: #FFFFFF;
+            border: 1px solid rgba(184, 154, 108, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+            transition: all 0.5s ease;
         }
-
-        /* Thêm overlay mờ để nổi bật nội dung trên nền ảnh */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(241, 245, 249, 0.85);
-            /* Lớp phủ màu nền cũ với độ trong suốt 85% */
-            z-index: -1;
-        }
-
-        /* Navbar Styling */
-        .navbar-custom {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 1rem 2rem;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.4rem;
-            letter-spacing: 1px;
-            color: #ffffff !important;
-        }
-
-        .navbar-brand span {
-            color: #10b981;
-            /* Điểm nhấn xanh lục cho chức năng báo cáo */
-            font-weight: 600;
-        }
-
-        /* Container & Page Header */
-        .container {
-            max-width: 1100px;
-            margin-top: 2rem;
-        }
-
-        .page-title {
-            font-weight: 800;
-            color: #0f172a;
-            font-size: 1.6rem;
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .page-title i {
-            color: #3b82f6;
-            /* Xanh dương của biểu đồ */
-            margin-right: 12px;
-            font-size: 1.8rem;
-        }
-
-        /* Top Action Buttons */
-        .btn-top {
-            border-radius: 8px;
-            font-weight: 600;
-            padding: 0.6rem 1.2rem;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .btn-top i {
-            margin-right: 8px;
-            font-size: 1.1rem;
-        }
-
-        .btn-top:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Filter Section */
-        .filter-section {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e2e8f0;
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .filter-form {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin: 0;
-        }
-
-        .filter-label {
-            font-weight: 600;
-            color: #475569;
-            margin: 0;
-        }
-
-        .form-control-month {
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            padding: 0.5rem 1rem;
-            font-weight: 600;
-            color: #1e293b;
-            background-color: #f8fafc;
-            transition: all 0.2s;
-        }
-
-        .form-control-month:focus {
-            border-color: #3b82f6;
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-            outline: none;
-        }
-
-        /* Table Card Container */
-        .card-table {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-            border-top: 4px solid #3b82f6;
-            /* Nhấn khung trên */
-        }
-
-        /* Table Customization */
-        .custom-table {
-            margin-bottom: 0;
-        }
-
-        .custom-table thead th {
-            background-color: #f8fafc;
-            color: #64748b;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            padding: 1.2rem 1.5rem;
-            border-bottom: 2px solid #e2e8f0;
-            border-top: none;
-            white-space: nowrap;
-        }
-
-        .custom-table tbody td {
-            vertical-align: middle;
-            padding: 1.2rem 1.5rem;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 0.95rem;
-            color: #334155;
-        }
-
-        .custom-table tbody tr {
-            transition: background-color 0.2s ease;
-        }
-
-        .custom-table tbody tr:hover {
-            background-color: #f8fafc;
-        }
-
-        /* Row Highlighting for Top 1 */
-        .top-1-row {
-            background-color: #fffbeb !important;
-            /* Vàng nhạt cực sang */
-        }
-
-        .top-1-row td {
-            border-bottom-color: #fde68a !important;
-        }
-
-        /* Badges & Text Styling */
-        .rank-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-
-        .rank-1 {
-            background-color: #fbbf24;
-            color: #78350f;
-            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.4);
-        }
-
-        .rank-2 {
-            background-color: #94a3b8;
-            color: #ffffff;
-        }
-
-        .rank-3 {
-            background-color: #b45309;
-            color: #ffffff;
-        }
-
-        .rank-other {
-            background-color: #e2e8f0;
-            color: #475569;
-        }
-
-        .product-id {
-            font-weight: 700;
-            color: #94a3b8;
-        }
-
-        .product-name {
-            font-weight: 700;
-            color: #1e293b;
-            font-size: 1.05rem;
-        }
-
-        .supplier-tag {
-            color: #64748b;
-            font-weight: 500;
-        }
-
-        .quantity-tag {
-            font-weight: 800;
-            color: #059669;
-            /* Xanh lá nhấn mạnh (thêm vào kho) */
-            font-size: 1.15rem;
-            background: #d1fae5;
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            display: inline-block;
-        }
-
-        /* Empty State */
-        .empty-state {
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .empty-icon {
-            font-size: 3.5rem;
-            color: #cbd5e1;
-            margin-bottom: 1.5rem;
-        }
-
-        .empty-text {
-            color: #64748b;
-            font-weight: 600;
-            font-size: 1.15rem;
+        .rank-gold { @apply bg-gradient-to-br from-hotel-gold to-hotel-chocolate text-white shadow-lg shadow-hotel-gold/30; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
-<body>
+<body class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
 
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-        <a class="navbar-brand" href="#">
-            <i class="fas fa-hotel mr-2 text-warning"></i>HOTEL ADMIN <span>| BÁO CÁO KHO</span>
-        </a>
-    </nav>
+    <jsp:include page="/common/neural_shell_top.jspf">
+        <jsp:param name="active" value="inventory" />
+    </jsp:include>
 
-    <div class="container">
-        <div class="filter-section">
-            <h3 class="page-title">
-                <i class="fas fa-chart-line"></i>
-                Hàng Nhập Nhiều Nhất Trong Tháng
-            </h3>
-
-            <div class="d-flex align-items-center">
-                <form action="products" method="get" class="filter-form">
-                    <input type="hidden" name="action" value="history">
-
-                    <label class="filter-label"><i class="fas fa-calendar-alt mr-2 text-primary"></i>Chọn
-                        tháng:</label>
-                    <input type="month" name="monthPicker" class="form-control-month"
-                        value="${selectedMonth}" required onchange="this.form.submit()">
-
-                    <button type="submit" class="btn btn-primary d-none">Lọc</button>
-                </form>
-
-                <a href="products" class="btn btn-top btn-outline-secondary ml-4">
-                    <i class="fas fa-arrow-left"></i> Về Kho Hàng
-                </a>
+    <!-- Import History Content -->
+    <div class="flex-1 h-screen overflow-y-auto pb-32">
+        <div class="max-w-6xl mx-auto px-12 animate-[fadeIn_0.8s_ease-out]">
+            
+            <!-- Header Section -->
+            <div class="flex justify-between items-end py-12">
+                <div class="space-y-4">
+                    <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-[9px] font-bold tracking-[0.3em] uppercase">
+                        <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
+                        Phân tích luồng cung ứng
+                    </div>
+                    <h2 class="text-5xl font-serif font-bold text-hotel-text tracking-tight uppercase">
+                        Lịch Sử <span class="text-hotel-gold italic">Nhập Kho.</span>
+                    </h2>
+                </div>
+                
+                <div class="flex items-center gap-6 bg-white p-4 rounded-2xl border border-hotel-gold/10">
+                    <form action="products" method="GET" class="flex items-center gap-4 m-0">
+                        <input type="hidden" name="action" value="history">
+                        <label class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest">Thời điểm:</label>
+                        <input type="month" name="monthPicker" value="${selectedMonth}" onchange="this.form.submit()" class="bg-hotel-cream border border-hotel-gold/10 rounded-xl px-4 py-2 text-[10px] font-bold text-hotel-text outline-none focus:border-hotel-gold transition-all">
+                    </form>
+                    <a href="products" class="w-12 h-12 rounded-xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-gold hover:bg-hotel-gold hover:text-white transition-all" title="Về kho hàng">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <div class="card-table">
-            <div class="table-responsive">
-                <table class="table table-hover custom-table align-middle">
-                    <thead>
-                        <tr>
-                            <th class="text-center" style="width: 100px;">Thứ Hạng</th>
-                            <th>Mã SP</th>
-                            <th>Tên Sản Phẩm</th>
-                            <th>Nhà Cung Cấp</th>
-                            <th class="text-right">Tổng Lượng Nhập</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:if test="${empty importStats}">
-                            <tr>
-                                <td colspan="5">
-                                    <div class="empty-state">
-                                        <div class="empty-icon"><i class="fas fa-box-open"></i></div>
-                                        <div class="empty-text">Không có giao dịch nhập hàng nào trong tháng
-                                            này!</div>
-                                    </div>
-                                </td>
+            <!-- Top Ranking Cards -->
+            <c:if test="${not empty importStats}">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    <c:forEach var="stat" items="${importStats}" varStatus="loop" begin="0" end="2">
+                        <div class="card-elegant p-8 rounded-[2.5rem] relative overflow-hidden group hover:-translate-y-2">
+                            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                                <span class="material-symbols-outlined text-8xl">trending_up</span>
+                            </div>
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center font-serif font-bold ${loop.index == 0 ? 'bg-hotel-gold text-white' : 'bg-hotel-gold/10 text-hotel-gold'}">
+                                    ${loop.index + 1}
+                                </div>
+                                <p class="text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Hạng ${loop.index + 1}</p>
+                            </div>
+                            <h4 class="text-xl font-serif font-bold text-hotel-text mb-2 line-clamp-1">${stat[0].itemName}</h4>
+                            <p class="text-[9px] text-hotel-muted font-bold tracking-widest uppercase mb-6 opacity-60">${stat[0].supplier.supplierName}</p>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-serif font-bold text-hotel-text">${stat[1]}</span>
+                                <span class="text-[10px] font-bold text-hotel-gold uppercase">${stat[0].unit}</span>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </c:if>
+
+            <!-- Full Report Table -->
+            <div class="card-elegant rounded-[3rem] overflow-hidden">
+                <div class="p-8 border-b border-hotel-gold/5 flex justify-between items-center bg-hotel-bone/30">
+                    <h5 class="text-[11px] font-bold text-hotel-text uppercase tracking-[0.3em]">Chi tiết biến động tồn kho</h5>
+                    <span class="px-3 py-1 bg-hotel-gold/10 text-hotel-gold text-[8px] font-bold rounded-full uppercase tracking-tighter">Tháng ${selectedMonth}</span>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-hotel-bone/50 border-b border-hotel-gold/10">
+                                <th class="px-10 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Thứ hạng</th>
+                                <th class="px-10 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Sản phẩm & NCC</th>
+                                <th class="px-10 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em] text-right">Khối lượng nhập</th>
                             </tr>
-                        </c:if>
+                        </thead>
+                        <tbody class="divide-y divide-hotel-gold/5">
+                            <c:forEach var="stat" items="${importStats}" varStatus="loop">
+                                <tr class="hover:bg-hotel-gold/5 transition-colors">
+                                    <td class="px-10 py-8">
+                                        <div class="w-10 h-10 rounded-xl bg-hotel-cream border border-hotel-gold/10 flex items-center justify-center font-serif font-bold italic text-hotel-gold">
+                                            #${loop.index + 1}
+                                        </div>
+                                    </td>
+                                    <td class="px-10 py-8">
+                                        <div>
+                                            <p class="text-[12px] font-bold text-hotel-text uppercase tracking-widest mb-1">${stat[0].itemName}</p>
+                                            <p class="text-[9px] text-hotel-muted font-bold opacity-60 tracking-wider">${stat[0].supplier.supplierName}</p>
+                                        </div>
+                                    </td>
+                                    <td class="px-10 py-8 text-right">
+                                        <div class="inline-flex items-center gap-3 bg-emerald-50 px-5 py-2.5 rounded-xl border border-emerald-100">
+                                            <span class="material-symbols-outlined text-emerald-600 text-sm">add_shopping_cart</span>
+                                            <span class="text-lg font-serif font-bold text-emerald-700">${stat[1]}</span>
+                                            <span class="text-[9px] font-bold text-emerald-600/60 uppercase uppercase">${stat[0].unit}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
 
-                        <c:forEach var="stat" items="${importStats}" varStatus="loop">
-                            <tr class="${loop.index == 0 ? 'top-1-row' : ''}">
-
-                                <td class="text-center">
-                                    <c:choose>
-                                        <c:when test="${loop.index == 0}">
-                                            <span class="rank-badge rank-1" title="Top 1"><i
-                                                    class="fas fa-trophy"></i></span>
-                                        </c:when>
-                                        <c:when test="${loop.index == 1}">
-                                            <span class="rank-badge rank-2" title="Top 2">2</span>
-                                        </c:when>
-                                        <c:when test="${loop.index == 2}">
-                                            <span class="rank-badge rank-3" title="Top 3">3</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="rank-badge rank-other">${loop.index + 1}</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-
-                                <td class="product-id">#${stat[0].itemID}</td>
-
-                                <td class="product-name">
-                                    ${stat[0].itemName}
-                                    <c:if test="${loop.index == 0}">
-                                        <i class="fas fa-fire ml-2 text-danger" title="Trending"></i>
-                                    </c:if>
-                                </td>
-
-                                <td class="supplier-tag">
-                                    <i class="fas fa-building mr-1 text-muted"></i>
-                                    ${stat[0].supplier.supplierName}
-                                </td>
-
-                                <td class="text-right">
-                                    <span class="quantity-tag">
-                                        +${stat[1]} ${stat[0].unit}
-                                    </span>
-                                </td>
-
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
+                <c:if test="${empty importStats}">
+                    <div class="py-32 text-center">
+                        <span class="material-symbols-outlined text-7xl text-hotel-gold/20 block mb-6">query_stats</span>
+                        <h3 class="text-xl font-serif font-bold text-hotel-text uppercase tracking-[0.2em] opacity-30">Không có dữ liệu nhập hàng</h3>
+                        <p class="text-[9px] text-hotel-muted font-bold tracking-widest uppercase mt-2">Vui lòng chọn mốc thời gian khác</p>
+                    </div>
+                </c:if>
             </div>
         </div>
     </div>
 
+    <jsp:include page="/common/neural_shell_bottom.jspf" />
 </body>
-
 </html>

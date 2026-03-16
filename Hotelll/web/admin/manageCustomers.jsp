@@ -1,179 +1,324 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="com.smarthotel.model.Customer" %>
-<%@ page import="java.util.List" %>
-<%
-    List<Customer> customers = (List<Customer>) request.getAttribute("customers");
-%>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>SmartHotel CRM - Customer Management</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#3B82F6", "primary-dark": "#2563EB",
-                        "background-light": "#F3F4F6", "background-dark": "#111827",
-                        "surface-light": "#FFFFFF", "surface-dark": "#1F2937",
-                        "text-light": "#1F2937", "text-dark": "#F9FAFB",
-                        "secondary-text-light": "#6B7280", "secondary-text-dark": "#9CA3AF",
-                        "border-light": "#E5E7EB", "border-dark": "#374151",
-                    },
-                    fontFamily: { display: ["Inter", "sans-serif"], sans: ["Inter", "sans-serif"], },
-                    backgroundImage: {
-                        'diamond-gradient': 'linear-gradient(135deg, #b3e5fc 0%, #29b6f6 50%, #0288d1 100%)',
-                        'gold-gradient': 'linear-gradient(135deg, #fff9c4 0%, #fbc02d 50%, #f57f17 100%)',
-                        'silver-gradient': 'linear-gradient(135deg, #f5f5f5 0%, #bdbdbd 50%, #616161 100%)',
-                    }
-                },
-            },
-        };
-    </script>
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .metallic-text { text-shadow: 0 1px 0 rgba(255,255,255,0.4); }
-    </style>
-</head>
-<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark transition-colors duration-300 min-h-screen flex flex-col">
-    <header class="bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark shadow-sm z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center gap-3">
-                    <div class="flex-shrink-0 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary text-3xl">domain</span>
-                        <h1 class="text-xl font-bold tracking-tight text-primary">SmartHotel <span class="text-secondary-text-light dark:text-secondary-text-dark font-normal">Admin</span></h1>
-                    </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a class="border-transparent text-secondary-text-light dark:text-secondary-text-dark hover:border-primary hover:text-primary inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" href="<%=request.getContextPath()%>/admin">Dashboard</a>
-                        <a class="border-primary text-primary dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" href="#">CRM & Loyalty</a>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <button class="p-2 rounded-full text-secondary-text-light dark:text-secondary-text-dark hover:bg-gray-100 dark:hover:bg-gray-700" onclick="document.documentElement.classList.toggle('dark')">
-                        <span class="material-symbols-outlined block dark:hidden">dark_mode</span>
-                        <span class="material-symbols-outlined hidden dark:block">light_mode</span>
-                    </button>
-                    <a href="<%=request.getContextPath()%>/logout" class="text-sm font-medium text-red-500 hover:text-red-700 ml-4">Sign Out</a>
-                </div>
-            </div>
-        </div>
-    </header>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+        <%@ page import="model.Customer" %>
+            <%@ page import="java.util.List" %>
+                <% List<Customer> customers = (List<Customer>) request.getAttribute("customers"); %>
+                        <!DOCTYPE html>
+                        <html lang="vi">
 
-    <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-        <div class="md:flex md:items-center md:justify-between mb-8">
-            <div class="min-w-0 flex-1">
-                <h2 class="text-2xl font-bold leading-7 text-text-light dark:text-text-dark sm:truncate sm:text-3xl sm:tracking-tight">
-                    VIP Loyalty & CRM Dashboard
-                </h2>
-                <p class="mt-1 text-sm text-secondary-text-light dark:text-secondary-text-dark">
-                    Manage guest profiles, loyalty points, and high-value membership status.
-                </p>
-            </div>
-        </div>
+                        <head>
+                            <meta charset="utf-8" />
+                            <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+                            <title>Quản Lý Khách Hàng - SmartHotel</title>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 flex items-center">
-                <div class="p-3 rounded-full bg-blue-50 dark:bg-blue-900/20 mr-4"><span class="material-symbols-outlined text-primary text-3xl">workspace_premium</span></div>
-                <div>
-                    <p class="text-sm font-medium text-secondary-text-light dark:text-secondary-text-dark">Total Members</p>
-                    <p class="text-2xl font-bold text-text-light dark:text-text-dark"><%= customers != null ? customers.size() : 0 %></p>
-                </div>
-            </div>
-            <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 flex items-center">
-                <div class="p-3 rounded-full bg-yellow-50 dark:bg-yellow-900/20 mr-4"><span class="material-symbols-outlined text-yellow-600 text-3xl">loyalty</span></div>
-                <div>
-                    <p class="text-sm font-medium text-secondary-text-light dark:text-secondary-text-dark">Active CRM</p>
-                    <p class="text-2xl font-bold text-text-light dark:text-text-dark">Online</p>
-                </div>
-            </div>
-        </div>
+                            <!-- Premium Fonts -->
+                            <link
+                                href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@100;300;400;500;700;900&display=swap"
+                                rel="stylesheet">
+                            <link
+                                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+                                rel="stylesheet" />
 
-        <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg border border-border-light dark:border-border-dark overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-border-light dark:divide-border-dark">
-                    <thead class="bg-gray-50 dark:bg-gray-800">
-                        <tr>
-                            <th class="py-3.5 pl-4 pr-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-text-light dark:text-secondary-text-dark sm:pl-6">Member</th>
-                            <th class="px-3 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-secondary-text-light dark:text-secondary-text-dark">Contact</th>
-                            <th class="px-3 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-secondary-text-light dark:text-secondary-text-dark">Tier Status</th>
-                            <th class="px-3 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-secondary-text-light dark:text-secondary-text-dark">Total Points</th>
-                            <th class="px-3 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-secondary-text-light dark:text-secondary-text-dark">Total Spending</th>
-                            <th class="px-3 py-3.5 text-center text-xs font-semibold uppercase tracking-wider text-secondary-text-light dark:text-secondary-text-dark">Reward</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border-light dark:divide-border-dark bg-surface-light dark:bg-surface-dark">
-                        <% if (customers != null && !customers.isEmpty()) {
-                            for (Customer c : customers) { 
-                                String tier = c.getMemberType() != null ? c.getMemberType() : "Standard";
-                                String bgGradient = "bg-gray-100 dark:bg-gray-700 text-gray-600";
-                                String icon = "";
-                                
-                                if(tier.toUpperCase().contains("DIAMOND")) {
-                                    bgGradient = "bg-diamond-gradient border border-blue-300 metallic-text text-white"; icon = "diamond";
-                                } else if(tier.toUpperCase().contains("GOLD") || tier.toUpperCase().contains("VIP")) {
-                                    bgGradient = "bg-gold-gradient border border-yellow-300 metallic-text text-yellow-900"; icon = "star";
-                                } else if(tier.toUpperCase().contains("SILVER")) {
-                                    bgGradient = "bg-silver-gradient border border-gray-300 metallic-text text-gray-700"; icon = "verified";
+                            <script src="https://cdn.tailwindcss.com"></script>
+                            <script>
+                                tailwind.config = {
+                                    theme: {
+                                        extend: {
+                                            colors: {
+                                                hotel: {
+                                                    gold: "#B89A6C",
+                                                    cream: "#FAF9F6",
+                                                    bone: "#FDFCFB",
+                                                    text: "#2C2722",
+                                                    muted: "#70685F",
+                                                    chocolate: "#4A4238",
+                                                },
+                                                accent: {
+                                                    emerald: "#4F7942",
+                                                    ruby: "#8B0000"
+                                                }
+                                            },
+                                            fontFamily: {
+                                                serif: ["Cormorant Garamond", "serif"],
+                                                sans: ["Inter", "Be Vietnam Pro", "sans-serif"],
+                                            }
+                                        },
+                                    },
                                 }
-                        %>
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group">
-                            <td class="whitespace-nowrap py-4 pl-4 pr-3 sm:pl-6">
-                                <div class="flex items-center">
-                                    <div class="h-10 w-10 flex-shrink-0 relative">
-                                        <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 font-bold border-2 border-blue-200">
-                                            <span class="material-symbols-outlined">person</span>
+                            </script>
+                            <style>
+                                .card-elegant {
+                                    background: #FFFFFF;
+                                    border: 1px solid rgba(184, 154, 108, 0.1);
+                                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+                                    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+                                }
+
+                                .tier-badge {
+                                    font-weight: 700;
+                                    letter-spacing: 1px;
+                                    text-transform: uppercase;
+                                    font-size: 9px;
+                                    padding: 4px 12px;
+                                    border-radius: 99px;
+                                    display: inline-flex;
+                                    align-items: center;
+                                    gap: 6px;
+                                }
+
+                                .tier-diamond {
+                                    background: #2C2722;
+                                    color: #FAF9F6;
+                                    border: 1px solid #4A4238;
+                                }
+
+                                .tier-gold {
+                                    background: #B89A6C;
+                                    color: #FFFFFF;
+                                }
+
+                                .tier-silver {
+                                    background: #FAF9F6;
+                                    color: #70685F;
+                                    border: 1px solid rgba(184, 154, 108, 0.2);
+                                }
+
+                                .tier-standard {
+                                    background: #FDFCFB;
+                                    color: #70685F;
+                                    border: 1px solid rgba(112, 104, 95, 0.1);
+                                }
+
+                                .input-elegant {
+                                    background: #FDFCFB;
+                                    border: 1px solid rgba(184, 154, 108, 0.15);
+                                    color: #2C2722;
+                                    transition: all 0.3s ease;
+                                }
+
+                                .input-elegant:focus {
+                                    border-color: #B89A6C;
+                                    background: #FFFFFF;
+                                    box-shadow: 0 0 0 4px rgba(184, 154, 108, 0.05);
+                                    outline: none;
+                                }
+
+                                .table-elegant th {
+                                    font-family: 'Inter', sans-serif;
+                                    font-size: 10px;
+                                    font-weight: 700;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.2em;
+                                    color: #70685F;
+                                    padding: 24px 32px;
+                                    border-bottom: 1px solid rgba(184, 154, 108, 0.1);
+                                    opacity: 0.6;
+                                }
+
+                                .table-elegant td {
+                                    padding: 24px 32px;
+                                    border-bottom: 1px solid rgba(184, 154, 108, 0.05);
+                                }
+
+                                @keyframes fadeIn {
+                                    from {
+                                        opacity: 0;
+                                        transform: translateY(10px);
+                                    }
+
+                                    to {
+                                        opacity: 1;
+                                        transform: translateY(0);
+                                    }
+                                }
+                            </style>
+                        </head>
+
+                        <body
+                            class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
+
+                            <jsp:include page="/common/neural_shell_top.jspf">
+                                <jsp:param name="active" value="crm" />
+                            </jsp:include>
+
+                            <!-- CRM Page Content -->
+                            <div class="flex-1 h-screen overflow-y-auto pb-32">
+                                <div
+                                    class="max-w-7xl mx-auto px-8 lg:px-12 py-12 animate-[fadeIn_0.6s_ease-out] space-y-12">
+
+                                    <!-- Header Section -->
+                                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                                        <div class="space-y-4">
+                                            <div
+                                                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[10px] font-bold uppercase tracking-[0.3em]">
+                                                Hệ Thống Quản Trị Quan Hệ Khách Hàng
+                                            </div>
+                                            <h2
+                                                class="text-6xl font-serif font-bold text-hotel-text tracking-tight leading-tight uppercase">
+                                                Hồ Sơ<br /><span class="text-hotel-gold italic text-7xl lowercase">Khách
+                                                    hàng.</span>
+                                            </h2>
+                                            <p class="text-hotel-muted text-lg font-light italic max-w-xl opacity-80">
+                                                Quản trị trải nghiệm và định hình phong cách sống thượng lưu cho cộng
+                                                đồng hội viên SmartHotel.
+                                            </p>
+                                        </div>
+                                        <div class="flex gap-4">
+                                            <button
+                                                class="px-8 py-4 rounded-xl border border-hotel-gold/20 text-hotel-muted text-[10px] font-bold uppercase tracking-widest hover:bg-white transition-all">Xuất
+                                                Dữ Liệu</button>
+                                            <div
+                                                class="card-elegant p-6 rounded-[2rem] flex items-center gap-6 relative overflow-hidden group border-hotel-gold/10">
+                                                <div
+                                                    class="absolute inset-0 bg-hotel-gold/5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                </div>
+                                                <span
+                                                    class="material-symbols-outlined text-hotel-gold text-4xl group-hover:scale-110 transition-transform">workspace_premium</span>
+                                                <div class="relative">
+                                                    <p
+                                                        class="text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] mb-1 opacity-60">
+                                                        Tổng số hội viên</p>
+                                                    <p
+                                                        class="text-3xl font-serif font-bold text-hotel-text tracking-tighter">
+                                                        <%= customers !=null ? customers.size() : 0 %>
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="ml-4">
-                                        <div class="font-bold text-text-light dark:text-text-dark"><%= c.getFullName() %></div>
-                                        <div class="text-xs text-secondary-text-light dark:text-secondary-text-dark">ID: #<%= c.getCustomerID() %></div>
+
+                                    <!-- CRM Table Section -->
+                                    <div
+                                        class="card-elegant rounded-[3rem] overflow-hidden p-8 lg:p-10 border-hotel-gold/10 shadow-xl">
+                                        <div class="overflow-x-auto">
+                                            <table
+                                                class="w-full text-left border-collapse min-w-[1000px] table-elegant">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Thông Tin Hội Viên</th>
+                                                        <th>Kênh Liên Lạc</th>
+                                                        <th>Hạng Thành Viên</th>
+                                                        <th>Tích Lũy</th>
+                                                        <th class="text-right">Tổng Chi Tiêu</th>
+                                                        <th class="text-center">Thao Tác</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if (customers !=null && !customers.isEmpty()) { for (Customer c :
+                                                        customers) { String tier=c.getMemberType() !=null ?
+                                                        c.getMemberType() : "Standard" ; String
+                                                        tierClass="tier-standard" ; String icon="verified" ;
+                                                        if(tier.toUpperCase().contains("DIAMOND")) {
+                                                        tierClass="tier-diamond" ; icon="diamond" ; } else
+                                                        if(tier.toUpperCase().contains("GOLD") ||
+                                                        tier.toUpperCase().contains("VIP") ||
+                                                        tier.toUpperCase().contains("PLATINUM")) { tierClass="tier-gold"
+                                                        ; icon="star" ; } else if(tier.toUpperCase().contains("SILVER"))
+                                                        { tierClass="tier-silver" ; icon="military_tech" ; } %>
+                                                        <tr class="group hover:bg-hotel-gold/[0.02] transition-colors">
+                                                            <td>
+                                                                <div class="flex items-center gap-5">
+                                                                    <div
+                                                                        class="w-14 h-14 rounded-2xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-muted/40 group-hover:text-hotel-gold transition-all duration-500">
+                                                                        <span
+                                                                            class="material-symbols-outlined text-3xl">account_circle</span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p
+                                                                            class="font-bold text-hotel-text group-hover:text-hotel-gold transition-colors tracking-tight uppercase text-sm">
+                                                                            <%= c.getFullName() %>
+                                                                        </p>
+                                                                        <p
+                                                                            class="text-[10px] text-hotel-muted font-bold tracking-widest opacity-40">
+                                                                            Mã KH: #<%= c.getCustomerID() %>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="space-y-1">
+                                                                    <p
+                                                                        class="text-[12px] font-medium text-hotel-text opacity-70">
+                                                                        <%= c.getEmail() !=null ? c.getEmail() : "-" %>
+                                                                    </p>
+                                                                    <p
+                                                                        class="text-[10px] text-hotel-muted font-bold tracking-widest opacity-40">
+                                                                        <%= c.getPhone() !=null ? c.getPhone() : "N/A"
+                                                                            %>
+                                                                    </p>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span class="tier-badge <%= tierClass %>">
+                                                                    <span class="material-symbols-outlined text-[14px]">
+                                                                        <%= icon %>
+                                                                    </span>
+                                                                    <%= tier %>
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <div class="flex items-baseline gap-1">
+                                                                    <span
+                                                                        class="text-2xl font-serif font-bold text-hotel-text tabular-nums">
+                                                                        <%= c.getPoints() %>
+                                                                    </span>
+                                                                    <span
+                                                                        class="text-[9px] text-hotel-muted font-bold tracking-widest uppercase opacity-40">điểm</span>
+                                                                </div>
+                                                            </td>
+                                                            <td class="text-right">
+                                                                <span
+                                                                    class="text-hotel-text font-serif font-bold text-xl tracking-tight">
+                                                                    <%= String.format("%,.0f", c.getTotalSpending()) %>
+                                                                        <span
+                                                                            class="text-[10px] text-hotel-muted font-sans font-bold opacity-30 ml-1">VNĐ</span>
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <form
+                                                                    action="${pageContext.request.contextPath}/admin/customers"
+                                                                    method="post"
+                                                                    class="flex items-center justify-center gap-3">
+                                                                    <input type="hidden" name="action"
+                                                                        value="addPoints" />
+                                                                    <input type="hidden" name="customerId"
+                                                                        value="<%=c.getCustomerID()%>" />
+                                                                    <input
+                                                                        class="w-24 h-12 rounded-xl text-center font-serif font-bold text-lg input-elegant border-hotel-gold/10"
+                                                                        name="points" type="number" value="10"
+                                                                        min="1" />
+                                                                    <button type="submit"
+                                                                        class="w-12 h-12 rounded-xl bg-hotel-gold text-white hover:bg-hotel-text transition-all flex items-center justify-center active:scale-95 shadow-md group">
+                                                                        <span
+                                                                            class="material-symbols-outlined text-lg group-hover:rotate-12 transition-transform">bolt</span>
+                                                                    </button>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                        <% } } else { %>
+                                                            <tr>
+                                                                <td colspan="6"
+                                                                    class="py-32 text-center text-hotel-muted/20 font-serif italic text-2xl tracking-[0.2em] uppercase">
+                                                                    Không tìm thấy dữ liệu hội viên
+                                                                </td>
+                                                            </tr>
+                                                            <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center opacity-30 pt-8">
+                                        <p
+                                            class="font-serif italic text-hotel-muted text-[11px] tracking-[0.5em] uppercase">
+                                            SmartHotel CRM Engine • Intelligence Layer v2.0</p>
                                     </div>
                                 </div>
-                            </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm text-secondary-text-light dark:text-secondary-text-dark">
-                                <div><%= c.getEmail() != null ? c.getEmail() : "-" %></div>
-                                <div class="text-xs mt-0.5 opacity-75"><%= c.getPhone() != null ? c.getPhone() : "-" %></div>
-                            </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm">
-                                <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold shadow-sm <%= bgGradient %>">
-                                    <% if(!icon.isEmpty()) { %><span class="material-symbols-outlined text-[14px] mr-1"><%= icon %></span><% } %>
-                                    <%= tier %>
-                                </span>
-                            </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm text-text-light dark:text-text-dark font-bold text-base">
-                                <%= c.getPoints() %> pts
-                            </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm text-text-light dark:text-text-dark font-medium">
-                                <%= String.format("%,.0f", c.getTotalSpending()) %> đ
-                            </td>
-                            <td class="whitespace-nowrap px-3 py-4 text-sm text-center">
-                                <form action="${pageContext.request.contextPath}/admin/customers" method="post" class="flex items-center justify-center gap-2">
-                                    <input type="hidden" name="action" value="addPoints"/>
-                                    <input type="hidden" name="customerId" value="<%=c.getCustomerID()%>"/>
-                                    <input class="w-16 rounded-md border-0 py-1.5 text-text-light dark:text-text-dark bg-gray-50 dark:bg-gray-700 ring-1 ring-inset ring-border-light dark:ring-border-dark focus:ring-2 focus:ring-primary sm:text-xs text-center" name="points" type="number" value="1" min="1"/>
-                                    <button type="submit" class="inline-flex items-center justify-center rounded-md bg-green-50 dark:bg-green-900/20 px-2 py-1.5 text-xs font-medium text-green-700 dark:text-green-400 ring-1 ring-inset ring-green-600/20 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors">
-                                        <span class="material-symbols-outlined text-sm mr-1">add_circle</span> Add
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        <%  }
-                        } else { %>
-                        <tr>
-                            <td colspan="6" class="py-10 text-center text-secondary-text-light dark:text-secondary-text-dark">Chưa có khách hàng trong hệ thống.</td>
-                        </tr>
-                        <% } %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-</body>
-</html>
+                            </div>
+
+                            <jsp:include page="/common/neural_shell_bottom.jspf" />
+                        </body>
+
+                        </html>
+
+                        </html>

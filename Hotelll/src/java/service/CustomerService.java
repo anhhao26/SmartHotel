@@ -1,8 +1,8 @@
-package com.smarthotel.service;
+package service;
 
-import com.smarthotel.dao.CustomerDAO;
-import com.smarthotel.model.Customer;
-import java.util.List;  // thêm dòng này
+import dao.CustomerDAO;
+import model.Customer;
+import java.util.List;
 
 public class CustomerService {
     private final CustomerDAO dao = new CustomerDAO();
@@ -11,7 +11,6 @@ public class CustomerService {
         return dao.findById(id); 
     }
 
-    // ✅ THÊM METHOD NÀY
     public List<Customer> findAll() {
         return dao.findAll();
     }

@@ -1,170 +1,466 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="com.smarthotel.util.JPAUtil" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page import="util.JPAUtil" %>
 <%@ page import="jakarta.persistence.EntityManager" %>
-<%@ page import="com.smarthotel.model.Invoice" %>
-<%@ page import="com.smarthotel.model.InvoiceItem" %>
+<%@ page import="model.Booking" %>
+<%@ page import="model.Invoice" %>
+<%@ page import="model.InvoiceItem" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>SmartHotel Invoice</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Hóa Đơn Thanh Toán - SmartHotel</title>
+
+    <!-- Premium Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { primary: "#1069f9", "background-light": "#f5f7f8" }, fontFamily: { display: ["Manrope", "sans-serif"], serif: ["Playfair Display", "serif"], } } } }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        hotel: {
+                            gold: "#B89A6C",
+                            cream: "#FAF9F6",
+                            bone: "#FDFCFB",
+                            text: "#2C2722",
+                            muted: "#70685F",
+                            chocolate: "#4A4238",
+                        },
+                        accent: {
+                            emerald: "#4F7942",
+                            ruby: "#8B0000"
+                        }
+                    },
+                    fontFamily: {
+                        serif: ["Cormorant Garamond", "serif"],
+                        sans: ["Inter", "Be Vietnam Pro", "sans-serif"],
+                    }
+                },
+            },
+        }
     </script>
     <style>
-        @media print { body { background-color: white; -webkit-print-color-adjust: exact; } .no-print { display: none !important; } .print-border { border: none; box-shadow: none; padding: 0;} }
+        .card-invoice {
+            background: #FFFFFF;
+            border: 1px solid rgba(184, 154, 108, 0.15);
+            box-shadow: 0 40px 100px -20px rgba(74, 66, 56, 0.12);
+            position: relative;
+        }
+
+        /* Decorative corner */
+        .card-invoice::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(225deg, #B89A6C 0%, #B89A6C 50%, transparent 50%);
+            opacity: 0.05;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+                overflow: visible !important;
+            }
+
+            .card-invoice {
+                box-shadow: none !important;
+                border: 1px solid #E5E7EB !important;
+                width: 100% !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                padding: 20px !important;
+            }
+
+            .flex-1 {
+                overflow: visible !important;
+                height: auto !important;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
-<body class="bg-background-light min-h-screen font-display antialiased text-slate-900 flex flex-col items-center py-8">
-<%
-  String sid = request.getParameter("invoiceId");
-  Invoice inv = null;
-  if (sid != null) {
-    try {
-      int iid = Integer.parseInt(sid);
-      EntityManager em = JPAUtil.getEntityManager();
-      try { inv = em.find(Invoice.class, iid); } finally { em.close(); }
-    } catch (Exception e) { inv = null; }
-  }
-%>
 
-<div class="no-print w-full max-w-[210mm] mx-auto mb-4 flex justify-between">
-    <a href="<%=request.getContextPath()%>/reception/home.jsp" class="font-bold text-primary hover:underline flex items-center gap-1"><span class="material-symbols-outlined">arrow_back</span> Quay Lại Bảng Điều Khiển</a>
-</div>
+<body
+    class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
 
-<div class="w-full max-w-[210mm] bg-white shadow-xl print-border mx-auto p-12 md:p-16 rounded-xl flex flex-col gap-8 h-auto min-h-[297mm]">
-    
-    <% if (inv == null) { %>
-        <div class="text-center text-red-600 font-bold text-xl py-20 flex flex-col items-center gap-4">
-            <span class="material-symbols-outlined text-6xl">error</span>
-            Không tìm thấy dữ liệu Hóa đơn này trong hệ thống!
-        </div>
-    <% } else { %>
+    <jsp:include page="/common/neural_shell_top.jspf">
+        <jsp:param name="active" value="reception" />
+    </jsp:include>
 
-    <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-200 pb-8">
-        <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-4xl text-primary">apartment</span>
-                <h1 class="text-4xl font-serif font-bold text-slate-900 tracking-tight">SmartHotel</h1>
-            </div>
-            <div class="flex flex-col text-slate-500 text-sm mt-1">
-                <p>Số 01 Nguyễn Văn Linh, Đà Nẵng, Việt Nam</p>
-                <p>+84 (236) 123-4567 | hello@smarthotel.vn</p>
-            </div>
-        </div>
-        <div class="text-right">
-            <div class="inline-flex items-center justify-center px-4 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-bold uppercase tracking-wider mb-2">PAID / ĐÃ THANH TOÁN</div>
-            <p class="text-slate-400 text-xs uppercase tracking-widest font-semibold mt-1">Trạng Thái Hóa Đơn</p>
-        </div>
-    </header>
+    <% 
+        Invoice inv = (Invoice) request.getAttribute("foundInvoice");
+        Booking booking = (Booking) request.getAttribute("foundBooking");
+        
+        if (inv == null && booking == null) {
+            String sid = request.getParameter("invoiceId");
+            if (sid != null && !sid.isEmpty()) {
+                try {
+                    int iid = Integer.parseInt(sid);
+                    EntityManager em = JPAUtil.getEntityManager();
+                    try {
+                        inv = em.find(Invoice.class, iid);
+                        if (inv != null) booking = inv.getBooking();
+                    } finally {
+                        em.close();
+                    }
+                } catch (Exception e) {
+                    inv = null;
+                }
+            }
+            
+            // If still null, check for bookingId param (direct access)
+            if (inv == null && booking == null) {
+                String bid = request.getParameter("bookingId");
+                if (bid != null && !bid.isEmpty()) {
+                    try {
+                        int bId = Integer.parseInt(bid);
+                        EntityManager em = JPAUtil.getEntityManager();
+                        try {
+                            booking = em.find(Booking.class, bId);
+                            // Also try to find invoice for this booking
+                            List<Invoice> invs = em.createQuery("SELECT i FROM Invoice i WHERE i.booking.bookingID = :bid", Invoice.class)
+                                .setParameter("bid", bId).getResultList();
+                            if (!invs.isEmpty()) inv = invs.get(0);
+                        } finally {
+                            em.close();
+                        }
+                    } catch (Exception e) {}
+                }
+            }
+        } else if (inv != null && booking == null) {
+            booking = inv.getBooking();
+        }
+    %>
 
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        <div class="flex flex-col gap-6">
-            <div>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Khách Hàng (Billed To)</p>
-                <h3 class="text-xl font-bold text-slate-900"><%= inv.getCustomer()!=null?inv.getCustomer().getFullName():"Khách Vãng Lai" %></h3>
-                <p class="text-slate-500 text-sm mt-1 font-medium">Hạng thẻ: <%= inv.getCustomer()!=null?inv.getCustomer().getMemberType():"Standard" %></p>
-            </div>
-            <div>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Mã Phiếu Đặt (Booking ID)</p>
-                <p class="text-slate-900 font-bold font-mono">BK-<%= inv.getBooking()!=null?inv.getBooking().getBookingID():"-" %></p>
-            </div>
-        </div>
-        <div class="flex flex-col gap-6 md:text-right">
-            <div>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Mã Hóa Đơn (Invoice No.)</p>
-                <p class="text-primary font-bold text-xl">INV-<%= inv.getInvoiceID() %></p>
-            </div>
-            <div>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Ngày Xuất (Issue Date)</p>
-                <p class="text-slate-900 font-bold"><%= inv.getCreatedDate()!=null? new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(inv.getCreatedDate()) : "-" %></p>
-            </div>
-        </div>
-    </section>
+    <!-- Invoice Portal Content -->
+    <div class="flex-1 h-screen overflow-y-auto pb-32">
+        <div class="max-w-4xl mx-auto px-6 py-12 animate-[fadeIn_0.6s_ease-out] w-full">
 
-    <section class="mt-4 flex-grow">
-        <div class="w-full overflow-hidden rounded-lg border border-slate-200">
-            <table class="w-full text-left text-sm">
-                <thead>
-                    <tr class="bg-slate-50 border-b border-slate-200">
-                        <th class="py-4 px-6 font-bold text-slate-900 w-16 text-center">STT</th>
-                        <th class="py-4 px-6 font-bold text-slate-900">Chi tiết dịch vụ / Sản phẩm</th>
-                        <th class="py-4 px-6 font-bold text-slate-900 text-center w-24">SL</th>
-                        <th class="py-4 px-6 font-bold text-slate-900 text-right w-32">Đơn giá</th>
-                        <th class="py-4 px-6 font-bold text-slate-900 text-right w-40">Thành tiền</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    <%
-                      List<InvoiceItem> items = inv.getItems();
-                      int idx = 1; double subtotal = 0;
-                      for (InvoiceItem it : items) {
-                        double line = (it.getUnitPrice()!=null?it.getUnitPrice():0.0) * (it.getQuantity()!=null?it.getQuantity():0);
-                        subtotal += line;
-                    %>
-                    <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="py-4 px-6 text-center text-slate-500 font-medium"><%= idx++ %></td>
-                        <td class="py-4 px-6 font-bold text-slate-900"><%= it.getInventory()!=null?it.getInventory().getItemName():"Tiền phòng & Dịch vụ" %></td>
-                        <td class="py-4 px-6 text-center text-slate-700 font-bold"><%= it.getQuantity()!=null?it.getQuantity():0 %></td>
-                        <td class="py-4 px-6 text-right text-slate-500 font-medium"><%= String.format("%,.0f", it.getUnitPrice()!=null?it.getUnitPrice():0.0) %></td>
-                        <td class="py-4 px-6 text-right text-slate-900 font-black"><%= String.format("%,.0f", line) %> đ</td>
-                    </tr>
-                    <% } %>
-                </tbody>
-            </table>
-        </div>
-    </section>
+            <!-- Control Bar -->
+            <div
+                class="no-print flex justify-between items-center mb-8 bg-white/50 backdrop-blur-md px-8 py-4 rounded-2xl border border-hotel-gold/10">
+                <a href="${pageContext.request.contextPath}/admin/bookings"
+                    class="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-hotel-muted hover:text-hotel-gold transition-colors">
+                    <span class="material-symbols-outlined text-lg">arrow_back</span>
+                    Quay lại Quản Lý Đặt Phòng
+                </a>
+                <button onclick="window.print()"
+                    class="flex items-center gap-3 bg-hotel-gold text-white px-8 py-3 rounded-xl font-bold text-[10px] tracking-[0.2em] uppercase hover:bg-hotel-chocolate transition-all group active:scale-95 shadow-md">
+                    <span
+                        class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">print</span>
+                    In Thông Tin
+                </button>
+            </div>
 
-    <section class="flex justify-end pt-4">
-        <div class="w-full md:w-1/2 lg:w-2/5 flex flex-col gap-3">
-            <div class="flex justify-between items-center text-sm">
-                <span class="text-slate-500 font-bold">Tổng phụ (Subtotal)</span>
-                <span class="text-slate-900 font-bold"><%= String.format("%,.0f", subtotal) %> đ</span>
-            </div>
-            <div class="flex justify-between items-center text-sm p-2 bg-green-50 rounded text-green-700 border border-green-100">
-                <span class="font-bold flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">local_offer</span> Voucher / Giảm giá</span>
-                <span class="font-bold">- <%= String.format("%,.0f", inv.getDiscount()!=null?inv.getDiscount():0.0) %> đ</span>
-            </div>
-            <div class="h-px bg-slate-200 my-2"></div>
-            <div class="flex justify-between items-center">
-                <span class="text-slate-900 font-black text-xl">TỔNG THANH TOÁN</span>
-                <span class="text-rose-600 font-black text-3xl"><%= String.format("%,.0f", inv.getTotalAmount()!=null?inv.getTotalAmount():subtotal) %> đ</span>
+            <div class="card-invoice p-12 md:p-16 rounded-[2rem] space-y-16">
+
+                <% if (inv == null && booking == null) { %>
+                    <div class="text-center py-40 space-y-8 opacity-40">
+                        <span
+                            class="material-symbols-outlined text-9xl text-hotel-gold">receipt_long</span>
+                        <p
+                            class="text-2xl font-serif italic text-hotel-text tracking-widest uppercase">
+                            Hóa đơn không tồn tại</p>
+                        <p
+                            class="text-hotel-muted uppercase text-[10px] tracking-widest">
+                            Hệ thống không tìm thấy dữ liệu đặt phòng hoặc hóa đơn này</p>
+                    </div>
+                <% } else { %>
+
+                    <!-- Header -->
+                    <header
+                        class="flex flex-col md:flex-row justify-between items-start gap-12 border-b border-hotel-gold/10 pb-12">
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-5">
+                                <div
+                                    class="w-16 h-16 bg-hotel-gold/10 rounded-2xl flex items-center justify-center text-hotel-gold">
+                                    <span
+                                        class="material-symbols-outlined text-4xl">hotel_class</span>
+                                </div>
+                                <div>
+                                    <h1
+                                        class="text-4xl font-serif font-bold text-hotel-text tracking-tight uppercase italic">
+                                        SmartHotel</h1>
+                                    <p
+                                        class="text-[10px] font-bold text-hotel-gold tracking-[0.4em] uppercase mt-1">
+                                        Trải Nghệm Đẳng Cấp Thượng Lưu</p>
+                                </div>
+                            </div>
+                            <div
+                                class="text-[11px] font-medium tracking-wide text-hotel-muted uppercase space-y-1 italic">
+                                <p>Địa chỉ: 01 Nguyễn Văn Linh, Hải Châu, Đà Nẵng
+                                </p>
+                                <p>Hotline: (+84) 123 456 789 | Email:
+                                    contact@smarthotel.luxury</p>
+                            </div>
+                        </div>
+                        <div class="md:text-right space-y-4">
+                            <div
+                                class="inline-flex px-6 py-2 rounded-full <%= (inv != null) ? "bg-accent-emerald/5 border border-accent-emerald/20 text-accent-emerald" : "bg-amber-500/5 border border-amber-500/20 text-amber-500" %> text-[11px] font-bold tracking-[0.3em] uppercase">
+                                <%= (inv != null) ? "ĐÃ THANH TOÁN" : "CHƯA THANH TOÁN" %>
+                            </div>
+                            <p
+                                class="text-[10px] font-medium tracking-widest text-hotel-muted uppercase italic">
+                                <%= (inv != null) ? "Giao dịch đã được hệ thống xác thực" : "Thông tin đặt phòng hiện tại" %></p>
+                        </div>
+                    </header>
+
+                    <!-- Client Info Section -->
+                    <section class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                        <div class="space-y-8">
+                            <div class="space-y-3">
+                                <p
+                                    class="text-[10px] font-bold text-hotel-muted tracking-[0.3em] uppercase border-b border-hotel-gold/10 pb-2">
+                                    Người nhận thanh toán</p>
+                                <h3
+                                    class="text-2xl font-serif font-bold text-hotel-text uppercase italic tracking-tight">
+                                    <%= (booking != null && booking.getCustomer() != null) ? 
+                                        booking.getCustomer().getFullName() : 
+                                        (inv != null && inv.getCustomer() != null ? inv.getCustomer().getFullName() : "Khách Hàng") %>
+                                </h3>
+                                <div class="flex items-center gap-3">
+                                    <span
+                                        class="text-hotel-gold text-[11px] font-bold tracking-[0.2em] uppercase">
+                                        Mã số khách: #<%= (booking != null && booking.getCustomer() != null) ? 
+                                            booking.getCustomer().getCustomerID() : 
+                                            (inv != null && inv.getCustomer() != null ? inv.getCustomer().getCustomerID() : "---") %>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <p
+                                    class="text-[10px] font-bold text-hotel-muted tracking-[0.3em] uppercase">
+                                    Mã đặt phòng tham chiếu</p>
+                                <p
+                                    class="text-hotel-chocolate font-serif font-bold text-xl tracking-widest italic uppercase">
+                                    #BK-<%= (booking != null) ? booking.getBookingID() : (inv != null && inv.getBooking() != null ? inv.getBooking().getBookingID() : "VOID") %>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="md:text-right space-y-8">
+                            <div class="space-y-2">
+                                <p
+                                    class="text-[10px] font-bold text-hotel-muted tracking-[0.3em] uppercase">
+                                    Số hóa đơn định danh</p>
+                                <p
+                                    class="text-hotel-text font-serif font-bold text-4xl tracking-tighter uppercase italic">
+                                    INV-<span
+                                        class="text-hotel-gold"><%= (inv != null) ? inv.getInvoiceID() : "DRAFT" %></span>
+                                </p>
+                            </div>
+                            <div class="space-y-2">
+                                <p
+                                    class="text-[10px] font-bold text-hotel-muted tracking-[0.3em] uppercase">
+                                    Ngày khởi tạo</p>
+                                <p
+                                    class="text-hotel-text font-bold text-[13px] uppercase tracking-widest italic">
+                                    <%= (inv != null && inv.getCreatedDate() != null) ? 
+                                        new java.text.SimpleDateFormat("dd/MM/yyyy · HH:mm:ss").format(inv.getCreatedDate()) : 
+                                        (booking != null && booking.getCheckInDate() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(booking.getCheckInDate()) : "N/A") %>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Services Detail Table -->
+                    <section
+                        class="rounded-2xl overflow-hidden border border-hotel-gold/10">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr
+                                    class="bg-hotel-gold/5 border-b border-hotel-gold/10">
+                                    <th
+                                        class="py-6 px-10 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
+                                        STT</th>
+                                    <th
+                                        class="py-6 px-10 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
+                                        Dịch Vụ & Tiện Ích</th>
+                                    <th
+                                        class="py-6 px-10 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-center">
+                                        SL</th>
+                                    <th
+                                        class="py-6 px-10 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-right">
+                                        Đơn Giá</th>
+                                    <th
+                                        class="py-6 px-10 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-right">
+                                        Thành Tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-hotel-gold/5">
+                                <% 
+                                   double subtotalVal = 0;
+                                   if (inv != null) {
+                                       List<InvoiceItem> items = inv.getItems();
+                                       int idx = 1;
+                                       for (InvoiceItem it : items) {
+                                           double line = (it.getUnitPrice() != null ? it.getUnitPrice() : 0.0) * (it.getQuantity() != null ? it.getQuantity() : 0);
+                                           subtotalVal += line;
+                                   %>
+                                   <tr class="hover:bg-hotel-gold/5 transition-colors group">
+                                       <td class="py-6 px-10 text-[12px] font-medium text-hotel-muted opacity-50 group-hover:opacity-100 italic transition-all">
+                                           <%= String.format("%02d", idx++) %>
+                                       </td>
+                                       <td class="py-6 px-10 font-serif font-bold text-hotel-text text-[14px] uppercase tracking-wide italic">
+                                           <%= it.getInventory() != null ? it.getInventory().getItemName() : "Dịch vụ phòng / Nghỉ dưỡng" %>
+                                       </td>
+                                       <td class="py-6 px-10 text-center text-hotel-gold font-bold text-[14px]">
+                                           <%= it.getQuantity() != null ? it.getQuantity() : 0 %>
+                                       </td>
+                                       <td class="py-6 px-10 text-right text-hotel-muted font-medium text-[13px]">
+                                           <%= String.format("%,.0f", it.getUnitPrice() != null ? it.getUnitPrice() : 0.0) %>
+                                       </td>
+                                       <td class="py-6 px-10 text-right text-hotel-text font-bold text-[14px] tabular-nums">
+                                           <%= String.format("%,.0f", line) %>
+                                           <span class="text-[10px] font-normal text-hotel-muted ml-1">VND</span>
+                                       </td>
+                                   </tr>
+                                   <% } 
+                                   } else if (booking != null) { 
+                                       subtotalVal = booking.getTotalAmount();
+                                   %>
+                                   <tr class="hover:bg-hotel-gold/5 transition-colors group">
+                                       <td class="py-6 px-10 text-[12px] font-medium text-hotel-muted opacity-50 group-hover:opacity-100 italic transition-all">01</td>
+                                       <td class="py-6 px-10 font-serif font-bold text-hotel-text text-[14px] uppercase tracking-wide italic">Dịch vụ đặt phòng (Dự kiến)</td>
+                                       <td class="py-6 px-10 text-center text-hotel-gold font-bold text-[14px]">1</td>
+                                       <td class="py-6 px-10 text-right text-hotel-muted font-medium text-[13px]"><%= String.format("%,.0f", booking.getTotalAmount()) %></td>
+                                       <td class="py-6 px-10 text-right text-hotel-text font-bold text-[14px] tabular-nums"><%= String.format("%,.0f", booking.getTotalAmount()) %> <span class="text-[10px] font-normal text-hotel-muted ml-1">VND</span></td>
+                                   </tr>
+                                   <% } %>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <!-- Summary & Totals -->
+                    <section
+                        class="flex flex-col md:flex-row justify-between gap-16 pt-8">
+                        <div class="max-w-md space-y-4">
+                            <p
+                                class="text-[10px] font-bold text-hotel-muted tracking-[0.3em] uppercase">
+                                Ghi Chú</p>
+                            <p
+                                class="text-hotel-muted text-[11px] leading-relaxed font-medium uppercase italic tracking-widest opacity-80 decoration-hotel-gold/30">
+                                Hóa đơn này được xác thực tự động bởi hệ thống quản
+                                lý SmartHotel ngay sau khi giao dịch thành công.
+                                Mọi chi tiết về dịch vụ thượng lưu (Elite Benefits)
+                                đã được đồng bộ hóa trên toàn hệ thống.
+                            </p>
+                        </div>
+                        <div class="w-full md:w-80 space-y-6 pt-4">
+                            <div
+                                class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider">
+                                <span class="text-hotel-muted">Tổng phí dịch
+                                    vụ</span>
+                                <span class="text-hotel-text">
+                                    <%= String.format("%,.0f", subtotalVal) %> <span
+                                            class="text-[9px] font-normal">VND</span>
+                                </span>
+                            </div>
+                            <div
+                                class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-accent-emerald">
+                                <span class="flex items-center gap-2">Khuyến mãi /
+                                    Giảm trừ</span>
+                                <span>- <%= String.format("%,.0f", (inv != null && inv.getDiscount() != null) ? inv.getDiscount() : 0.0) %> <span
+                                            class="text-[9px] font-normal">VND</span></span>
+                            </div>
+                            <div class="h-px bg-hotel-gold/20"></div>
+                            <div class="flex justify-between items-end">
+                                <div class="space-y-1">
+                                    <span
+                                        class="text-[9px] font-bold text-hotel-gold tracking-[0.4em] uppercase block">Tổng
+                                        thanh toán</span>
+                                    <span
+                                        class="text-4xl font-serif font-bold text-hotel-text tracking-widest uppercase italic leading-none">
+                                        <%= String.format("%,.0f", (inv != null) ? inv.getTotalAmount() : subtotalVal) %>
+                                    </span>
+                                </div>
+                                <span
+                                    class="text-xs font-bold text-hotel-muted uppercase pb-1">VND</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Verification & Signoff -->
+                    <footer class="pt-24 border-t border-hotel-gold/10">
+                        <div class="grid grid-cols-2 gap-20">
+                            <div class="space-y-6">
+                                <p
+                                    class="text-[9px] font-bold tracking-[0.4em] text-hotel-muted uppercase italic">
+                                    Đại diện khách sạn</p>
+                                <div class="w-full h-[1px] bg-hotel-gold/10 mb-8">
+                                </div>
+                                <div class="text-center">
+                                    <p
+                                        class="font-serif italic text-hotel-gold text-2xl">
+                                        Quản lý hệ thống</p>
+                                    <p
+                                        class="text-[10px] font-bold text-hotel-muted uppercase tracking-widest mt-2">
+                                        SmartHotel Administration</p>
+                                </div>
+                            </div>
+                            <div class="space-y-6 text-right">
+                                <p
+                                    class="text-[9px] font-bold tracking-[0.4em] text-hotel-muted uppercase italic">
+                                    Xác nhận của Khách hàng</p>
+                                <div class="w-full h-[1px] bg-hotel-gold/10 mb-8">
+                                </div>
+                                <p
+                                    class="text-xl font-serif italic text-hotel-text uppercase tracking-widest">
+                                    <%= (booking != null && booking.getCustomer() != null) ? 
+                                        booking.getCustomer().getFullName() : 
+                                        (inv != null && inv.getCustomer() != null ? inv.getCustomer().getFullName() : "Thành Viên Được Xác Thực") %>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="pt-24 text-center space-y-6">
+                            <p
+                                class="text-[10px] font-bold tracking-[1em] text-hotel-muted uppercase italic opacity-60">
+                                Cảm ơn quý khách đã tin tưởng và sử dụng dịch vụ</p>
+                            <div
+                                class="flex justify-center gap-8 text-[9px] font-bold text-hotel-gold tracking-[0.3em] uppercase">
+                                <span>Lưu Trú Nghệ Thuật</span>
+                                <span class="opacity-30">•</span>
+                                <span>Tiện Nghi Đẳng Cấp</span>
+                                <span class="opacity-30">•</span>
+                                <span>Phục Vụ Tận Tâm</span>
+                            </div>
+                        </div>
+                    </footer>
+                <% } %>
             </div>
         </div>
-    </section>
+    </div>
 
-    <footer class="mt-auto pt-16 flex flex-col gap-8">
-        <div class="flex flex-col md:flex-row justify-between items-end gap-12">
-            <div class="flex flex-col gap-2 max-w-sm">
-                <p class="text-slate-900 font-bold text-sm">Ghi chú thanh toán</p>
-                <p class="text-slate-500 text-sm font-medium">Toàn bộ chi phí đã được thanh toán đầy đủ bằng tiền mặt / chuyển khoản tại quầy.</p>
-            </div>
-            <div class="flex flex-col gap-2 w-64">
-                <div class="border-b-2 border-dashed border-slate-300 mb-2 h-8"></div>
-                <p class="text-center text-xs text-slate-400 uppercase tracking-widest font-bold">Chữ ký Lễ Tân</p>
-            </div>
-        </div>
-        <div class="border-t border-slate-100 pt-8 text-center">
-            <p class="text-slate-600 font-bold mb-1">Cảm ơn quý khách đã tin tưởng SmartHotel.</p>
-            <div class="flex justify-center gap-6 mt-4 text-xs font-bold text-slate-400">
-                <span>Hẹn gặp lại!</span>
-                <span>•</span>
-                <span>smarthotel.vn</span>
-            </div>
-        </div>
-    </footer>
-    <% } %>
-</div>
-
-<button class="no-print fixed bottom-8 right-8 bg-primary hover:bg-blue-700 text-white p-4 rounded-full shadow-lg shadow-blue-500/40 transition-all hover:scale-105 z-50 flex items-center justify-center gap-2 group" onclick="window.print()">
-    <span class="material-symbols-outlined">print</span>
-    <span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 whitespace-nowrap font-bold">In Hóa Đơn</span>
-</button>
-
+    <jsp:include page="/common/neural_shell_bottom.jspf" />
 </body>
+
 </html>

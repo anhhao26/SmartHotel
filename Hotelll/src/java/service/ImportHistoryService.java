@@ -1,7 +1,7 @@
-package com.smarthotel.service;
+package service;
 
-import com.smarthotel.dao.ImportHistoryDAO;
-import com.smarthotel.model.ImportHistory;
+import dao.ImportHistoryDAO;
+import model.ImportHistory;
 import java.util.List;
 
 public class ImportHistoryService {

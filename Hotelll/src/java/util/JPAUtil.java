@@ -1,4 +1,4 @@
-package com.smarthotel.util;
+package util;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -9,7 +9,7 @@ public class JPAUtil {
 
     private static EntityManagerFactory buildFactory() {
         try {
-            return Persistence.createEntityManagerFactory("SmartHotelPU");
+            return Persistence.createEntityManagerFactory("HotelllPU");
         } catch (Throwable ex) {
             System.err.println("Initial EntityManagerFactory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);

@@ -1,7 +1,7 @@
-package com.smarthotel.dao;
+package dao;
 
-import com.smarthotel.model.Customer;
-import com.smarthotel.util.JPAUtil;
+import model.Customer;
+import util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
@@ -17,11 +17,27 @@ public class CustomerDAO {
         }
     }
 
+    public Customer findByEmail(String email) {
+        if (email == null || email.trim().isEmpty())
+            return null;
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT c FROM Customer c WHERE c.email = :email";
+            TypedQuery<Customer> q = em.createQuery(jpql, Customer.class);
+            q.setParameter("email", email);
+            q.setMaxResults(1);
+            List<Customer> list = q.getResultList();
+            return list.isEmpty() ? null : list.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
     public List<Customer> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             return em.createQuery("SELECT c FROM Customer c", Customer.class)
-                     .getResultList();
+                    .getResultList();
         } finally {
             em.close();
         }
@@ -32,14 +48,12 @@ public class CustomerDAO {
         try {
             em.getTransaction().begin();
             em.persist(c);
-            
-            // LỆNH QUAN TRỌNG: Ép JPA đẩy lệnh INSERT xuống DB ngay lập tức để lấy ID tự tăng
-            em.flush(); 
-            
+            em.flush();
             em.getTransaction().commit();
             return c;
         } catch (Exception ex) {
-            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
             throw ex;
         } finally {
             em.close();
@@ -54,7 +68,8 @@ public class CustomerDAO {
             em.getTransaction().commit();
             return true;
         } catch (Exception ex) {
-            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
             ex.printStackTrace();
             return false;
         } finally {

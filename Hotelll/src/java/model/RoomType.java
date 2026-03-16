@@ -1,4 +1,4 @@
-package com.smarthotel.model;
+package model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -21,6 +21,9 @@ public class RoomType {
     @Column(name = "MaxCapacity")
     private Integer maxCapacity;
 
+    @Column(name = "Amenities", length = 500)
+    private String amenities;
+
     @OneToMany(mappedBy = "roomType", fetch = FetchType.LAZY)
     private List<Room> rooms;
 
@@ -35,6 +38,8 @@ public class RoomType {
     public void setPricePerNight(BigDecimal pricePerNight) { this.pricePerNight = pricePerNight; }
     public Integer getMaxCapacity() { return maxCapacity; }
     public void setMaxCapacity(Integer maxCapacity) { this.maxCapacity = maxCapacity; }
+    public String getAmenities() { return amenities; }
+    public void setAmenities(String amenities) { this.amenities = amenities; }
     public List<Room> getRooms() { return rooms; }
     public void setRooms(List<Room> rooms) { this.rooms = rooms; }
 }

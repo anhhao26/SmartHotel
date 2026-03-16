@@ -1,410 +1,399 @@
-<%-- Document : predict-revenue Created on : Mar 10, 2026, 1:17:01 AM Author : ntpho --%>
-    <%@page contentType="text/html" pageEncoding="UTF-8" %>
-        <!DOCTYPE html>
-        <html lang="vi">
+﻿<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <!DOCTYPE html>
+    <html lang="vi">
 
-        <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>AI Prediction Dashboard | SmartHotel</title>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-            <style>
-                :root {
-                    --primary-color: #2c3e50;
-                    --secondary-color: #34495e;
-                    --accent-color: #3498db;
-                    --background-color: #f4f7f6;
-                    --card-bg: #ffffff;
-                    --text-color: #333333;
-                    --text-muted: #7f8c8d;
-                    --hotel-gold: #f1c40f;
-                }
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>SmartHotel BI - Trung Tâm Phân Tích Kinh Doanh</title>
 
-                * {
-                    margin: 0;
-                    padding: 0;
-                    box-sizing: border-box;
-                }
+        <!-- Premium Fonts -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@100;300;400;500;700;900&display=swap"
+            rel="stylesheet">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            rel="stylesheet" />
 
-                body {
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    background-color: var(--background-color);
-                    color: var(--text-color);
-                    line-height: 1.6;
-                }
-
-                /* Header Styling */
-                .header {
-                    background-color: var(--primary-color);
-                    color: white;
-                    padding: 20px 40px;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                    position: sticky;
-                    top: 0;
-                    z-index: 100;
-                }
-
-                .header-title {
-                    font-size: 24px;
-                    font-weight: 600;
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                }
-
-                .header-title i {
-                    color: var(--hotel-gold);
-                }
-
-                /* Button Back to Dashboard */
-                .btn-back {
-                    background-color: transparent;
-                    color: white;
-                    border: 1px solid rgba(255, 255, 255, 0.5);
-                    padding: 10px 20px;
-                    border-radius: 5px;
-                    text-decoration: none;
-                    font-weight: 500;
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    transition: all 0.3s ease;
-                }
-
-                .btn-back:hover {
-                    background-color: rgba(255, 255, 255, 0.1);
-                    border-color: white;
-                    transform: translateY(-2px);
-                }
-
-                /* Main Content Area */
-                .main-content {
-                    padding: 40px 20px;
-                    max-width: 1200px;
-                    margin: 0 auto;
-                }
-
-                .page-description {
-                    text-align: center;
-                    margin-bottom: 40px;
-                    color: var(--text-muted);
-                    font-size: 16px;
-                }
-
-                /* Chart Containers */
-                .chart-card {
-                    background: var(--card-bg);
-                    border-radius: 12px;
-                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-                    padding: 30px;
-                    margin-bottom: 40px;
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
-                }
-
-                .chart-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
-                }
-
-                .card-header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    margin-bottom: 25px;
-                    border-bottom: 2px solid #f1f2f6;
-                    padding-bottom: 15px;
-                }
-
-                .card-title {
-                    font-size: 20px;
-                    color: var(--primary-color);
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                }
-
-                .card-title .icon-revenue {
-                    color: #27ae60;
-                }
-
-                .card-title .icon-booking {
-                    color: #8e44ad;
-                }
-
-                .card-subtitle {
-                    font-size: 14px;
-                    color: var(--text-muted);
-                    font-style: italic;
-                    background: #f8f9fa;
-                    padding: 5px 15px;
-                    border-radius: 20px;
-                }
-
-                .chart-wrapper {
-                    position: relative;
-                    height: 450px;
-                    width: 100%;
-                }
-
-                /* Error Message Styling */
-                .error-alert {
-                    background-color: #fdeaea;
-                    border-left: 5px solid #e74c3c;
-                    color: #c0392b;
-                    padding: 15px 20px;
-                    border-radius: 4px;
-                    margin-bottom: 25px;
-                    display: flex;
-                    align-items: center;
-                    gap: 15px;
-                    font-weight: 500;
-                    animation: slideIn 0.5s ease;
-                }
-
-                @keyframes slideIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(-10px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
-                /* Responsive */
-                @media (max-width: 768px) {
-                    .header {
-                        flex-direction: column;
-                        gap: 15px;
-                        padding: 15px 20px;
-                    }
-
-                    .chart-wrapper {
-                        height: 300px;
-                    }
-
-                    .card-header {
-                        flex-direction: column;
-                        align-items: flex-start;
-                        gap: 10px;
-                    }
-                }
-            </style>
-        </head>
-
-        <body>
-            <!-- Tiêu đề trang & Nút Quay lại -->
-            <header class="header">
-                <div class="header-title">
-                    <i class="fa-solid fa-robot"></i>
-                    AI Prediction System
-                </div>
-                <a href="${pageContext.request.contextPath}/admin/dashboard.jsp" class="btn-back">
-                    <i class="fa-solid fa-arrow-left"></i> Về Dashboard
-                </a>
-            </header>
-
-            <main class="main-content">
-                <p class="page-description">Hệ thống phân tích và dự báo chuỗi thời gian áp dụng thuật toán Học Máy
-                    (Machine Learning) dựa trên dữ liệu lịch sử của khách sạn.</p>
-
-                <!-- Biểu đồ 1: Doanh Thu -->
-                <div class="chart-card" id="revenueContainer">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fa-solid fa-chart-line icon-revenue"></i>
-                            Dự báo Doanh Thu (12 Tháng Tới)
-                        </h2>
-                        <span class="card-subtitle">Mô hình: Linear Regression</span>
-                    </div>
-                    <!-- JS sẽ chèn thông báo lỗi vào đây nếu có -->
-                    <div class="chart-wrapper">
-                        <canvas id="revenueChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Biểu đồ 2: Số Lượng Phòng -->
-                <div class="chart-card" id="bookingContainer">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fa-solid fa-bed icon-booking"></i>
-                            Dự báo Nhu Cầu Phòng Đặt (12 Tháng Tới)
-                        </h2>
-                        <span class="card-subtitle">Xu hướng & Mùa vụ</span>
-                    </div>
-                    <!-- JS sẽ chèn thông báo lỗi vào đây nếu có -->
-                    <div class="chart-wrapper">
-                        <canvas id="bookingChart"></canvas>
-                    </div>
-                </div>
-            </main>
-
-            <script>
-                // Data lấy từ Servlet
-                const rawRevenueData = <%= request.getAttribute("revenueData") != null && !request.getAttribute("revenueData").toString().isEmpty() ? request.getAttribute("revenueData") : "{}" %>;
-                const rawBookingData = <%= request.getAttribute("bookingData") != null && !request.getAttribute("bookingData").toString().isEmpty() ? request.getAttribute("bookingData") : "{}" %>;
-
-                // Hàm hiển thị lỗi giao diện đẹp hơn
-                function displayError(containerId, message) {
-                    const container = document.getElementById(containerId);
-                    if (container) {
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'error-alert';
-                        errorDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="font-size: 24px;"></i> <div><strong>Cảnh báo Dữ liệu / Kết nối:</strong><br>' + message + '</div>';
-
-                        // Chèn vào ngay dưới card-header
-                        const cardHeader = container.querySelector('.card-header');
-                        cardHeader.insertAdjacentElement('afterend', errorDiv);
-
-                        // Xóa luôn thẻ canvas biểu đồ vì không có data để vẽ
-                        const chartWrapper = container.querySelector('.chart-wrapper');
-                        if (chartWrapper) chartWrapper.style.display = 'none';
-                    }
-                }
-
-                // --------- BIỂU ĐỒ DOANH THU ---------
-                if (rawRevenueData.status === "error") {
-                    displayError('revenueContainer', rawRevenueData.message);
-                } else if (rawRevenueData.data) {
-                    const dataRev = rawRevenueData.data;
-                    const ctxRev = document.getElementById('revenueChart').getContext('2d');
-
-                    // Cấu hình Gradient cho vùng Area Chart Đẹp
-                    const gradientRev = ctxRev.createLinearGradient(0, 0, 0, 400);
-                    gradientRev.addColorStop(0, 'rgba(46, 204, 113, 0.5)'); // Xanh lá mạ nhạt
-                    gradientRev.addColorStop(1, 'rgba(46, 204, 113, 0.0)');
-
-                    const gradientPred = ctxRev.createLinearGradient(0, 0, 0, 400);
-                    gradientPred.addColorStop(0, 'rgba(52, 152, 219, 0.5)'); // Xanh dương nhạt
-                    gradientPred.addColorStop(1, 'rgba(52, 152, 219, 0.0)');
-
-                    new Chart(ctxRev, {
-                        type: 'line',
-                        data: {
-                            labels: dataRev.labels,
-                            datasets: [
-                                {
-                                    label: 'Lịch sử Thực tế',
-                                    data: dataRev.actual_revenue,
-                                    borderColor: '#2ecc71', // Xanh lá
-                                    backgroundColor: gradientRev,
-                                    borderWidth: 3,
-                                    fill: true,
-                                    tension: 0.4,
-                                    pointRadius: 5,
-                                    pointHoverRadius: 7,
-                                    pointBackgroundColor: 'white'
-                                },
-                                {
-                                    label: 'AI Dự báo Tương lai',
-                                    data: dataRev.predicted_revenue,
-                                    borderColor: '#3498db', // Xanh dương
-                                    backgroundColor: gradientPred,
-                                    borderWidth: 3,
-                                    borderDash: [5, 5],
-                                    fill: true,
-                                    tension: 0.4,
-                                    pointRadius: 5,
-                                    pointHoverRadius: 7,
-                                    pointBackgroundColor: 'white'
-                                }
-                            ]
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            hotel: {
+                                gold: "#B89A6C",
+                                cream: "#FAF9F6",
+                                bone: "#FDFCFB",
+                                text: "#2C2722",
+                                muted: "#70685F",
+                                chocolate: "#4A4238",
+                            },
+                            accent: {
+                                emerald: "#4F7942",
+                                ruby: "#8B0000"
+                            }
                         },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { position: 'top', labels: { font: { family: 'Segoe UI', size: 13 } } },
-                                tooltip: {
-                                    mode: 'index', intersect: false,
-                                    callbacks: {
-                                        label: function (context) {
-                                            let label = context.dataset.label || '';
-                                            if (label) { label += ': '; }
-                                            if (context.parsed.y !== null) {
-                                                label += new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(context.parsed.y);
-                                            }
-                                            return label;
+                        fontFamily: {
+                            serif: ["Cormorant Garamond", "serif"],
+                            sans: ["Inter", "Be Vietnam Pro", "sans-serif"],
+                        }
+                    },
+                },
+            }
+        </script>
+        <style>
+            .card-elegant {
+                background: #FFFFFF;
+                border: 1px solid rgba(184, 154, 108, 0.1);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+                transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            }
+
+            .card-elegant:hover {
+                transform: translateY(-5px);
+                border-color: rgba(184, 154, 108, 0.3);
+                box-shadow: 0 20px 60px rgba(184, 154, 108, 0.08);
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
+    </head>
+
+    <body class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
+
+        <jsp:include page="/common/neural_shell_top.jspf">
+            <jsp:param name="active" value="ai" />
+        </jsp:include>
+
+        <!-- AI Intelligence Content -->
+        <div class="flex-1 h-screen overflow-y-auto pb-32">
+            <div class="max-w-7xl mx-auto px-12 animate-[fadeIn_0.8s_ease-out]">
+
+                <!-- Header Section -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 py-12">
+                    <div class="space-y-4">
+                        <div
+                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[9px] font-bold uppercase tracking-[0.3em]">
+                            Trí Tuệ Doanh Nghiệp v8.0
+                        </div>
+                        <h2
+                            class="text-6xl font-serif font-bold text-hotel-text tracking-tight leading-tight uppercase">
+                            Dự Báo<br /><span class="text-hotel-gold italic">Tăng Trưởng.</span>
+                        </h2>
+                        <p class="text-hotel-muted text-lg font-medium italic max-w-2xl opacity-80">
+                            Hệ thống mô phỏng chuỗi thời gian dựa trên các thuật toán phân tích xu hướng cao cấp và dữ
+                            liệu thực tế từ hệ thống lõi SmartHotel.
+                        </p>
+                    </div>
+                    <div class="flex gap-4">
+                        <div
+                            class="card-elegant px-8 py-5 rounded-[2rem] flex items-center gap-5 relative overflow-hidden group">
+                            <div
+                                class="absolute inset-0 bg-hotel-gold/5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            </div>
+                            <span
+                                class="material-symbols-outlined text-hotel-gold text-4xl group-hover:scale-110 transition-transform">insights</span>
+                            <div>
+                                <p
+                                    class="text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] mb-1 opacity-60">
+                                    CƠ CHẾ PHÂN TÍCH</p>
+                                <p
+                                    class="text-xl font-serif font-bold text-hotel-text tracking-widest uppercase italic">
+                                    Prophet BI</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
+
+                    <!-- Revenue Prediction Card -->
+                    <div class="card-elegant rounded-[3rem] p-12 flex flex-col group relative overflow-hidden"
+                        id="revenueContainer">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-hotel-gold/[0.02] to-transparent pointer-events-none">
+                        </div>
+                        <div class="flex items-center justify-between mb-12 relative">
+                            <div class="flex items-center gap-5">
+                                <div
+                                    class="w-16 h-16 rounded-[1.5rem] bg-hotel-gold/10 flex items-center justify-center text-hotel-gold border border-hotel-gold/20 group-hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-3xl">trending_up</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-serif font-bold text-hotel-text tracking-tight uppercase">
+                                        Dự Báo Doanh Thu</h3>
+                                    <p
+                                        class="text-[9px] text-hotel-muted font-bold uppercase tracking-[0.3em] mt-1 italic opacity-50">
+                                        Chu kỳ 12 tháng kế tiếp</p>
+                                </div>
+                            </div>
+                            <span
+                                class="text-[8px] font-bold text-hotel-gold bg-hotel-gold/10 px-4 py-1.5 rounded-full border border-hotel-gold/20 uppercase tracking-[0.4em]">Time
+                                Series</span>
+                        </div>
+
+                        <div class="flex-1 relative min-h-[450px]">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Booking Prediction Card -->
+                    <div class="card-elegant rounded-[3rem] p-12 flex flex-col group relative overflow-hidden"
+                        id="bookingContainer">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-hotel-chocolate/[0.02] to-transparent pointer-events-none">
+                        </div>
+                        <div class="flex items-center justify-between mb-12 relative">
+                            <div class="flex items-center gap-5">
+                                <div
+                                    class="w-16 h-16 rounded-[1.5rem] bg-hotel-chocolate/10 flex items-center justify-center text-hotel-chocolate border border-hotel-chocolate/20 group-hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-3xl">bed</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-serif font-bold text-hotel-text tracking-tight uppercase">
+                                        Dự Báo Nhu Cầu</h3>
+                                    <p
+                                        class="text-[9px] text-hotel-muted font-bold uppercase tracking-[0.3em] mt-1 italic opacity-50">
+                                        Xu hướng mùa vụ cao cấp</p>
+                                </div>
+                            </div>
+                            <span
+                                class="text-[8px] font-bold text-hotel-chocolate bg-hotel-chocolate/10 px-4 py-1.5 rounded-full border border-hotel-chocolate/20 uppercase tracking-[0.4em]">Capacity
+                                Plan</span>
+                        </div>
+
+                        <div class="flex-1 relative min-h-[450px]">
+                            <canvas id="bookingChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Logic Protocol Detail -->
+                <div
+                    class="card-elegant rounded-[3rem] p-14 border-dashed mt-16 group relative overflow-hidden bg-hotel-bone/50">
+                    <div class="absolute inset-0 bg-hotel-gold/[0.01] pointer-events-none"></div>
+                    <div class="flex items-start gap-10 relative">
+                        <div
+                            class="w-20 h-20 rounded-[2rem] bg-white flex items-center justify-center text-hotel-gold border border-hotel-gold/10 shadow-sm">
+                            <span
+                                class="material-symbols-outlined text-4xl group-hover:rotate-12 transition-transform duration-500">description</span>
+                        </div>
+                        <div class="space-y-6">
+                            <h4 class="text-[10px] font-bold text-hotel-muted uppercase tracking-[0.5em] opacity-60">Cơ
+                                sở dữ liệu phân tích hệ thống</h4>
+                            <p
+                                class="text-hotel-muted text-base font-medium leading-relaxed max-w-5xl italic uppercase tracking-widest opacity-80">
+                                Thuật toán sử dụng dữ liệu lịch sử từ cơ sở dữ liệu SmartHotel, kết xuất qua mô hình trí
+                                tuệ nhân tạo.
+                                Các chỉ số bao gồm độ lệch chuẩn và xu hướng tăng trưởng được tính toán để thực thi
+                                chính sách tối ưu giá phòng
+                                (Dynamic Pricing) và điều phối tài nguyên vận hành hiệu quả nhất.
+                            </p>
+                            <div class="flex items-center gap-8 pt-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-2 h-2 rounded-full bg-accent-emerald"></span>
+                                    <span
+                                        class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest opacity-60">Model
+                                        Balanced</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="w-2 h-2 rounded-full bg-hotel-gold"></span>
+                                    <span
+                                        class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest opacity-60">Real-time
+                                        Stream</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Injection Blocks -->
+        <script id="revenue-data" type="application/json">
+        <%= request.getAttribute("revenueData") != null ? request.getAttribute("revenueData") : "{}" %>
+    </script>
+        <script id="booking-data" type="application/json">
+        <%= request.getAttribute("bookingData") != null ? request.getAttribute("bookingData") : "{}" %>
+    </script>
+
+        <jsp:include page="/common/neural_shell_bottom.jspf" />
+
+        <script>
+                (function () {
+                    // Data acquisition from JSON blocks
+                    let rawRevenueData = {};
+                    let rawBookingData = {};
+
+                    try {
+                        rawRevenueData = JSON.parse(document.getElementById('revenue-data').textContent);
+                        rawBookingData = JSON.parse(document.getElementById('booking-data').textContent);
+                    } catch (e) {
+                        console.error("Failed to parse analytics data", e);
+                    }
+
+                    function displayError(containerId, message) {
+                        const container = document.getElementById(containerId);
+                        if (container) {
+                            const canvas = container.querySelector('canvas');
+                            if (canvas) canvas.style.display = 'none';
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'p-20 flex flex-col items-center justify-center space-y-6 text-center h-full min-h-[450px] border-2 border-dashed border-hotel-gold/20 rounded-[3rem] mt-10 bg-hotel-gold/[0.02]';
+                            errorDiv.innerHTML = `
+                        <span class="material-symbols-outlined text-6xl text-hotel-gold opacity-50">analytics</span>
+                        <div>
+                            <p class="text-[11px] font-bold text-hotel-text uppercase tracking-[0.4em] mb-2">Lỗi Kết Nối Trung Tâm Phân Tích</p>
+                            <p class="text-xs font-medium text-hotel-muted italic leading-relaxed max-w-xs uppercase tracking-widest">${message}</p>
+                        </div>
+                        <button onclick="location.reload()" class="px-10 py-4 rounded-xl bg-white border border-hotel-gold/20 text-[9px] font-bold uppercase tracking-widest hover:bg-hotel-gold hover:text-white transition-all shadow-sm">Cập nhật dữ liệu</button>
+                    `;
+                            container.appendChild(errorDiv);
+                        }
+                    }
+
+                    Chart.defaults.color = '#70685F';
+                    Chart.defaults.font.family = "'Inter', 'Be Vietnam Pro', sans-serif";
+                    Chart.defaults.font.weight = '500';
+
+                    // Revenue Chart Implementation
+                    if (rawRevenueData.status === "error") {
+                        displayError('revenueContainer', rawRevenueData.message);
+                    } else if (rawRevenueData.data) {
+                        const ctx = document.getElementById('revenueChart').getContext('2d');
+                        const gActual = ctx.createLinearGradient(0, 0, 0, 400);
+                        gActual.addColorStop(0, 'rgba(184, 154, 108, 0.2)');
+                        gActual.addColorStop(1, 'rgba(184, 154, 108, 0)');
+
+                        const gPred = ctx.createLinearGradient(0, 0, 0, 400);
+                        gPred.addColorStop(0, 'rgba(74, 66, 56, 0.1)');
+                        gPred.addColorStop(1, 'rgba(74, 66, 56, 0)');
+
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: rawRevenueData.data.labels,
+                                datasets: [
+                                    {
+                                        label: 'Lịch sử Thực tế',
+                                        data: rawRevenueData.data.actual_revenue,
+                                        borderColor: '#B89A6C',
+                                        backgroundColor: gActual,
+                                        borderWidth: 4,
+                                        fill: true,
+                                        tension: 0.4,
+                                        pointRadius: 0,
+                                        pointHoverRadius: 8,
+                                        pointHoverBackgroundColor: '#B89A6C',
+                                        pointHoverBorderColor: '#FFFFFF',
+                                        pointHoverBorderWidth: 3,
+                                    },
+                                    {
+                                        label: 'Dự báo Tăng trưởng',
+                                        data: rawRevenueData.data.predicted_revenue,
+                                        borderColor: '#4A4238',
+                                        backgroundColor: gPred,
+                                        borderWidth: 2,
+                                        borderDash: [8, 4],
+                                        fill: true,
+                                        tension: 0.4,
+                                        pointRadius: 0,
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                interaction: { mode: 'index', intersect: false },
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            padding: 40,
+                                            boxWidth: 12,
+                                            usePointStyle: true,
+                                            font: { size: 10, weight: 'bold' }
                                         }
                                     }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    grid: { color: 'rgba(0,0,0,0.05)' },
-                                    ticks: {
-                                        font: { family: 'Segoe UI' },
-                                        callback: function (value) { return new Intl.NumberFormat('vi-VN').format(value) + ' ₫'; }
-                                    }
                                 },
-                                x: { grid: { display: false }, ticks: { font: { family: 'Segoe UI' } } }
+                                scales: {
+                                    y: {
+                                        grid: { color: 'rgba(184, 154, 108, 0.05)', drawBorder: false },
+                                        ticks: {
+                                            font: { size: 10 },
+                                            callback: (v) => (v / 1000000).toFixed(1) + 'M'
+                                        }
+                                    },
+                                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+                                }
                             }
-                        }
-                    });
-                }
+                        });
+                    }
 
-                // --------- BIỂU ĐỒ SỐ LƯỢNG PHÒNG ---------
-                if (rawBookingData.status === "error") {
-                    displayError('bookingContainer', rawBookingData.message);
-                } else if (rawBookingData.data) {
-                    const dataBook = rawBookingData.data;
-                    const ctxBook = document.getElementById('bookingChart').getContext('2d');
-                    new Chart(ctxBook, {
-                        type: 'bar',
-                        data: {
-                            labels: dataBook.labels,
-                            datasets: [
-                                {
-                                    label: 'Lịch sử Thực tế',
-                                    data: dataBook.actual_bookings,
-                                    backgroundColor: '#9b59b6', // Tím
-                                    borderRadius: 6,
-                                    borderWidth: 0
-                                },
-                                {
-                                    label: 'AI Dự báo Tương lai',
-                                    data: dataBook.predicted_bookings,
-                                    backgroundColor: 'rgba(155, 89, 182, 0.2)', // Tím nhạt
-                                    borderColor: '#9b59b6',
-                                    borderWidth: 2,
-                                    borderDash: [5, 5],
-                                    borderRadius: 6
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { position: 'top', labels: { font: { family: 'Segoe UI', size: 13 } } },
-                                tooltip: {
-                                    mode: 'index', intersect: false,
-                                    callbacks: {
-                                        label: function (context) {
-                                            return context.dataset.label + ': ' + context.parsed.y + ' phòng';
+                    // Booking Chart Implementation
+                    if (rawBookingData.status === "error") {
+                        displayError('bookingContainer', rawBookingData.message);
+                    } else if (rawBookingData.data) {
+                        const ctx = document.getElementById('bookingChart').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: rawBookingData.data.labels,
+                                datasets: [
+                                    {
+                                        label: 'Thực tế',
+                                        data: rawBookingData.data.actual_bookings,
+                                        backgroundColor: '#B89A6C',
+                                        borderRadius: 8,
+                                        maxBarThickness: 30
+                                    },
+                                    {
+                                        label: 'Dự báo Mùa vụ',
+                                        data: rawBookingData.data.predicted_bookings,
+                                        backgroundColor: 'rgba(74, 66, 56, 0.05)',
+                                        borderColor: 'rgba(74, 66, 56, 0.3)',
+                                        borderWidth: 1,
+                                        borderDash: [5, 5],
+                                        borderRadius: 8,
+                                        maxBarThickness: 30
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            padding: 40,
+                                            boxWidth: 12,
+                                            usePointStyle: true,
+                                            font: { size: 10, weight: 'bold' }
                                         }
                                     }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    grid: { color: 'rgba(0,0,0,0.05)', borderDash: [5, 5] },
-                                    ticks: { font: { family: 'Segoe UI' }, stepSize: 1 }
                                 },
-                                x: { grid: { display: false }, ticks: { font: { family: 'Segoe UI' } } }
+                                scales: {
+                                    y: { grid: { color: 'rgba(184, 154, 108, 0.05)', drawBorder: false }, ticks: { font: { size: 10 } } },
+                                    x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+                                }
                             }
-                        }
-                    });
-                }
-            </script>
-        </body>
+                        });
+                    }
+                })();
+        </script>
+    </body>
 
-        </html>
+    </html>

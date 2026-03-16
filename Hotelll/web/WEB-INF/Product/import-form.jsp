@@ -5,113 +5,136 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Nhập Kho Cung Ứng | Quản lý Kho Khách Sạn</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Giao Dịch Nhập Kho | SmartHotel Logistics</title>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        hotel: {
+                            gold: "#B89A6C",
+                            cream: "#FAF9F6",
+                            bone: "#FDFCFB",
+                            text: "#2C2722",
+                            muted: "#70685F",
+                            chocolate: "#4A4238",
+                        }
+                    },
+                    fontFamily: {
+                        serif: ["Cormorant Garamond", "serif"],
+                        sans: ["Inter", "Be Vietnam Pro", "sans-serif"],
+                    }
+                },
+            },
+        }
+    </script>
+
     <style>
-        body { font-family: 'Inter', sans-serif; background: url('${pageContext.request.contextPath}/picture&background/warehouse.jpg') no-repeat center center fixed; background-size: cover; color: #334155; padding-bottom: 3rem; min-height: 100vh; display: flex; align-items: center; }
-        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.85); z-index: -1; }
-        .card-form { background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06); border: none; overflow: hidden; width: 100%; margin: auto; }
-        .card-header-custom { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; padding: 1.5rem 2rem; border-bottom: none; text-align: center; border-top: 4px solid #3b82f6; }
-        .card-header-custom h4 { margin: 0; font-weight: 700; font-size: 1.4rem; letter-spacing: 0.5px; }
-        .card-header-custom h4 i { color: #3b82f6; margin-right: 10px; }
-        .sub-title { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; }
-        .card-body-custom { padding: 2.5rem 3rem; }
-        label { font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.95rem; }
-        .form-control { border-radius: 8px; border: 1px solid #cbd5e1; padding: 0.75rem 1rem; height: auto; font-size: 1rem; color: #1e293b; transition: all 0.2s; background-color: #f8fafc; }
-        .form-control:focus { background-color: #ffffff; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); outline: none; }
-        input[disabled], input[readonly] { background-color: #e2e8f0 !important; color: #64748b !important; border-color: #cbd5e1 !important; cursor: not-allowed; font-weight: 700; }
-        .input-group-text { background-color: #f1f5f9; border: 1px solid #cbd5e1; border-right: none; border-radius: 8px 0 0 8px; color: #64748b; }
-        .form-control-group { border-left: none; border-radius: 0 8px 8px 0; }
-        .btn-action { border-radius: 8px; padding: 0.8rem 1.5rem; font-weight: 700; font-size: 1.05rem; transition: all 0.3s ease; }
-        .btn-save { background-color: #3b82f6; border-color: #3b82f6; color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
-        .btn-save:hover { background-color: #2563eb; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4); color: white; }
-        .btn-cancel { background-color: #f1f5f9; border-color: #cbd5e1; color: #64748b; }
-        .btn-cancel:hover { background-color: #e2e8f0; color: #334155; }
-        .product-badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 8px 20px; border-radius: 30px; font-size: 1rem; font-weight: 600; margin-bottom: 25px; border: 1px solid #c7d2fe; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); }
-        .form-text-custom { font-size: 0.85rem; color: #64748b; margin-top: 6px; display: block; }
+        .card-elegant {
+            background: #FFFFFF;
+            border: 1px solid rgba(184, 154, 108, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 
-<body>
-    <div class="container" style="max-width: 650px;">
-        <div class="card card-form">
-            <div class="card-header-custom">
-                <h4><i class="fas fa-box-open"></i> Giao Dịch Nhập Kho</h4>
-                <div class="sub-title">Hệ Thống Quản Lý Kho Khách Sạn</div>
+<body class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
+
+    <jsp:include page="/common/neural_shell_top.jspf">
+        <jsp:param name="active" value="inventory" />
+    </jsp:include>
+
+    <!-- Logistics Import Content -->
+    <div class="flex-1 h-screen overflow-y-auto pb-32">
+        <div class="max-w-2xl mx-auto px-12 animate-[fadeIn_0.8s_ease-out]">
+            
+            <!-- Header Section -->
+            <div class="py-12 text-center">
+                <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-[9px] font-bold tracking-[0.3em] uppercase mb-6">
+                    <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
+                    Giao dịch bổ sung tồn kho
+                </div>
+                <h2 class="text-5xl font-serif font-bold text-hotel-text tracking-tight uppercase">
+                    Nhập <span class="text-hotel-gold italic">Hàng Hóa.</span>
+                </h2>
             </div>
 
-            <div class="card-body-custom">
-                <div class="text-center">
-                    <div class="product-badge">
-                        <i class="fas fa-tag mr-2"></i> ${product.itemName}
+            <div class="card-elegant rounded-[3rem] p-12 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-hotel-gold/[0.02] blur-3xl rounded-full -mr-24 -mt-24"></div>
+                
+                <div class="text-center mb-10">
+                    <div class="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-hotel-gold/5 border border-hotel-gold/10">
+                        <span class="material-symbols-outlined text-hotel-gold">inventory</span>
+                        <span class="text-[13px] font-bold text-hotel-text uppercase tracking-widest">${product.itemName}</span>
                     </div>
                 </div>
 
-                <form action="products" method="post" id="importForm">
+                <form action="products" method="POST" id="importForm" class="space-y-8 relative z-10">
                     <input type="hidden" name="action" value="saveImport">
                     <input type="hidden" name="id" value="${product.itemID}">
 
-                    <div class="form-group mb-4">
-                        <label><i class="fas fa-cubes mr-2 text-primary"></i>Tồn kho hiện tại:</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-box"></i></span>
-                            </div>
-                            <input type="text" class="form-control form-control-group text-center"
-                                style="font-size: 1.1rem" value="${product.quantity}" disabled>
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em] flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">database</span> Tồn kho hiện tại
+                        </label>
+                        <div class="flex items-center gap-4 bg-hotel-cream/50 border border-hotel-gold/5 p-5 rounded-2xl opacity-60">
+                            <span class="text-2xl font-serif font-bold text-hotel-text">${product.quantity}</span>
+                            <span class="text-[10px] font-bold text-hotel-muted uppercase tracking-widest">${product.unit}</span>
                         </div>
                     </div>
 
-                    <div class="form-group mb-4">
-                        <label><i class="fas fa-truck-loading mr-2 text-primary"></i>Số lượng NHẬP THÊM <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-plus-circle"></i></span>
-                            </div>
-                            <input type="number" name="quantityToAdd" class="form-control form-control-group" min="1" placeholder="Vui lòng nhập số lượng..." required>
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em] flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">add_box</span> Số lượng nhập thêm (*)
+                        </label>
+                        <div class="relative">
+                            <input type="number" name="quantityToAdd" min="1" placeholder="0" class="w-full bg-hotel-cream border border-hotel-gold/10 rounded-2xl pl-6 pr-20 py-5 text-[14px] font-bold text-hotel-text tracking-widest outline-none focus:ring-4 focus:ring-hotel-gold/10 focus:border-hotel-gold transition-all" required />
+                            <span class="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-bold text-hotel-gold/40 uppercase">${product.unit}</span>
                         </div>
-                        <small class="form-text-custom"><i class="fas fa-info-circle mr-1"></i>Số lượng hàng hóa thực tế được bổ sung vào hệ thống kho phòng.</small>
                     </div>
 
-                    <div class="form-group mb-5">
-                        <label><i class="fas fa-money-bill-wave mr-2 text-primary"></i>Đơn giá nhập mới (Cost) <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-coins"></i></span>
-                            </div>
-                            <input type="number" name="newCostPrice" class="form-control font-weight-bold text-success" style="border-radius: 0;" value="${product.costPrice}" required>
-                            <div class="input-group-append">
-                                <span class="input-group-text" style="border-radius: 0 8px 8px 0; border-left: none; background-color: #ffffff; color: #10b981; font-weight: bold;">VNĐ</span>
-                            </div>
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.2em] flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">payments</span> Đơn giá nhập mới (*)
+                        </label>
+                        <div class="relative">
+                            <input type="number" name="newCostPrice" value="${product.costPrice}" class="w-full bg-white border-2 border-emerald-600/10 rounded-2xl pl-6 pr-20 py-5 text-[14px] font-bold text-emerald-700 tracking-widest outline-none focus:ring-4 focus:ring-emerald-600/10 focus:border-emerald-600 transition-all" required />
+                            <span class="absolute right-6 top-1/2 -translate-y-1/2 text-[10px] font-bold text-emerald-600/40 uppercase">VND</span>
                         </div>
-                        <small class="form-text-custom"><i class="fas fa-check-circle mr-1 text-success"></i>Hệ thống sẽ tự động cập nhật giá vốn nếu có sự thay đổi từ nhà cung cấp.</small>
+                        <p class="text-[9px] text-emerald-600/60 font-bold italic tracking-wide"><span class="material-symbols-outlined text-[10px] align-middle mr-1">check_circle</span> Hệ thống sẽ tự động cập nhật giá vốn trung bình</p>
                     </div>
 
-                    <div class="row mt-2">
-                        <div class="col-sm-5 mb-3 mb-sm-0">
-                            <a href="products" class="btn btn-cancel btn-action w-100">
-                                <i class="fas fa-arrow-left mr-2"></i>Trở về
-                            </a>
-                        </div>
-                        <div class="col-sm-7">
-                            <button type="submit" class="btn btn-save btn-action w-100" id="submitBtn">
-                                <i class="fas fa-check mr-2"></i>Xác Nhận Lưu Kho
-                            </button>
-                        </div>
+                    <div class="flex gap-6 pt-10">
+                        <a href="products" class="flex-1 py-5 rounded-2xl border border-hotel-gold/20 text-hotel-muted text-[11px] font-bold uppercase tracking-[0.3em] text-center hover:bg-hotel-bone transition-all">
+                            Hủy Bỏ
+                        </a>
+                        <button type="submit" id="submitBtn" class="flex-[2] py-5 rounded-2xl bg-hotel-gold text-white text-[11px] font-bold uppercase tracking-[0.3em] shadow-xl shadow-hotel-gold/30 hover:bg-hotel-text transition-all active:scale-95 flex items-center justify-center gap-2">
+                            Xác Nhận Nhập Kho <span class="material-symbols-outlined text-sm">verified</span>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
     <script>
         document.getElementById('importForm').addEventListener('submit', function () {
             var btn = document.getElementById('submitBtn');
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Đang cập nhật...';
-            btn.style.opacity = '0.8';
-            btn.style.pointerEvents = 'none';
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Đang xử lý...';
+            btn.classList.add('opacity-50', 'pointer-events-none');
         });
     </script>
+
+    <jsp:include page="/common/neural_shell_bottom.jspf" />
 </body>
 </html>

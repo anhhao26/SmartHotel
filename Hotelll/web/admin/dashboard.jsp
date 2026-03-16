@@ -1,185 +1,292 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>SmartHotel Analytics Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#2563EB", secondary: "#10B981", accent: "#F59E0B", danger: "#EF4444",
-                        "background-light": "#F3F4F6", "background-dark": "#0F172A",
-                        "surface-light": "#FFFFFF", "surface-dark": "#1E293B",
-                        "text-main-light": "#111827", "text-main-dark": "#F9FAFB",
-                        "text-muted-light": "#6B7280", "text-muted-dark": "#9CA3AF",
-                        "sidebar-dark": "#111827",
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+    <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+        <!DOCTYPE html>
+        <html lang="vi">
+
+        <head>
+            <meta charset="utf-8" />
+            <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+            <title>SmartHotel - Quản Trị Khách Sạn</title>
+
+            <!-- Premium Fonts -->
+            <link
+                href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@100;300;400;500;700;900&display=swap"
+                rel="stylesheet">
+            <link
+                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+                rel="stylesheet" />
+
+            <script src="https://cdn.tailwindcss.com"></script>
+            <script>
+                tailwind.config = {
+                    theme: {
+                        extend: {
+                            colors: {
+                                hotel: {
+                                    gold: "#B89A6C",
+                                    cream: "#FAF9F6",
+                                    bone: "#FDFCFB",
+                                    text: "#2C2722",
+                                    muted: "#70685F",
+                                    chocolate: "#4A4238",
+                                },
+                                accent: {
+                                    emerald: "#4F7942",
+                                    ruby: "#8B0000"
+                                }
+                            },
+                            fontFamily: {
+                                serif: ["Cormorant Garamond", "serif"],
+                                sans: ["Inter", "Be Vietnam Pro", "sans-serif"],
+                            }
+                        },
                     },
-                    fontFamily: { display: ["Inter", "sans-serif"], body: ["Inter", "sans-serif"], },
-                    boxShadow: { 'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)', 'glow': '0 0 15px rgba(37, 99, 235, 0.2)', }
-                },
-            },
-        };
-    </script>
-</head>
-<body class="font-body bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark transition-colors duration-300 antialiased min-h-screen flex overflow-hidden">
-    
-    <aside class="w-64 bg-sidebar-dark text-white flex-shrink-0 hidden md:flex flex-col transition-all duration-300 border-r border-gray-800">
-        <div class="h-16 flex items-center px-6 border-b border-gray-800 bg-sidebar-dark">
-            <span class="material-icons-round text-primary mr-2 text-3xl">domain</span>
-            <h1 class="font-bold text-xl tracking-wide">SmartHotel</h1>
-        </div>
-        <nav class="flex-1 overflow-y-auto py-6 space-y-1">
-            <div class="px-4 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tổng quan</div>
-            <a class="flex items-center px-6 py-3 bg-primary bg-opacity-10 text-primary border-r-4 border-primary" href="#"><span class="material-icons-round mr-3">dashboard</span><span class="font-medium">Dashboard</span></a>
-            <div class="px-4 mt-8 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Quản lý</div>
-            
-            <a class="flex items-center px-6 py-3 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" href="<%=request.getContextPath()%>/products"><span class="material-icons-round mr-3" style="color: #F59E0B;">inventory_2</span><span class="font-medium">Kho & Vật Tư</span></a>
-            
-            <a class="flex items-center px-6 py-3 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" href="<%=request.getContextPath()%>/admin/customers"><span class="material-icons-round mr-3">groups</span><span class="font-medium">Khách hàng (CRM)</span></a>
-            <a class="flex items-center px-6 py-3 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" href="<%=request.getContextPath()%>/RoomServlet"><span class="material-icons-round mr-3">meeting_room</span><span class="font-medium">Phòng & Sơ đồ</span></a>
-            <a class="flex items-center px-6 py-3 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" href="<%=request.getContextPath()%>/VoucherServlet"><span class="material-icons-round mr-3">local_offer</span><span class="font-medium">Vouchers</span></a>
-        </nav>
-    </aside>
+                }
+            </script>
+            <style>
+                .card-elegant {
+                    background: #FFFFFF;
+                    border: 1px solid rgba(184, 154, 108, 0.1);
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+                    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+                }
 
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        <header class="h-16 bg-surface-light dark:bg-surface-dark shadow-sm border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6 z-10 flex-shrink-0">
-            <div class="flex items-center md:hidden gap-2 text-primary font-bold"><span class="material-icons-round">domain</span> SmartHotel Admin</div>
-            <div class="hidden md:flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2 w-96">
-                <span class="material-icons-round text-gray-400 text-sm">search</span>
-                <input class="bg-transparent border-none focus:ring-0 text-sm w-full text-text-main-light placeholder-gray-400" placeholder="Tìm kiếm nhanh..." type="text"/>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="p-2 text-gray-500 hover:text-primary rounded-full hover:bg-gray-100 transition-colors" onclick="document.documentElement.classList.toggle('dark')"><span class="material-icons-round">dark_mode</span></button>
-                <a href="<%=request.getContextPath()%>/logout" class="flex items-center px-4 py-2 text-sm font-medium text-danger border border-danger/30 rounded-lg hover:bg-danger hover:text-white transition-colors"><span class="material-icons-round text-lg mr-1">logout</span> Đăng xuất</a>
-            </div>
-        </header>
+                .card-elegant:hover {
+                    transform: translateY(-5px);
+                    border-color: rgba(184, 154, 108, 0.3);
+                    box-shadow: 0 20px 60px rgba(184, 154, 108, 0.08);
+                }
 
-        <div class="flex-1 overflow-y-auto p-6 lg:p-10 scroll-smooth">
-            <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between">
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-1">Bảng Điều Khiển Trung Tâm</h2>
-                    <p class="text-text-muted-light dark:text-text-muted-dark">Xin chào, Quản trị viên. Hệ thống đang hoạt động ổn định.</p>
-                </div>
-            </div>
+                .btn-gold {
+                    background: #B89A6C;
+                    color: white;
+                    transition: all 0.3s ease;
+                }
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-6 shadow-soft border border-gray-100 dark:border-gray-700">
-                    <div class="flex justify-between items-start mb-2">
-                        <div><p class="text-xs font-semibold text-text-muted-light uppercase tracking-wide">Tổng Doanh Thu</p><h3 class="text-2xl font-bold text-gray-800 dark:text-white mt-1">45.2M <span class="text-sm font-normal text-gray-500">VND</span></h3></div>
-                        <div class="bg-blue-100 p-2 rounded-lg text-primary"><span class="material-icons-round text-xl">payments</span></div>
-                    </div>
-                </div>
-                <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-6 shadow-soft border border-gray-100 dark:border-gray-700">
-                    <div class="flex justify-between items-start mb-2">
-                        <div><p class="text-xs font-semibold text-text-muted-light uppercase tracking-wide">Công Suất Phòng</p><h3 class="text-2xl font-bold text-gray-800 dark:text-white mt-1">85%</h3></div>
-                        <div class="bg-green-100 p-2 rounded-lg text-secondary"><span class="material-icons-round text-xl">bed</span></div>
-                    </div>
-                </div>
-                <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-6 shadow-soft border border-gray-100 dark:border-gray-700">
-                    <div class="flex justify-between items-start mb-2">
-                        <div><p class="text-xs font-semibold text-text-muted-light uppercase tracking-wide">Lượt Check-in</p><h3 class="text-2xl font-bold text-gray-800 dark:text-white mt-1">24 <span class="text-sm font-normal text-gray-500">Khách</span></h3></div>
-                        <div class="bg-yellow-100 p-2 rounded-lg text-accent"><span class="material-icons-round text-xl">luggage</span></div>
-                    </div>
-                </div>
-                <div class="bg-surface-light dark:bg-surface-dark rounded-xl p-6 shadow-soft border border-gray-100 dark:border-gray-700">
-                    <div class="flex justify-between items-start mb-2">
-                        <div><p class="text-xs font-semibold text-text-muted-light uppercase tracking-wide">Voucher Active</p><h3 class="text-2xl font-bold text-gray-800 dark:text-white mt-1">12</h3></div>
-                        <div class="bg-purple-100 p-2 rounded-lg text-purple-600"><span class="material-icons-round text-xl">confirmation_number</span></div>
-                    </div>
-                </div>
-            </div>
+                .btn-gold:hover {
+                    background: #4A4238;
+                    transform: translateY(-2px);
+                    box-shadow: 0 10px 20px -5px rgba(184, 154, 108, 0.3);
+                }
 
-            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-6 flex items-center">
-                <span class="w-1 h-6 bg-primary rounded-full mr-3"></span> Truy cập nhanh Module
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                
-                <div class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-soft border border-gray-200 dark:border-gray-700 flex flex-col hover:border-accent transition-all duration-300 group h-full">
-                    <div class="h-2 bg-accent w-full"></div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl"><span class="material-icons-round text-accent text-3xl">inventory_2</span></div>
-                            <span class="text-xs font-bold text-accent bg-yellow-100 dark:bg-yellow-900/40 px-2 py-1 rounded">MODULE 2</span>
+                .stat-card {
+                    background: #FFFFFF;
+                    border-left: 4px solid #B89A6C;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+                    transition: all 0.3s ease;
+                }
+
+                .stat-card:hover {
+                    transform: scale(1.02);
+                    box-shadow: 0 15px 30px rgba(184, 154, 108, 0.1);
+                }
+
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            </style>
+        </head>
+
+        <body class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
+
+            <c:set var="active" value="dashboard" scope="request" />
+            <%@ include file="/common/neural_shell_top.jspf" %>
+
+                <div class="flex-1 h-screen overflow-y-auto pb-32">
+                    <div class="max-w-7xl mx-auto px-8 lg:px-12 py-12 animate-[fadeIn_0.8s_ease-out] space-y-16">
+
+                        <!-- Welcome Section -->
+                        <div
+                            class="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-hotel-gold/10 pb-12">
+                            <div class="space-y-4">
+                                <div
+                                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[10px] font-bold uppercase tracking-[0.3em]">
+                                    <span class="w-2 h-2 rounded-full bg-hotel-gold animate-pulse"></span>
+                                    Hệ Thống Quản Trị Cao Cấp
+                                </div>
+                                <h2
+                                    class="text-6xl font-serif font-bold text-hotel-text leading-tight uppercase tracking-tight">
+                                    Bảng Điều Khiển<br /><span class="text-hotel-gold italic">Trung Tâm.</span>
+                                </h2>
+                                <p class="text-hotel-muted text-lg font-light max-w-xl italic">
+                                    Tối ưu hóa vận hành, quản trị doanh thu và nâng tầm trải nghiệm khách hàng tại
+                                    SmartHotel.
+                                </p>
+                            </div>
+                            <div class="flex gap-4">
+                                <button
+                                    class="px-8 py-4 rounded-xl border border-hotel-gold/20 text-hotel-muted text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white transition-all">
+                                    Xuất báo cáo
+                                </button>
+                                <button
+                                    class="px-8 py-4 rounded-xl btn-gold font-bold text-[10px] uppercase tracking-[0.2em] shadow-lg">
+                                    Cấu hình hệ thống
+                                </button>
+                            </div>
                         </div>
-                        <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Kho & Vật Tư</h4>
-                        <p class="text-text-muted-light dark:text-text-muted-dark text-sm mb-6 flex-1">Kiểm soát hàng tồn kho, quản lý danh sách nhà cung cấp và hóa đơn nhập xuất.</p>
-                        <a href="<%=request.getContextPath()%>/products" class="w-full py-3 bg-accent hover:bg-yellow-600 text-white font-medium rounded-lg shadow-md transition-all flex justify-center items-center group-hover:translate-y-[-2px]">Mở Quản Lý Kho <span class="material-icons-round ml-2 text-sm">arrow_forward</span></a>
+
+                        <!-- Stats Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            <div class="stat-card p-8 rounded-2xl">
+                                <div class="flex items-center justify-between mb-8">
+                                    <div
+                                        class="w-14 h-14 rounded-2xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold border border-hotel-gold/10">
+                                        <span class="material-symbols-outlined text-3xl">payments</span>
+                                    </div>
+                                    <span
+                                        class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">+12.5%</span>
+                                </div>
+                                <p
+                                    class="text-hotel-muted text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
+                                    Doanh thu tháng</p>
+                                <h3 class="text-4xl font-serif font-bold text-hotel-text tracking-tight">
+                                    <fmt:formatNumber value="${monthlyRevenue / 1000000}" pattern="#,##0.0"/>M 
+                                    <span class="text-xs text-hotel-muted font-sans ml-1 opacity-40">VND</span>
+                                </h3>
+                            </div>
+
+                            <div class="stat-card p-8 rounded-2xl border-l-hotel-muted">
+                                <div class="flex items-center justify-between mb-8">
+                                    <div
+                                        class="w-14 h-14 rounded-2xl bg-hotel-muted/5 flex items-center justify-center text-hotel-muted border border-hotel-muted/10">
+                                        <span class="material-symbols-outlined text-3xl">bed</span>
+                                    </div>
+                                    <span
+                                        class="text-[10px] font-bold text-hotel-gold bg-hotel-gold/5 px-3 py-1 rounded-full uppercase tracking-tighter">Cao
+                                        điểm</span>
+                                </div>
+                                <p
+                                    class="text-hotel-muted text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
+                                    Công suất phòng</p>
+                                <h3 class="text-4xl font-serif font-bold text-hotel-text tracking-tight">
+                                    <fmt:formatNumber value="${occupancyRate}" pattern="#,##0.0"/>%
+                                </h3>
+                            </div>
+
+                            <div class="stat-card p-8 rounded-2xl border-l-hotel-gold/40">
+                                <div class="flex items-center justify-between mb-8">
+                                    <div
+                                        class="w-14 h-14 rounded-2xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold border border-hotel-gold/10">
+                                        <span class="material-symbols-outlined text-3xl">person_check</span>
+                                    </div>
+                                    <span
+                                        class="text-[10px] font-bold text-hotel-muted bg-hotel-bone px-3 py-1 rounded-full italic">Hôm
+                                        nay</span>
+                                </div>
+                                <p
+                                    class="text-hotel-muted text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
+                                    Yêu cầu phục vụ</p>
+                                <h3 class="text-4xl font-serif font-bold text-hotel-text tracking-tight">${serviceRequests} <span
+                                        class="text-xs text-hotel-muted font-sans ml-1 opacity-40">Phục vụ</span></h3>
+                            </div>
+
+                            <div class="stat-card p-8 rounded-2xl">
+                                <div class="flex items-center justify-between mb-8">
+                                    <div
+                                        class="w-14 h-14 rounded-2xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold border border-hotel-gold/10">
+                                        <span class="material-symbols-outlined text-3xl">auto_graph</span>
+                                    </div>
+                                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                                </div>
+                                <p
+                                    class="text-hotel-muted text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
+                                    Dự báo tăng trưởng</p>
+                                <h3 class="text-4xl font-serif font-bold text-hotel-text tracking-tight">
+                                    <fmt:formatNumber value="${monthlyRevenue * 1.2 / 1000000}" pattern="#,##0.0"/>M 
+                                    <span class="text-xs text-hotel-muted font-sans ml-1 opacity-40">Mục tiêu</span>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <!-- Management Portals -->
+                        <div class="space-y-10">
+                            <div class="flex items-center gap-6">
+                                <h3
+                                    class="text-[11px] font-bold text-hotel-muted/40 uppercase tracking-[0.5em] whitespace-nowrap">
+                                    Hệ Sinh Thái Quản Trị</h3>
+                                <div class="w-full h-[1px] bg-hotel-gold/10"></div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+                                <div
+                                    class="card-elegant p-12 rounded-[2.5rem] flex flex-col group relative overflow-hidden">
+                                    <div
+                                        class="absolute inset-0 bg-hotel-gold/[0.02] opacity-0 group-hover:opacity-100 transition-opacity">
+                                    </div>
+                                    <div
+                                        class="w-20 h-20 rounded-3xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold mb-10 border border-hotel-gold/10 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined text-4xl">groups</span>
+                                    </div>
+                                    <h4 class="text-3xl font-serif font-bold text-hotel-text mb-4">Quản Lý Khách</h4>
+                                    <p class="text-hotel-muted text-sm font-light leading-relaxed mb-12 flex-1 italic">
+                                        Hợp nhất hồ sơ khách hàng, phân hạng thành viên và quản lý lịch sử lưu trú cao
+                                        cấp tại SmartHotel.
+                                    </p>
+                                    <a href="${pageContext.request.contextPath}/admin/customers"
+                                        class="w-full py-5 rounded-2xl bg-hotel-gold text-white font-bold text-[10px] uppercase tracking-[0.3em] text-center hover:bg-hotel-chocolate transition-all shadow-md">
+                                        Truy cập CRM
+                                    </a>
+                                </div>
+
+                                <div
+                                    class="card-elegant p-12 rounded-[2.5rem] flex flex-col group relative overflow-hidden">
+                                    <div
+                                        class="absolute inset-0 bg-hotel-chocolate/[0.02] opacity-0 group-hover:opacity-100 transition-opacity">
+                                    </div>
+                                    <div
+                                        class="w-20 h-20 rounded-3xl bg-hotel-chocolate/5 flex items-center justify-center text-hotel-chocolate mb-10 border border-hotel-chocolate/10 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined text-4xl">grid_view</span>
+                                    </div>
+                                    <h4 class="text-3xl font-serif font-bold text-hotel-text mb-4">Sơ Đồ Phòng</h4>
+                                    <p class="text-hotel-muted text-sm font-light leading-relaxed mb-12 flex-1 italic">
+                                        Trực quan hóa sơ đồ tầng, trạng thái phòng thực tế và tối ưu điều phối tài
+                                        nguyên buồng phòng.
+                                    </p>
+                                    <a href="${pageContext.request.contextPath}/RoomServlet"
+                                        class="w-full py-5 rounded-2xl border border-hotel-gold text-hotel-gold font-bold text-[10px] uppercase tracking-[0.3em] text-center hover:bg-hotel-gold hover:text-white transition-all">
+                                        Xem sơ đồ
+                                    </a>
+                                </div>
+
+                                <div
+                                    class="card-elegant p-12 rounded-[2.5rem] flex flex-col group relative overflow-hidden">
+                                    <div
+                                        class="absolute inset-0 bg-hotel-muted/[0.02] opacity-0 group-hover:opacity-100 transition-opacity">
+                                    </div>
+                                    <div
+                                        class="w-20 h-20 rounded-3xl bg-hotel-muted/5 flex items-center justify-center text-hotel-muted mb-10 border border-hotel-muted/10 group-hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined text-4xl">inventory</span>
+                                    </div>
+                                    <h4 class="text-3xl font-serif font-bold text-hotel-text mb-4">Hậu Cần & Kho</h4>
+                                    <p class="text-hotel-muted text-sm font-light leading-relaxed mb-12 flex-1 italic">
+                                        Kiểm soát định mức vật tư, quản trị chuỗi cung ứng và vận hành kho vận tinh gọn
+                                        chuyên nghiệp.
+                                    </p>
+                                    <a href="${pageContext.request.contextPath}/products"
+                                        class="w-full py-5 rounded-2xl bg-hotel-bone border border-hotel-gold/10 text-hotel-muted font-bold text-[10px] uppercase tracking-[0.3em] text-center hover:bg-hotel-gold hover:text-white transition-all shadow-sm">
+                                        Hệ thống kho
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center opacity-30 pt-12 pb-8 border-t border-hotel-gold/5">
+                            <p class="font-serif italic text-hotel-muted text-[11px] tracking-[0.6em] uppercase">
+                                SmartHotel Luxury Management Hub • Corporate Edition v2.5</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-soft border border-gray-200 dark:border-gray-700 flex flex-col hover:border-primary transition-all duration-300 group h-full">
-                    <div class="h-2 bg-primary w-full"></div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl"><span class="material-icons-round text-primary text-3xl">groups</span></div>
-                            <span class="text-xs font-bold text-primary bg-blue-100 dark:bg-blue-900/40 px-2 py-1 rounded">MODULE 5</span>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Quản lý Khách hàng (CRM)</h4>
-                        <p class="text-text-muted-light dark:text-text-muted-dark text-sm mb-6 flex-1">Xem danh sách khách hàng, quản lý điểm tích lũy, phân hạng VIP.</p>
-                        <a href="<%=request.getContextPath()%>/admin/customers" class="w-full py-3 bg-primary hover:bg-blue-700 text-white font-medium rounded-lg shadow-md transition-all flex justify-center items-center group-hover:translate-y-[-2px]">Mở CRM Khách Hàng <span class="material-icons-round ml-2 text-sm">arrow_forward</span></a>
-                    </div>
-                </div>
+                <%@ include file="/common/neural_shell_bottom.jspf" %>
+        </body>
 
-                <div class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-soft border border-gray-200 dark:border-gray-700 flex flex-col hover:border-secondary transition-all duration-300 group h-full">
-                    <div class="h-2 bg-secondary w-full"></div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl"><span class="material-icons-round text-secondary text-3xl">concierge</span></div>
-                            <span class="text-xs font-bold text-secondary bg-green-100 dark:bg-green-900/40 px-2 py-1 rounded">MODULE 7</span>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Quầy Lễ Tân (Reception)</h4>
-                        <p class="text-text-muted-light dark:text-text-muted-dark text-sm mb-6 flex-1">Xử lý nhận phòng (Check-in), trả phòng (Check-out) và thanh toán.</p>
-                        <a href="<%=request.getContextPath()%>/reception/home.jsp" class="w-full py-3 bg-secondary hover:bg-emerald-600 text-white font-medium rounded-lg shadow-md transition-all flex justify-center items-center group-hover:translate-y-[-2px]">Tới Quầy Lễ Tân <span class="material-icons-round ml-2 text-sm">arrow_forward</span></a>
-                    </div>
-                </div>
-
-                <div class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-soft border border-gray-200 dark:border-gray-700 flex flex-col hover:border-danger transition-all duration-300 group h-full">
-                    <div class="h-2 bg-danger w-full"></div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl"><span class="material-icons-round text-danger text-3xl">bed</span></div>
-                            <span class="text-xs font-bold text-danger bg-red-100 dark:bg-red-900/40 px-2 py-1 rounded">MODULE 4</span>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Sơ đồ phòng (Room Board)</h4>
-                        <p class="text-text-muted-light dark:text-text-muted-dark text-sm mb-6 flex-1">Kiểm soát trực quan trạng thái phòng: trống, đang ở, đang dọn dẹp.</p>
-                        <a href="<%=request.getContextPath()%>/RoomServlet" class="w-full py-3 bg-danger hover:bg-red-600 text-white font-medium rounded-lg shadow-md transition-all flex justify-center items-center group-hover:translate-y-[-2px]">Mở Sơ Đồ Phòng <span class="material-icons-round ml-2 text-sm">arrow_forward</span></a>
-                    </div>
-                </div>
-
-                <div class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-soft border border-gray-200 dark:border-gray-700 flex flex-col hover:border-gray-800 transition-all duration-300 group h-full">
-                    <div class="h-2 bg-gray-800 dark:bg-gray-400 w-full"></div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl"><span class="material-icons-round text-gray-700 dark:text-white text-3xl">local_offer</span></div>
-                            <span class="text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">MODULE 3</span>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Khuyến mãi (Voucher)</h4>
-                        <p class="text-text-muted-light dark:text-text-muted-dark text-sm mb-6 flex-1">Thiết lập mã giảm giá, chương trình khuyến mãi theo mùa.</p>
-                        <a href="<%=request.getContextPath()%>/VoucherServlet" class="w-full py-3 bg-gray-800 hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 text-white font-medium rounded-lg shadow-md transition-all flex justify-center items-center group-hover:translate-y-[-2px]">Quản Lý Voucher <span class="material-icons-round ml-2 text-sm">arrow_forward</span></a>
-                    </div>
-                </div>
-
-                <div class="bg-gradient-to-br from-blue-50 to-white dark:from-slate-800 dark:to-slate-900 rounded-xl overflow-hidden shadow-soft border border-blue-100 dark:border-gray-700 flex flex-col transition-all duration-300 group h-full relative">
-                    <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-icons-round text-9xl text-primary">smartphone</span></div>
-                    <div class="p-6 flex-1 flex flex-col relative z-10">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm"><span class="material-icons-round text-primary text-3xl">public</span></div>
-                            <span class="text-xs font-bold text-primary bg-white dark:bg-slate-700 px-2 py-1 rounded shadow-sm">MODULE 6</span>
-                        </div>
-                        <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Trang Khách Đặt Phòng</h4>
-                        <p class="text-text-muted-light dark:text-text-muted-dark text-sm mb-6 flex-1">Giao diện public cho khách vãng lai tìm và đặt phòng.</p>
-                        <a href="<%=request.getContextPath()%>/webapp/search.jsp" target="_blank" class="w-full py-3 bg-white dark:bg-slate-700 text-primary dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-slate-600 font-medium rounded-lg shadow-sm transition-all flex justify-center items-center group-hover:translate-y-[-2px]">Xem Giao Diện Khách <span class="material-icons-round ml-2 text-sm">launch</span></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-</body>
-</html>
+        </html>
