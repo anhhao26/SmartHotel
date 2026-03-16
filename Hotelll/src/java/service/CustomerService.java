@@ -15,6 +15,10 @@ public class CustomerService {
         return dao.findAll();
     }
 
+    public List<Customer> searchCustomers(String query) {
+        return dao.searchCustomers(query);
+    }
+
     public Customer create(Customer c) { 
         return dao.create(c); 
     }

@@ -306,4 +306,18 @@ public class BookingDAO {
             em.close();
         }
     }
-}
+
+    public List<Booking> searchBookings(String query) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT b FROM Booking b LEFT JOIN FETCH b.customer LEFT JOIN FETCH b.room LEFT JOIN FETCH b.room.roomType " +
+                          "WHERE b.customer.fullName LIKE :q OR b.room.roomNumber LIKE :q OR b.status LIKE :q " +
+                          "ORDER BY b.bookingID DESC";
+            TypedQuery<Booking> q = em.createQuery(jpql, Booking.class);
+            q.setParameter("q", "%" + query + "%");
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+}

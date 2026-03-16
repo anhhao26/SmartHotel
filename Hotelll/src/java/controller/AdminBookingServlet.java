@@ -36,8 +36,14 @@ public class AdminBookingServlet extends HttpServlet {
             }
         }
 
-        // Fetch top 50 bookings for management view
-        List<Booking> bookings = bookingDAO.getRecentNotifications(50);
+        // Fetch bookings (filtered if search param is present)
+        String search = req.getParameter("search");
+        List<Booking> bookings;
+        if (search != null && !search.trim().isEmpty()) {
+            bookings = bookingDAO.searchBookings(search.trim());
+        } else {
+            bookings = bookingDAO.getRecentNotifications(50);
+        }
         
         req.setAttribute("bookings", bookings);
         req.setAttribute("active", "bookings"); // Pass to sidebar via neural_shell_top

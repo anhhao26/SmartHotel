@@ -43,6 +43,18 @@ public class CustomerDAO {
         }
     }
 
+    public List<Customer> searchCustomers(String query) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT c FROM Customer c WHERE c.fullName LIKE :q OR c.email LIKE :q OR c.phone LIKE :q";
+            TypedQuery<Customer> q = em.createQuery(jpql, Customer.class);
+            q.setParameter("q", "%" + query + "%");
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     public Customer create(Customer c) {
         EntityManager em = JPAUtil.getEntityManager();
         try {

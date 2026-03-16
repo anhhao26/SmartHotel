@@ -10,6 +10,7 @@ public class RoomService {
 
     public List<Room> getRoomBoard() { return roomDAO.findAllRooms(); }
     public List<Room> getRoomsByStatus(String status) { return roomDAO.findRoomsByStatus(status); }
+    public List<Room> searchRooms(String keyword) { return roomDAO.searchRooms(keyword); }
 
     public String changeRoomStatus(String roomNumber, String newStatus) {
         Room room = roomDAO.findByRoomNumber(roomNumber);

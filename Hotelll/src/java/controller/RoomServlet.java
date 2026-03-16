@@ -31,8 +31,12 @@ public class RoomServlet extends HttpServlet {
         request.setAttribute("typeList", typeList);
 
         String statusFilter = request.getParameter("status");
+        String search = request.getParameter("search");
         List<Room> list;
-        if (statusFilter != null && !statusFilter.isEmpty() && !"All".equals(statusFilter)) {
+        
+        if (search != null && !search.trim().isEmpty()) {
+            list = roomService.searchRooms(search.trim());
+        } else if (statusFilter != null && !statusFilter.isEmpty() && !"All".equals(statusFilter)) {
             list = roomService.getRoomsByStatus(statusFilter);
         } else {
             list = roomService.getRoomBoard(); 

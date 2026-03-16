@@ -193,7 +193,7 @@
                                         class="w-5 h-5" />
                                     Google
                                 </a>
-                                <a href="https://www.facebook.com/dialog/oauth?client_id=969411312109569&redirect_uri=http://localhost:8080/Hotelll/login/facebook&scope=email,public_profile"
+                                <a href="https://www.facebook.com/dialog/oauth?client_id=969411312109569&redirect_uri=http://localhost:8080/Hotelll/login/facebook&scope=email%20public_profile"
                                     class="social-light flex justify-center items-center h-16 rounded-sm gap-3 font-bold text-[9px] uppercase tracking-widest text-hotel-muted hover:text-[#1877F2]">
                                     <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
