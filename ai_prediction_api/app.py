@@ -25,6 +25,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import time
 
 app = Flask(__name__)
 CORS(app) # Cho phép Java hoặc giao diện Web gọi API này
@@ -70,8 +71,20 @@ def execute_query(query):
         conn.close()
     return df
 
+# Cache dữ liệu DB trong 5 phút để tránh quá tải SQL Server
+CONTEXT_CACHE_TTL = 300
+_cached_context = None
+_context_last_updated = 0
+
 def get_hotel_context():
     """Hàm lấy thông tin mô tả khách sạn và tình trạng phòng từ DB để huấn luyện AI"""
+    global _cached_context, _context_last_updated
+    current_time = time.time()
+    
+    # Nếu cache vẫn còn hạn (dưới 5 phút) thì dùng luôn, không truy vấn DB nữa
+    if _cached_context and (current_time - _context_last_updated) < CONTEXT_CACHE_TTL:
+        return _cached_context
+
     try:
         # 1. Lấy thông tin phòng
         query_rooms = """
@@ -129,9 +142,15 @@ Thông tin về SmartHotel:
 - Các dịch vụ khác: Hồ bơi, Nhà hàng, Spa.
 - Check-in: 14:00, Check-out: 12:00.
 """
+        # Lưu vào cache
+        _cached_context = context
+        _context_last_updated = current_time
         return context
     except Exception as e:
         print("LDB:", e)
+        # Nếu SQL lỗi nhưng có cache cũ, trả về thông tin cũ thay vì báo lỗi cứng ngắc
+        if _cached_context:
+            return _cached_context
         return "SmartHotel là một khách sạn cao cấp. Lỗi kết nối CSDL khi kiểm tra phòng trống."
 
 def predict_time_series(df, target_column, is_integer_output=False):
@@ -318,6 +337,10 @@ Quy tắc:
             parts = msg.get("parts", [])
             if parts:
                 formatted_history.append({"role": role, "parts": parts})
+                
+        # [TỐI ƯU CỰC KỲ QUAN TRỌNG] - Cắt giảm memory để AI không bị tốn Token
+        # Chỉ giữ lại 10 đoạn hội thoại gần nhất (5 câu hỏi - 5 câu trả lời)
+        formatted_history = formatted_history[-10:]
 
         global current_key_index
         attempts = 0

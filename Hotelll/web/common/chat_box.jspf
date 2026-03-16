@@ -17,6 +17,19 @@
     </div>
     <!-- Body chứa nội dung chat -->
     <div id="original-chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-gray-50/50 dark:bg-gray-900/50">
+        
+        <!-- Lưu ý từ hệ thống -->
+        <div class="flex justify-center w-full mb-1">
+            <div class="bg-blue-50/80 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-800 rounded-xl p-3 text-[12px] text-blue-800 dark:text-blue-200 w-[95%] shadow-sm">
+                <p class="font-bold flex items-center gap-1.5 mb-2"><span class="material-icons-round text-[16px]">info</span> Lưu ý khi sử dụng AI:</p>
+                <ul class="text-left list-disc list-inside space-y-1.5 opacity-90">
+                    <li>Dữ liệu phòng & dịch vụ được cập nhật <b>mỗi 5 phút</b>.</li>
+                    <li>AI chỉ ghi nhớ <b>10 đoạn hội thoại gần nhất</b> để tối ưu tốc độ.</li>
+                    <li>Vui lòng không cung cấp mã số CCCD/Thẻ tín dụng.</li>
+                </ul>
+            </div>
+        </div>
+
         <!-- AI Greeting -->
         <div class="flex gap-2 w-full flex-row">
             <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-amber-500 text-white shadow-sm mt-1">
