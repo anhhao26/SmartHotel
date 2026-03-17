@@ -17,7 +17,7 @@ Jinja2==3.1.6
 jiter==0.13.0
 joblib==1.5.3
 MarkupSafe==3.0.3
-numpy==2.4.3
+numpy==1.26.4
 # openai==2.26.0 (Đã bị loại bỏ trong app.py)
 pandas==3.0.1
 pydantic==2.12.5
