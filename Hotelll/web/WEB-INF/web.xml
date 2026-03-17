@@ -5,18 +5,6 @@
   version="5.0">
     
     <filter>
-        <filter-name>AuthorizationFilter</filter-name>
-        <filter-class>filter.AuthorizationFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>AuthorizationFilter</filter-name>
-        <url-pattern>/admin/*</url-pattern>
-        <url-pattern>/admin</url-pattern>
-        <url-pattern>/reception/*</url-pattern>
-        <url-pattern>/reception</url-pattern>
-    </filter-mapping>
-
-    <filter>
         <filter-name>AdminNotificationFilter</filter-name>
         <filter-class>filter.AdminNotificationFilter</filter-class>
     </filter>

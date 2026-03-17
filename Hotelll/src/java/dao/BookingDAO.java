@@ -42,7 +42,7 @@ public class BookingDAO {
     }
 
     public List<BookingShort> findCheckedInBookings() {
-        return findBookingsByStatuses(Arrays.asList("Checked-in", "CHECKED-IN"));
+        return findBookingsByStatuses(Arrays.asList("Checked-in", "CHECKED-IN", "Payment Pending"));
     }
 
     private List<BookingShort> findBookingsByStatuses(List<String> statuses) {
@@ -107,31 +107,36 @@ public class BookingDAO {
         return true; 
     }
 
-    // ĐÃ FIX: Đổi Booking -> Confirmed, Khóa phòng Room -> Occupied, Cập nhật chi tiêu và tích điểm Customer
+    // ĐÃ FIX: Cho phép xác nhận từ nhiều trạng thái (Pending, Checked-in, Checked-out)
+    // Cập nhật chi tiêu và tích điểm Customer, dùng confirmedAt làm guard để không cộng trùng.
     public boolean confirm(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
             Booking b = em.find(Booking.class, id);
             
-            if (b != null && (b.getStatus().equalsIgnoreCase("Pending") || b.getStatus().equalsIgnoreCase("PENDING"))) {
-                // 1. Cập nhật hóa đơn thành Đã Thanh Toán
-                b.setStatus("Confirmed"); 
-                b.setConfirmedAt(new Date());
-                
-                // 2. CHÍNH THỨC KHÓA PHÒNG
-                if (b.getRoom() != null) {
-                    b.getRoom().setStatus("Occupied");
+            if (b != null) {
+                if (b.getConfirmedAt() == null) {
+                    // Cập nhật ngày xác nhận thanh toán lần đầu
+                    b.setConfirmedAt(new Date());
+                }
+
+                // 1. Cập nhật trạng thái Booking: 
+                // - Pending -> Confirmed (Trường hợp đặt phòng mới)
+                // - Checked-in / Payment Pending -> Checked-out (Trường hợp trả phòng)
+                if ("Pending".equalsIgnoreCase(b.getStatus())) {
+                    b.setStatus("Confirmed"); 
+                } else if ("Checked-in".equalsIgnoreCase(b.getStatus()) || "Payment Pending".equalsIgnoreCase(b.getStatus())) {
+                    b.setStatus("Checked-out");
                 }
                 
-                // 3. TÍNH TỔNG TIỀN CHI TIÊU VÀ CỘNG ĐIỂM CHO KHÁCH
-                if (b.getCustomer() != null) {
-                    Customer customer = b.getCustomer();
-                    double currentSpending = customer.getTotalSpending() != null ? customer.getTotalSpending() : 0.0;
-                    customer.setTotalSpending(currentSpending + b.getTotalAmount());
-                    int currentPoints = customer.getPoints() != null ? customer.getPoints() : 0;
-                    int addedPoints = (int) (b.getTotalAmount() / 100000);
-                    customer.setPoints(currentPoints + addedPoints);
+                // 2. CẬP NHẬT TRẠNG THÁI PHÒNG
+                if (b.getRoom() != null) {
+                    if ("Confirmed".equalsIgnoreCase(b.getStatus())) {
+                        b.getRoom().setStatus("Occupied");
+                    } else if ("Checked-out".equalsIgnoreCase(b.getStatus())) {
+                        b.getRoom().setStatus("Cleaning");
+                    }
                 }
                 
                 em.merge(b);

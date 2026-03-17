@@ -186,21 +186,12 @@
                             </div>
 
                             <!-- Social Login -->
-                            <div class="grid grid-cols-2 gap-4">
-                                <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/Hotelll/login/google&response_type=code&client_id=899831105462-9sidfcfujl3lbktmp5akimbnc2dc6ehi.apps.googleusercontent.com&prompt=consent"
-                                    class="social-light flex justify-center items-center h-16 rounded-sm gap-3 font-bold text-[9px] uppercase tracking-widest text-hotel-muted hover:text-hotel-gold">
+                            <div class="flex justify-center">
+                                <a href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile&redirect_uri=http://localhost:8080/Hotelll/login/google&response_type=code&client_id=1078937497673-5046k9djoj4a9rfivr54qev9kjp202b0.apps.googleusercontent.com&prompt=consent"
+                                    class="social-light flex justify-center items-center h-16 w-full max-w-xs rounded-sm gap-3 font-bold text-[9px] uppercase tracking-widest text-hotel-muted hover:text-hotel-gold">
                                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google"
                                         class="w-5 h-5" />
                                     Google
-                                </a>
-                                <a href="https://www.facebook.com/dialog/oauth?client_id=969411312109569&redirect_uri=http://localhost:8080/Hotelll/login/facebook&scope=email%20public_profile"
-                                    class="social-light flex justify-center items-center h-16 rounded-sm gap-3 font-bold text-[9px] uppercase tracking-widest text-hotel-muted hover:text-[#1877F2]">
-                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                                    </svg>
-                                    Facebook
                                 </a>
                             </div>
                         </form>

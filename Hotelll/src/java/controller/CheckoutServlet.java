@@ -5,6 +5,8 @@ import dao.VoucherDAO;
 import model.Booking;
 import model.CartItem;
 import model.Voucher;
+import model.Inventory;
+import dao.InventoryDAO;
 import service.BillingService;
 import service.VoucherService;
 import jakarta.servlet.annotation.WebServlet;
@@ -25,9 +27,40 @@ public class CheckoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String action = req.getParameter("action");
-            if ("checkin".equalsIgnoreCase(action)) {
+            if ("checkin".equalsIgnoreCase(action) || "confirm".equalsIgnoreCase(action)) {
                 int bid = Integer.parseInt(req.getParameter("bid"));
-                boolean ok = billingService.processCheckIn(bid);
+                boolean ok = true;
+                if ("checkin".equalsIgnoreCase(action)) {
+                    ok = billingService.processCheckIn(bid);
+                } else if ("confirm".equalsIgnoreCase(action)) {
+                    // XÁC NHẬN THANH TOÁN THỦ CÔNG (TẠI QUẦY)
+                    ok = bookingDAO.confirm(bid);
+                    if (ok) {
+                        Booking b = bookingDAO.find(bid);
+                        if (b != null && b.getCustomer() != null && b.getTotalAmount() != null) {
+                            dao.CustomerDAO cDao = new dao.CustomerDAO();
+                            // ĐÃ FIX: Fetch lại Customer để tránh LazyInitializationException
+                            model.Customer actualCus = cDao.findById(b.getCustomer().getCustomerID());
+                            
+                            if (actualCus != null) {
+                                double amount = b.getTotalAmount();
+                                double current = actualCus.getTotalSpending() != null ? actualCus.getTotalSpending() : 0.0;
+                                double next = current + amount;
+                                actualCus.setTotalSpending(next);
+                                
+                                int pts = actualCus.getPoints() != null ? actualCus.getPoints() : 0;
+                                int added = (int)(amount / 100000.0);
+                                actualCus.setPoints(pts + added);
+                                
+                                if (next >= 10000000.0) actualCus.setMemberType("VIP");
+                                else if (next > 0 && !"VIP".equalsIgnoreCase(actualCus.getMemberType())) actualCus.setMemberType("Member");
+                                
+                                cDao.update(actualCus);
+                                System.out.println("[Manual] Updated CRM for Cust #" + actualCus.getCustomerID() + ": +" + amount + " VND, +" + added + " pts");
+                            }
+                        }
+                    }
+                }
                 
                 String requestedWith = req.getHeader("X-Requested-With");
                 if ("XMLHttpRequest".equalsIgnoreCase(requestedWith)) {
@@ -35,8 +68,8 @@ public class CheckoutServlet extends HttpServlet {
                     if (ok) resp.getWriter().write("OK");
                     else resp.getWriter().write("FAIL");
                 } else {
-                    if (ok) resp.sendRedirect(req.getContextPath() + "/reception/home.jsp?msg=Check-in Success");
-                    else resp.getWriter().println("Check-in Failed!");
+                    if (ok) resp.sendRedirect(req.getContextPath() + "/reception/checkout.jsp?msg=Action Success");
+                    else resp.getWriter().println("Action Failed!");
                 }
                 return;
             }
@@ -46,44 +79,12 @@ public class CheckoutServlet extends HttpServlet {
                 int cid = Integer.parseInt(req.getParameter("cid"));
                 int rid = Integer.parseInt(req.getParameter("rid"));
                 
-                // 1. LẤY TIỀN MINIBAR (Phụ phí) TỪ FORM
-                double minibarPrice = Double.parseDouble(req.getParameter("price"));
-                String voucherCode = req.getParameter("voucherCode");
-
-                // 2. LẤY LẠI GIÁ PHÒNG TỪ DATABASE
-                Booking b = bookingDAO.find(bid);
-                double roomPrice = b.getTotalAmount(); 
-                
-                // 3. TỔNG CỘNG TIỀN PHẢI TRẢ = Giá phòng + Phụ phí
-                double finalPrice = roomPrice + minibarPrice;
-
-                // 4. ÁP DỤNG VOUCHER (Nếu có)
-                if (voucherCode != null && !voucherCode.trim().isEmpty()) {
-                    VoucherService voucherService = new VoucherService();
-                    String voucherMsg = voucherService.checkVoucherValid(voucherCode, BigDecimal.valueOf(finalPrice));
-
-                    if (!"OK".equals(voucherMsg)) {
-                        // Nếu voucher lỗi, báo lỗi và dừng lại
-                        resp.sendRedirect(req.getContextPath() + "/reception/checkout.jsp?error=" + java.net.URLEncoder.encode(voucherMsg, "UTF-8"));
-                        return;
-                    }
-
-                    VoucherDAO vdao = new VoucherDAO();
-                    Voucher v = vdao.findById(voucherCode);
-                    if (v != null) {
-                        // Trừ tiền Voucher vào TỔNG TIỀN
-                        finalPrice = finalPrice - v.getDiscountValue().doubleValue();
-                        if (finalPrice < 0) finalPrice = 0;
-                        
-                        // Tăng số lần sử dụng của Voucher lên 1
-                        v.setUsedCount(v.getUsedCount() + 1);
-                        vdao.update(v);
-                    }
-                }
-
-                // --- LOGIC LƯU MINIBAR ---
+                // 1. CHỈ TÍNH TIỀN VẬT DỤNG/DỊCH VỤ (Excluding room price)
+                double itemTotal = 0.0;
                 List<CartItem> items = new ArrayList<>();
                 String[] itemIds = req.getParameterValues("itemId");
+                dao.InventoryDAO inventoryDAO = new dao.InventoryDAO();
+                
                 if (itemIds != null) {
                     for (String sId : itemIds) {
                         int itemId = Integer.parseInt(sId);
@@ -92,22 +93,74 @@ public class CheckoutServlet extends HttpServlet {
                         if (qtyParam != null && !qtyParam.isEmpty()) {
                             try { q = Integer.parseInt(qtyParam); } catch (NumberFormatException ex) {}
                         }
-                        if (q > 0) items.add(new CartItem(itemId, q));
+                        if (q > 0) {
+                            items.add(new CartItem(itemId, q));
+                            model.Inventory inv = inventoryDAO.find(itemId);
+                            if (inv != null) {
+                                itemTotal += (inv.getSellingPrice() * q);
+                            }
+                        }
                     }
                 }
 
-                // Lưu lại thông tin thanh toán vào DB
-                boolean ok = billingService.processCheckOut(bid, cid, rid, items, finalPrice);
+                double finalPrice = itemTotal;
+                String voucherCode = req.getParameter("voucherCode");
+
+                // 2. ÁP DỤNG VOUCHER (Nếu có)
+                if (voucherCode != null && !voucherCode.trim().isEmpty()) {
+                    VoucherService voucherService = new VoucherService();
+                    String voucherMsg = voucherService.checkVoucherValid(voucherCode, BigDecimal.valueOf(finalPrice));
+
+                    if (!"OK".equals(voucherMsg)) {
+                        resp.sendRedirect(req.getContextPath() + "/reception/checkout.jsp?error=" + java.net.URLEncoder.encode(voucherMsg, "UTF-8"));
+                        return;
+                    }
+
+                    VoucherDAO vdao = new VoucherDAO();
+                    Voucher v = vdao.findById(voucherCode);
+                    if (v != null) {
+                        finalPrice = finalPrice - v.getDiscountValue().doubleValue();
+                        if (finalPrice < 0) finalPrice = 0;
+                        
+                        v.setUsedCount(v.getUsedCount() + 1);
+                        vdao.update(v);
+                    }
+                }
+                
+                // 3. LẤY THÔNG TIN ĐẶT PHÒNG ĐỂ ĐIỀU HƯỚNG
+                Booking b = bookingDAO.find(bid);
+                if (b == null) {
+                    resp.sendRedirect(req.getContextPath() + "/reception/checkout.jsp?error=" + java.net.URLEncoder.encode("Không tìm thấy thông tin đặt phòng!", "UTF-8"));
+                    return;
+                }
+
+                // KIỂM TRA NẾU ĐANG ĐỢI THANH TOÁN (Retry Flow)
+                // Nếu khách đang 'Payment Pending' và không thêm vật dụng gì mới -> Đi thẳng tới thanh toán với số tiền cũ
+                boolean ok = true;
+                if ("Payment Pending".equalsIgnoreCase(b.getStatus()) && items.isEmpty()) {
+                    finalPrice = b.getTotalAmount() != null ? b.getTotalAmount() : 0.0;
+                    System.out.println("[Checkout] Retry payment for Booking #" + bid + " (Total: " + finalPrice + ")");
+                } else {
+                    // Lưu lại thông tin thanh toán vào DB (Deduct items, create invoice)
+                    ok = billingService.processCheckOut(bid, cid, rid, items, finalPrice);
+                }
                 
                 if (ok) {
+                    // Nếu đã thanh toán thành công (hoặc bypass processCheckOut), 
+                    // ta set trạng thái Booking tạm thời là 'Payment Pending' để vẫn hiển thị trên Console
                     if (finalPrice > 0) {
-                        // Cập nhật lại tổng tiền cuối cùng vào Booking để đẩy qua VNPay
-                        b.setTotalAmount(finalPrice); 
+                        b.setStatus("Payment Pending");
+                        b.setTotalAmount(finalPrice); // Cập nhật lại tổng tiền cuối cùng vào Booking để đẩy qua VNPay
+                        bookingDAO.update(b); 
+                        
                         req.setAttribute("booking", b);
                         req.getRequestDispatcher("/webapp/payment.jsp").forward(req, resp);
                     } else {
-                        // Nếu tổng tiền = 0 (khách xài Voucher che hết tiền), cho Checkout luôn
-                        resp.sendRedirect(req.getContextPath() + "/reception/home.jsp?msg=Checkout Success - Room is Cleaning");
+                        // Nếu tổng tiền = 0 (khách xài Voucher che hết tiền hoặc không có gì thanh toán), xác nhận thanh toán luôn
+                        b.setStatus("Checked-out"); 
+                        bookingDAO.update(b);
+                        bookingDAO.confirm(bid); // Finalize CRM & Room Status
+                        resp.sendRedirect(req.getContextPath() + "/reception/checkout.jsp?msg=Checkout Success - Room is Cleaning");
                     }
                 } else {
                     resp.getWriter().println("Payment Failed (Rollback)!");

@@ -6,10 +6,7 @@ import model.Booking;
 import util.EmailUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.*;
 import java.net.URLEncoder;
@@ -63,31 +60,71 @@ public class VNPayReturnServlet extends HttpServlet {
 
         String responseCode = request.getParameter("vnp_ResponseCode");
         String rawTxnRef = request.getParameter("vnp_TxnRef");
-        String bookingIdStr = rawTxnRef;
         
-        if (rawTxnRef != null && rawTxnRef.contains("_")) {
-            bookingIdStr = rawTxnRef.substring(0, rawTxnRef.indexOf("_"));
-        }
-
         if ("00".equals(responseCode)) {
-            // THANH TOÁN THÀNH CÔNG
             try {
+                String bookingIdStr = rawTxnRef;
+                String role = "GUEST";
+                if (rawTxnRef != null && rawTxnRef.contains("_")) {
+                    String[] parts = rawTxnRef.split("_");
+                    if (parts.length >= 2) {
+                        bookingIdStr = parts[0];
+                        role = parts[1];
+                    }
+                }
+                
                 int bookingId = Integer.parseInt(bookingIdStr);
                 BookingDAO bDao = new BookingDAO();
-                bDao.confirm(bookingId);
+                bDao.confirm(bookingId); // Cập nhật trạng thái booking/phòng
                 
                 Booking confirmedBooking = bDao.find(bookingId);
                 if (confirmedBooking != null) {
-                    // PHỤC HỒI SESSION NẾU BỊ MẤT (Do SameSite cookie issue trên trình duyệt mới)
-                    HttpSession session = request.getSession(true);
-                    if (session.getAttribute("acc") == null) {
-                        model.Customer cus = confirmedBooking.getCustomer();
-                        if (cus != null) {
-                            session.setAttribute("CUST_ID", cus.getCustomerID());
-                            AccountDAO aDao = new AccountDAO();
-                            model.Account acc = aDao.findByCustomerId(cus.getCustomerID());
-                            if (acc != null) {
-                                session.setAttribute("acc", acc);
+                    model.Customer cus = confirmedBooking.getCustomer();
+                    if (cus != null) {
+                        // 1. CẬP NHẬT CHI TIÊU & ĐIỂM (Dựa trên số tiền thực trả từ VNPay)
+                        String amountStr = request.getParameter("vnp_Amount");
+                        if (amountStr != null) {
+                            double amountPaid = Double.parseDouble(amountStr) / 100.0;
+                            
+                            // Tránh cộng trùng nếu refresh trang (Dùng session để check txnRef)
+                            HttpSession session = request.getSession();
+                            Set<String> processed = (Set<String>) session.getAttribute("PROCESSED_VNPAY");
+                            if (processed == null) processed = new HashSet<>();
+                            
+                            if (!processed.contains(rawTxnRef)) {
+                                dao.CustomerDAO cDao = new dao.CustomerDAO();
+                                // ĐÃ FIX: Fetch lại Customer để tránh LazyInitializationException khi EM đã đóng
+                                model.Customer actualCus = cDao.findById(cus.getCustomerID());
+                                
+                                if (actualCus != null) {
+                                    double currentTotal = actualCus.getTotalSpending() != null ? actualCus.getTotalSpending() : 0.0;
+                                    double newTotal = currentTotal + amountPaid;
+                                    actualCus.setTotalSpending(newTotal);
+                                    
+                                    int currentPoints = actualCus.getPoints() != null ? actualCus.getPoints() : 0;
+                                    int addedPoints = (int) (amountPaid / 100000.0);
+                                    actualCus.setPoints(currentPoints + addedPoints);
+                                    
+                                    if (newTotal >= 10000000.0) actualCus.setMemberType("VIP");
+                                    else if (newTotal > 0 && !"VIP".equalsIgnoreCase(actualCus.getMemberType())) actualCus.setMemberType("Member");
+                                    
+                                    cDao.update(actualCus);
+                                    System.out.println("[VNPay] Updated CRM for Cust #" + actualCus.getCustomerID() + ": +" + amountPaid + " VND, +" + addedPoints + " pts");
+                                    
+                                    processed.add(rawTxnRef);
+                                    session.setAttribute("PROCESSED_VNPAY", processed);
+                                }
+                            }
+                        }
+
+                        // 2. PHỤC HỒI SESSION NẾU BỊ MẤT (Chỉ cho Khách)
+                        if ("GUEST".equals(role)) {
+                            HttpSession session = request.getSession(true);
+                            if (session.getAttribute("acc") == null) {
+                                session.setAttribute("CUST_ID", cus.getCustomerID());
+                                dao.AccountDAO aDao = new dao.AccountDAO();
+                                model.Account acc = aDao.findByCustomerId(cus.getCustomerID());
+                                if (acc != null) session.setAttribute("acc", acc);
                             }
                         }
                     }
@@ -101,16 +138,19 @@ public class VNPayReturnServlet extends HttpServlet {
                     }).start();
                 }
                 
-                response.sendRedirect(request.getContextPath() + "/guest/history.jsp?msg=payment_success");
+                // ROLE-BASED REDIRECT
+                if ("STAFF".equals(role)) {
+                    response.sendRedirect(request.getContextPath() + "/reception/checkout.jsp?msg=checkout_success");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/guest/history.jsp?msg=payment_success");
+                }
                 
             } catch (Exception e) {
                 e.printStackTrace();
-                response.setContentType("text/html;charset=UTF-8");
-                response.getWriter().println("Lỗi xử lý kết quả thanh toán: " + e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/guest/history.jsp?error=process_failed");
             }
         } else {
-            // ... (Phần xử lý thất bại giữ nguyên)
-            // THANH TOÁN THẤT BẠI
+            // PAYMENT FAILED
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().println("<div style='text-align:center; margin-top:50px; font-family:sans-serif;'>");
             response.getWriter().println("<h2 style='color:red;'>Giao dịch thanh toán thất bại hoặc đã bị hủy!</h2>");
@@ -118,4 +158,4 @@ public class VNPayReturnServlet extends HttpServlet {
             response.getWriter().println("</div>");
         }
     }
-}
+}

@@ -15,6 +15,10 @@
                 <link
                     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
                     rel="stylesheet" />
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+                <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/confetti.css">
+                <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+                <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
                 <script src="https://cdn.tailwindcss.com"></script>
                 <script>
                     tailwind.config = {
@@ -92,6 +96,22 @@
                         display: block;
                         opacity: 0.8;
                     }
+
+                    /* Flatpickr Custom Styling */
+                    .flatpickr-calendar {
+                        border-radius: 1rem !important;
+                        box-shadow: 0 25px 50px -12px rgba(184, 154, 108, 0.25) !important;
+                        border: 1px solid rgba(184, 154, 108, 0.2) !important;
+                    }
+
+                    .flatpickr-day.selected {
+                        background: #B89A6C !important;
+                        border-color: #B89A6C !important;
+                    }
+
+                    .flatpickr-day.today {
+                        border-color: #B89A6C !important;
+                    }
                 </style>
             </head>
 
@@ -103,7 +123,7 @@
 
                 <!-- Voucher Page Content -->
                 <div class="flex-1 h-screen overflow-y-auto pb-32">
-                    <div class="max-w-7xl mx-auto px-12 animate-[fadeIn_0.5s_ease-out] pt-12">
+                    <div class="max-w-[1600px] mx-auto px-12 animate-[fadeIn_0.5s_ease-out] pt-12">
 
                     <!-- Header Section -->
                     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -147,7 +167,7 @@
                     <div class="grid grid-cols-1 xl:grid-cols-12 gap-12">
 
                         <!-- Form Pane -->
-                        <div class="xl:col-span-4">
+                        <div class="xl:col-span-5">
                             <div class="card-elegant rounded-sm p-10 space-y-10 h-fit bg-white">
                                 <div class="space-y-3">
                                     <h3
@@ -180,15 +200,21 @@
                                         <div class="grid grid-cols-2 gap-5">
                                             <div class="space-y-1">
                                                 <label class="label-premium">Ngày kích hoạt</label>
-                                                <input name="startDate" required
-                                                    class="w-full h-12 input-elegant rounded-xl px-4 text-[10px] font-bold text-hotel-text uppercase border-hotel-gold/10"
-                                                    type="datetime-local" />
+                                                <div class="relative">
+                                                    <input name="startDate" id="startDate" required
+                                                        class="w-full h-14 input-elegant rounded-xl pl-12 pr-4 font-bold text-hotel-text uppercase border-hotel-gold/10 text-[11px]"
+                                                        placeholder="CHỌN NGÀY..." type="text" readonly />
+                                                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-hotel-gold text-lg">calendar_today</span>
+                                                </div>
                                             </div>
                                             <div class="space-y-1">
                                                 <label class="label-premium">Ngày hết hạn</label>
-                                                <input name="endDate" required
-                                                    class="w-full h-12 input-elegant rounded-xl px-4 text-[10px] font-bold text-hotel-text uppercase border-hotel-gold/10"
-                                                    type="datetime-local" />
+                                                <div class="relative">
+                                                    <input name="endDate" id="endDate" required
+                                                        class="w-full h-14 input-elegant rounded-xl pl-12 pr-4 font-bold text-hotel-text uppercase border-hotel-gold/10 text-[11px]"
+                                                        placeholder="CHỌN NGÀY..." type="text" readonly />
+                                                    <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-hotel-gold text-lg">event_busy</span>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -218,7 +244,7 @@
                         </div>
 
                         <!-- List Pane -->
-                        <div class="xl:col-span-8">
+                        <div class="xl:col-span-7">
                             <div class="card-elegant rounded-sm p-10 relative overflow-hidden bg-white">
                                 <div class="flex items-center justify-between mb-12 relative">
                                     <h3
@@ -315,6 +341,31 @@
                 </div>
 
                 <jsp:include page="/common/neural_shell_bottom.jspf" />
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const startPicker = flatpickr("#startDate", {
+                            enableTime: true,
+                            dateFormat: "Y-m-d\\TH:i",
+                            altInput: true,
+                            altFormat: "d/m/Y H:i",
+                            minDate: "today",
+                            locale: "vn",
+                            onChange: function(selectedDates, dateStr, instance) {
+                                endPicker.set('minDate', dateStr);
+                            }
+                        });
+
+                        const endPicker = flatpickr("#endDate", {
+                            enableTime: true,
+                            dateFormat: "Y-m-d\\TH:i",
+                            altInput: true,
+                            altFormat: "d/m/Y H:i",
+                            minDate: "today",
+                            locale: "vn"
+                        });
+                    });
+                </script>
             </body>
 
             </html>
