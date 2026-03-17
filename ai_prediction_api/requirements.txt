@@ -19,7 +19,7 @@ joblib==1.5.3
 MarkupSafe==3.0.3
 numpy==1.26.4
 # openai==2.26.0 (Đã bị loại bỏ trong app.py)
-pandas==3.0.1
+pandas==2.2.3
 pydantic==2.12.5
 pydantic_core==2.41.5
 python-dateutil==2.9.0.post0
