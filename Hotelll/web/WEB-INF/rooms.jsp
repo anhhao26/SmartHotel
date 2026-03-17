@@ -250,12 +250,10 @@
                                         <div
                                             class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors">
                                         </div>
-                                        <div class="absolute top-6 right-6">
                                             <span
-                                                class="px-4 py-1.5 rounded-sm text-[8px] font-bold tracking-widest uppercase backdrop-blur-md border ${room.status == 'Available' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' : 'bg-red-500/10 text-red-600 border-red-500/20'}">
-                                                ${room.status == 'Available' ? 'Còn Trống' : 'Đã Đặt'}
+                                                class="px-4 py-1.5 rounded-sm text-[8px] font-bold tracking-widest uppercase backdrop-blur-md border bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
+                                                Còn Trống
                                             </span>
-                                        </div>
                                     </div>
 
                                     <div class="p-8 space-y-8">
@@ -310,7 +308,7 @@
                             " class="flex-1 py-4 text-hotel-text font-bold text-[9px] tracking-widest uppercase border border-hotel-gold/20 hover:bg-hotel-gold/5 transition-all">Chi
                                                 tiết</button>
                                             <a href="${empty sessionScope.acc ? pageContext.request.contextPath.concat('/login.jsp?redirect=booking&roomId=').concat(room.roomNumber) : pageContext.request.contextPath.concat('/webapp/search.jsp?roomId=').concat(room.roomNumber)}"
-                                                class="${room.status == 'Available' ? 'bg-hotel-gold text-white' : 'bg-hotel-bone text-hotel-muted/30 cursor-not-allowed'} flex-[1.5] py-4 font-bold text-[9px] tracking-widest uppercase text-center flex items-center justify-center gap-2 transition-all shadow-lg hover:bg-hotel-chocolate">
+                                                class="bg-hotel-gold text-white flex-[1.5] py-4 font-bold text-[9px] tracking-widest uppercase text-center flex items-center justify-center gap-2 transition-all shadow-lg hover:bg-hotel-chocolate">
                                                 Đặt Ngay <span
                                                     class="material-symbols-outlined text-sm">calendar_month</span>
                                             </a>
@@ -403,12 +401,9 @@
 
                                 <div class="pt-6">
                                     <a :href="${empty sessionScope.acc} ? '${pageContext.request.contextPath}/login.jsp?redirect=booking&roomId=' + activeRoom.num : '${pageContext.request.contextPath}/webapp/search.jsp?roomId=' + activeRoom.num"
-                                        :class="activeRoom.status !== 'Available' ? 'opacity-30 pointer-events-none' : ''"
                                         class="w-full py-6 rounded-sm bg-hotel-gold text-white font-bold text-[11px] tracking-widest uppercase text-center flex items-center justify-center gap-4 hover:bg-hotel-text transition-all active:scale-[0.98] shadow-2xl">
-                                        <span
-                                            x-text="activeRoom.status === 'Available' ? 'Khởi Tạo Đặt Phòng' : 'Hết Phòng'"></span>
-                                        <span class="material-symbols-outlined text-lg"
-                                            x-show="activeRoom.status === 'Available'">event_available</span>
+                                        <span>Khởi Tạo Đặt Phòng</span>
+                                        <span class="material-symbols-outlined text-lg">event_available</span>
                                     </a>
                                 </div>
                             </div>

@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,6 +24,12 @@ public class InvoiceServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/admin/bookings");
             return;
         }
+
+        // Check role and permissions
+        jakarta.servlet.http.HttpSession session = request.getSession(false);
+        String role = (session != null) ? (String) session.getAttribute("ROLE") : null;
+        boolean isStaff = role != null && (role.equalsIgnoreCase("ADMIN") || role.equalsIgnoreCase("SUPERADMIN") || role.equalsIgnoreCase("MANAGER") || role.equalsIgnoreCase("RECEPTIONIST"));
+        request.setAttribute("isStaffView", isStaff);
 
         // If we only have bookingId, we try to find the invoice associated with it
         if (invoiceId == null || invoiceId.isEmpty()) {

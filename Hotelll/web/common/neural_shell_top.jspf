@@ -74,19 +74,26 @@
             </a>
         </c:if>
         
-        <a href="${pageContext.request.contextPath}/RoomServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'rooms' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
-            <span class="material-symbols-outlined mr-4 text-[20px]">bed</span> Sơ Đồ Phòng
-        </a>
+        <c:if test='<%= isAdmin || (currentRole != null && currentRole.equalsIgnoreCase("RECEPTIONIST")) %>'>
+            <a href="${pageContext.request.contextPath}/RoomServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'rooms' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+                <span class="material-symbols-outlined mr-4 text-[20px]">bed</span> Sơ Đồ Phòng
+            </a>
+        </c:if>
 
         <c:if test="<%= isAdmin %>">
             <a href="${pageContext.request.contextPath}/admin/bookings" class="sidebar-item ${(not empty param.active ? param.active : active) == 'bookings' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
                 <span class="material-symbols-outlined mr-4 text-[20px]">calendar_month</span> Quản Lý Đặt Phòng
             </a>
+            <a href="${pageContext.request.contextPath}/VoucherServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'vouchers' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+                <span class="material-symbols-outlined mr-4 text-[20px]">confirmation_number</span> Quản Lý Voucher
+            </a>
         </c:if>
  
-        <a href="${pageContext.request.contextPath}/reception" class="sidebar-item ${(not empty param.active ? param.active : active) == 'reception' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
-            <span class="material-symbols-outlined mr-4 text-[20px]">concierge</span> Tiếp Tân
-        </a>
+        <c:if test='<%= isAdmin || (currentRole != null && currentRole.equalsIgnoreCase("RECEPTIONIST")) %>'>
+            <a href="${pageContext.request.contextPath}/reception" class="sidebar-item ${(not empty param.active ? param.active : active) == 'reception' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+                <span class="material-symbols-outlined mr-4 text-[20px]">concierge</span> Tiếp Tân
+            </a>
+        </c:if>
         
         <c:if test="<%= isAdmin %>">
             <a href="${pageContext.request.contextPath}/products" class="sidebar-item ${(not empty param.active ? param.active : active) == 'inventory' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">

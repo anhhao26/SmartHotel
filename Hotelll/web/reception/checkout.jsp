@@ -439,8 +439,70 @@
                                                 }
 
                                                 function submitCheckinForm(act) {
-                                                    document.getElementById('action_checkin_input').value = act;
-                                                    document.getElementById('checkinForm').submit();
+                                                    if (act === 'confirm') {
+                                                        document.getElementById('action_checkin_input').value = act;
+                                                        document.getElementById('checkinForm').submit();
+                                                        return;
+                                                    }
+
+                                                    // Use AJAX for 'checkin' action
+                                                    const form = document.getElementById('checkinForm');
+                                                    const formData = new FormData(form);
+                                                    formData.set('action', act);
+
+                                                    const params = new URLSearchParams();
+                                                    for (const pair of formData.entries()) {
+                                                        params.append(pair[0], pair[1]);
+                                                    }
+
+                                                    fetch(form.action, {
+                                                        method: 'POST',
+                                                        headers: {
+                                                            'X-Requested-With': 'XMLHttpRequest',
+                                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                                        },
+                                                        body: params.toString()
+                                                    })
+                                                    .then(response => response.text())
+                                                    .then(data => {
+                                                        if (data.trim() === 'OK') {
+                                                            showToast('Hoàn tất nhận phòng thành công!', 'success');
+                                                            // Optionally refresh the pending list or just reset the form
+                                                            setTimeout(() => location.reload(), 1500); // Reload after 1.5s to see updated lists
+                                                        } else {
+                                                            showToast('Lỗi: ' + data, 'error');
+                                                        }
+                                                    })
+                                                    .catch(error => {
+                                                        console.error('Error:', error);
+                                                        showToast('Lỗi kết nối hệ thống!', 'error');
+                                                    });
+                                                }
+
+                                                function showToast(message, type = 'success') {
+                                                    const toast = document.createElement('div');
+                                                    toast.className = `fixed bottom-10 right-10 z-[200] px-8 py-4 rounded-2xl shadow-2xl border backdrop-blur-xl transform translate-y-20 opacity-0 transition-all duration-500 flex items-center gap-4 ${
+                                                        type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600' : 'bg-red-500/10 border-red-500/20 text-red-600'
+                                                    }`;
+                                                    
+                                                    const icon = type === 'success' ? 'check_circle' : 'error';
+                                                    toast.innerHTML = `
+                                                        <span class="material-symbols-outlined">${icon}</span>
+                                                        <span class="text-[11px] font-bold uppercase tracking-widest">${message}</span>
+                                                    `;
+                                                    
+                                                    document.body.appendChild(toast);
+                                                    
+                                                    // Animate in
+                                                    setTimeout(() => {
+                                                        toast.classList.remove('translate-y-20', 'opacity-0');
+                                                    }, 100);
+                                                    
+                                                    // Animate out
+                                                    setTimeout(() => {
+                                                        toast.classList.add('translate-y-20', 'opacity-0');
+                                                        setTimeout(() => toast.remove(), 500);
+                                                    }, 3000);
                                                 }
 
                                                 function fillCheckout() {

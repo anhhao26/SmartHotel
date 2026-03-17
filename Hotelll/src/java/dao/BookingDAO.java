@@ -90,22 +90,6 @@ public class BookingDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
-            
-            // Logic chống trùng phòng
-            Long conflict = em.createQuery(
-                "SELECT COUNT(b) FROM Booking b WHERE b.room.roomID = :roomId " +
-                "AND UPPER(b.status) IN ('CONFIRMED', 'CHECKED-IN') " +
-                "AND :checkIn < b.checkOutDate AND :checkOut > b.checkInDate", Long.class)
-                .setParameter("roomId", b.getRoom().getRoomID())
-                .setParameter("checkIn", b.getCheckInDate())
-                .setParameter("checkOut", b.getCheckOutDate())
-                .getSingleResult();
-
-            if (conflict > 0) {
-                em.getTransaction().rollback();
-                return false;
-            }
-
             em.persist(b);
             em.getTransaction().commit();
             return true;
@@ -118,27 +102,9 @@ public class BookingDAO {
         }
     }
 
-    // Hàm kiểm tra lịch trống cho người dùng
+    // Hàm kiểm tra lịch trống cho người dùng - LUÔN CHO PHÉP ĐẶT
     public boolean isRoomAvailable(String roomNumber, Date reqCheckIn, Date reqCheckOut) {
-        EntityManager em = JPAUtil.getEntityManager(); 
-        try {
-            String jpql = "SELECT COUNT(b) FROM Booking b WHERE b.room.roomNumber = :rn " +
-                          "AND UPPER(b.status) IN ('CONFIRMED', 'CHECKED-IN') " +
-                          "AND b.checkInDate < :reqCheckOut AND b.checkOutDate > :reqCheckIn";
-            
-            Long count = em.createQuery(jpql, Long.class)
-                           .setParameter("rn", roomNumber)
-                           .setParameter("reqCheckOut", reqCheckOut)
-                           .setParameter("reqCheckIn", reqCheckIn)
-                           .getSingleResult();
-                            
-            return count == 0; 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            em.close();
-        }
+        return true; 
     }
 
     // ĐÃ FIX: Đổi Booking -> Confirmed, Khóa phòng Room -> Occupied, Cập nhật chi tiêu và tích điểm Customer
