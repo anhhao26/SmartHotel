@@ -144,42 +144,35 @@
                             <!-- CRM Page Content -->
                             <div class="flex-1 h-screen overflow-y-auto pb-32">
                                 <div
-                                    class="max-w-7xl mx-auto px-8 lg:px-12 py-12 animate-[fadeIn_0.6s_ease-out] space-y-12">
-
-                                    <!-- Header Section -->
-                                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                                        <div class="space-y-4">
+                                    class="max-w-7xl mx-auto px-8 lg:px-12 py-12 animate-[fadeIn_0.6s_ease-out] space-y-12"                                    <!-- Header Section -->
+                                    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 lg:gap-12">
+                                        <div class="space-y-4 lg:space-y-6">
                                             <div
                                                 class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[10px] font-bold uppercase tracking-[0.3em]">
-                                                Hệ Thống Quản Trị Quan Hệ Khách Hàng
+                                                CRM Engine
                                             </div>
                                             <h2
-                                                class="text-6xl font-serif font-bold text-hotel-text tracking-tight leading-tight uppercase">
-                                                Hồ Sơ<br /><span class="text-hotel-gold italic text-7xl lowercase">Khách
-                                                    hàng.</span>
+                                                class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-hotel-text tracking-tight leading-tight uppercase">
+                                                Hồ Sơ<br /><span class="text-hotel-gold italic text-5xl md:text-6xl lg:text-7xl lowercase">Khách hàng.</span>
                                             </h2>
-                                            <p class="text-hotel-muted text-lg font-light italic max-w-xl opacity-80">
-                                                Quản trị trải nghiệm và định hình phong cách sống thượng lưu cho cộng
-                                                đồng hội viên SmartHotel.
-                                            </p>
                                         </div>
-                                        <div class="flex gap-4">
+                                        <div class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
                                             <button
-                                                class="px-8 py-4 rounded-xl border border-hotel-gold/20 text-hotel-muted text-[10px] font-bold uppercase tracking-widest hover:bg-white transition-all">Xuất
+                                                class="px-8 py-4 rounded-xl border border-hotel-gold/20 text-hotel-muted text-[10px] font-bold uppercase tracking-widest hover:bg-white transition-all order-2 sm:order-1">Xuất
                                                 Dữ Liệu</button>
                                             <div
-                                                class="card-elegant p-6 rounded-[2rem] flex items-center gap-6 relative overflow-hidden group border-hotel-gold/10">
+                                                class="card-elegant p-5 lg:p-6 rounded-[2rem] flex items-center gap-6 relative overflow-hidden group border-hotel-gold/10 order-1 sm:order-2">
                                                 <div
                                                     class="absolute inset-0 bg-hotel-gold/5 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 </div>
                                                 <span
-                                                    class="material-symbols-outlined text-hotel-gold text-4xl group-hover:scale-110 transition-transform">workspace_premium</span>
+                                                    class="material-symbols-outlined text-hotel-gold text-3xl lg:text-4xl group-hover:scale-110 transition-transform">workspace_premium</span>
                                                 <div class="relative">
                                                     <p
                                                         class="text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] mb-1 opacity-60">
-                                                        Tổng số hội viên</p>
+                                                        Hội viên</p>
                                                     <p
-                                                        class="text-3xl font-serif font-bold text-hotel-text tracking-tighter">
+                                                        class="text-2xl lg:text-3xl font-serif font-bold text-hotel-text tracking-tighter">
                                                         <%= customers !=null ? customers.size() : 0 %>
                                                     </p>
                                                 </div>
@@ -187,124 +180,144 @@
                                         </div>
                                     </div>
 
-                                    <!-- CRM Table Section -->
-                                    <div
-                                        class="card-elegant rounded-[3rem] overflow-hidden p-8 lg:p-10 border-hotel-gold/10 shadow-xl">
+                                    <!-- Desktop Table View (Hidden on mobile) -->
+                                    <div class="hidden lg:block card-elegant rounded-[3rem] overflow-hidden p-8 border-hotel-gold/10 shadow-xl">
                                         <div class="overflow-x-auto">
-                                            <table
-                                                class="w-full text-left border-collapse min-w-[1000px] table-elegant">
+                                            <table class="w-full text-left border-collapse table-elegant">
                                                 <thead>
                                                     <tr>
-                                                        <th>Thông Tin Hội Viên</th>
-                                                        <th>Kênh Liên Lạc</th>
-                                                        <th>Hạng Thành Viên</th>
+                                                        <th>Hội Viên</th>
+                                                        <th>Liên Lạc</th>
+                                                        <th>Hạng</th>
                                                         <th>Tích Lũy</th>
-                                                        <th class="text-right">Tổng Chi Tiêu</th>
+                                                        <th class="text-right">Chi Tiêu</th>
                                                         <th class="text-center">Thao Tác</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <% if (customers !=null && !customers.isEmpty()) { for (Customer c :
-                                                        customers) { String tier=c.getMemberType() !=null ?
-                                                        c.getMemberType() : "Standard" ; String
-                                                        tierClass="tier-standard" ; String icon="verified" ;
-                                                        if(tier.toUpperCase().contains("DIAMOND")) {
-                                                        tierClass="tier-diamond" ; icon="diamond" ; } else
-                                                        if(tier.toUpperCase().contains("GOLD") ||
-                                                        tier.toUpperCase().contains("VIP") ||
-                                                        tier.toUpperCase().contains("PLATINUM")) { tierClass="tier-gold"
-                                                        ; icon="star" ; } else if(tier.toUpperCase().contains("SILVER"))
-                                                        { tierClass="tier-silver" ; icon="military_tech" ; } %>
+                                                    <% if (customers !=null && !customers.isEmpty()) { 
+                                                        for (Customer c : customers) { 
+                                                            String tier = c.getMemberType() !=null ? c.getMemberType() : "Standard"; 
+                                                            String tierClass = "tier-standard"; String icon = "verified";
+                                                            if(tier.toUpperCase().contains("DIAMOND")) { tierClass = "tier-diamond"; icon = "diamond"; } 
+                                                            else if(tier.toUpperCase().contains("GOLD") || tier.toUpperCase().contains("VIP") || tier.toUpperCase().contains("PLATINUM")) { tierClass = "tier-gold"; icon = "star"; } 
+                                                            else if(tier.toUpperCase().contains("SILVER")) { tierClass = "tier-silver"; icon = "military_tech"; } 
+                                                    %>
                                                         <tr class="group hover:bg-hotel-gold/[0.02] transition-colors">
                                                             <td>
-                                                                <div class="flex items-center gap-5">
-                                                                    <div
-                                                                        class="w-14 h-14 rounded-2xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-muted/40 group-hover:text-hotel-gold transition-all duration-500">
-                                                                        <span
-                                                                            class="material-symbols-outlined text-3xl">account_circle</span>
+                                                                <div class="flex items-center gap-4">
+                                                                    <div class="w-12 h-12 rounded-xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-muted/40 group-hover:text-hotel-gold transition-all duration-500">
+                                                                        <span class="material-symbols-outlined text-2xl">account_circle</span>
                                                                     </div>
                                                                     <div>
-                                                                        <p
-                                                                            class="font-bold text-hotel-text group-hover:text-hotel-gold transition-colors tracking-tight uppercase text-sm">
+                                                                        <p class="font-bold text-hotel-text group-hover:text-hotel-gold transition-colors tracking-tight uppercase text-[12px]">
                                                                             <%= c.getFullName() %>
                                                                         </p>
-                                                                        <p
-                                                                            class="text-[10px] text-hotel-muted font-bold tracking-widest opacity-40">
-                                                                            Mã KH: #<%= c.getCustomerID() %>
-                                                                        </p>
+                                                                        <p class="text-[9px] text-hotel-muted font-bold tracking-widest opacity-40">#<%= c.getCustomerID() %></p>
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td>
                                                                 <div class="space-y-1">
-                                                                    <p
-                                                                        class="text-[12px] font-medium text-hotel-text opacity-70">
-                                                                        <%= c.getEmail() !=null ? c.getEmail() : "-" %>
-                                                                    </p>
-                                                                    <p
-                                                                        class="text-[10px] text-hotel-muted font-bold tracking-widest opacity-40">
-                                                                        <%= c.getPhone() !=null ? c.getPhone() : "N/A"
-                                                                            %>
-                                                                    </p>
+                                                                    <p class="text-[11px] font-medium text-hotel-text opacity-70"><%= c.getEmail() !=null ? c.getEmail() : "-" %></p>
+                                                                    <p class="text-[9px] text-hotel-muted font-bold tracking-widest opacity-40"><%= c.getPhone() !=null ? c.getPhone() : "N/A" %></p>
                                                                 </div>
                                                             </td>
                                                             <td>
                                                                 <span class="tier-badge <%= tierClass %>">
-                                                                    <span class="material-symbols-outlined text-[14px]">
-                                                                        <%= icon %>
-                                                                    </span>
+                                                                    <span class="material-symbols-outlined text-[12px]"><%= icon %></span>
                                                                     <%= tier %>
                                                                 </span>
                                                             </td>
                                                             <td>
                                                                 <div class="flex items-baseline gap-1">
-                                                                    <span
-                                                                        class="text-2xl font-serif font-bold text-hotel-text tabular-nums">
-                                                                        <%= c.getPoints() %>
-                                                                    </span>
-                                                                    <span
-                                                                        class="text-[9px] text-hotel-muted font-bold tracking-widest uppercase opacity-40">điểm</span>
+                                                                    <span class="text-xl font-serif font-bold text-hotel-text tabular-nums"><%= c.getPoints() %></span>
+                                                                    <span class="text-[8px] text-hotel-muted font-bold tracking-widest uppercase opacity-40">điểm</span>
                                                                 </div>
                                                             </td>
                                                             <td class="text-right">
-                                                                <span
-                                                                    class="text-hotel-text font-serif font-bold text-xl tracking-tight">
+                                                                <span class="text-hotel-text font-serif font-bold text-lg tracking-tight">
                                                                     <%= String.format("%,.0f", c.getTotalSpending()) %>
-                                                                        <span
-                                                                            class="text-[10px] text-hotel-muted font-sans font-bold opacity-30 ml-1">VNĐ</span>
+                                                                    <span class="text-[9px] text-hotel-muted font-sans font-bold opacity-30 ml-1">VNĐ</span>
                                                                 </span>
                                                             </td>
                                                             <td>
-                                                                <form
-                                                                    action="${pageContext.request.contextPath}/admin/customers"
-                                                                    method="post"
-                                                                    class="flex items-center justify-center gap-3">
-                                                                    <input type="hidden" name="action"
-                                                                        value="addPoints" />
-                                                                    <input type="hidden" name="customerId"
-                                                                        value="<%=c.getCustomerID()%>" />
-                                                                    <input
-                                                                        class="w-24 h-12 rounded-xl text-center font-serif font-bold text-lg input-elegant border-hotel-gold/10"
-                                                                        name="points" type="number" value="10"
-                                                                        min="1" />
-                                                                    <button type="submit"
-                                                                        class="w-12 h-12 rounded-xl bg-hotel-gold text-white hover:bg-hotel-text transition-all flex items-center justify-center active:scale-95 shadow-md group">
-                                                                        <span
-                                                                            class="material-symbols-outlined text-lg group-hover:rotate-12 transition-transform">bolt</span>
+                                                                <form action="${pageContext.request.contextPath}/admin/customers" method="post" class="flex items-center justify-center gap-2">
+                                                                    <input type="hidden" name="action" value="addPoints" />
+                                                                    <input type="hidden" name="customerId" value="<%=c.getCustomerID()%>" />
+                                                                    <input class="w-16 h-10 rounded-lg text-center font-serif font-bold text-sm input-elegant border-hotel-gold/10" name="points" type="number" value="10" min="1" />
+                                                                    <button type="submit" class="w-10 h-10 rounded-lg bg-hotel-gold text-white hover:bg-hotel-text transition-all flex items-center justify-center active:scale-95 shadow-md group">
+                                                                        <span class="material-symbols-outlined text-sm group-hover:rotate-12 transition-transform">bolt</span>
                                                                     </button>
                                                                 </form>
                                                             </td>
                                                         </tr>
-                                                        <% } } else { %>
-                                                            <tr>
-                                                                <td colspan="6"
-                                                                    class="py-32 text-center text-hotel-muted/20 font-serif italic text-2xl tracking-[0.2em] uppercase">
-                                                                    Không tìm thấy dữ liệu hội viên
-                                                                </td>
-                                                            </tr>
-                                                            <% } %>
+                                                    <% } } %>
                                                 </tbody>
                                             </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- Mobile Card View (Visible on mobile) -->
+                                    <div class="lg:hidden space-y-6">
+                                        <% if (customers !=null && !customers.isEmpty()) { 
+                                            for (Customer c : customers) { 
+                                                String tier = c.getMemberType() !=null ? c.getMemberType() : "Standard";
+                                                String tierClass = "tier-standard"; String icon = "verified";
+                                                if(tier.toUpperCase().contains("DIAMOND")) { tierClass = "tier-diamond"; icon = "diamond"; } 
+                                                else if(tier.toUpperCase().contains("GOLD") || tier.toUpperCase().contains("VIP") || tier.toUpperCase().contains("PLATINUM")) { tierClass = "tier-gold"; icon = "star"; } 
+                                                else if(tier.toUpperCase().contains("SILVER")) { tierClass = "tier-silver"; icon = "military_tech"; }
+                                        %>
+                                            <div class="card-elegant rounded-3xl p-6 space-y-6 border-hotel-gold/10">
+                                                <div class="flex items-start justify-between">
+                                                    <div class="flex items-center gap-4">
+                                                        <div class="w-12 h-12 rounded-xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-gold">
+                                                            <span class="material-symbols-outlined text-2xl">account_circle</span>
+                                                        </div>
+                                                        <div>
+                                                            <h4 class="font-bold text-hotel-text uppercase text-sm tracking-tight"><%= c.getFullName() %></h4>
+                                                            <p class="text-[9px] text-hotel-muted font-bold tracking-widest opacity-40 uppercase">#<%= c.getCustomerID() %></p>
+                                                        </div>
+                                                    </div>
+                                                    <span class="tier-badge <%= tierClass %>">
+                                                        <span class="material-symbols-outlined text-[12px]"><%= icon %></span>
+                                                        <%= tier %>
+                                                    </span>
+                                                </div>
+                                                
+                                                <div class="grid grid-cols-2 gap-4 pb-4 border-b border-hotel-gold/5">
+                                                    <div>
+                                                        <p class="text-[8px] font-bold text-hotel-muted uppercase tracking-widest mb-1">Tích Lũy</p>
+                                                        <p class="text-xl font-serif font-bold text-hotel-text"><%= c.getPoints() %><span class="text-[8px] ml-1 opacity-40">điểm</span></p>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <p class="text-[8px] font-bold text-hotel-muted uppercase tracking-widest mb-1">Chi Tiêu</p>
+                                                        <p class="text-xl font-serif font-bold text-hotel-gold"><%= String.format("%,.0f", c.getTotalSpending()) %><span class="text-[8px] ml-1 opacity-40">VNĐ</span></p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex items-center justify-between gap-4">
+                                                    <div class="flex-1 min-w-0">
+                                                        <p class="text-[10px] font-medium text-hotel-text truncate opacity-70"><%= c.getEmail() %></p>
+                                                        <p class="text-[9px] text-hotel-muted font-bold tracking-widest opacity-40"><%= c.getPhone() %></p>
+                                                    </div>
+                                                    <form action="${pageContext.request.contextPath}/admin/customers" method="post" class="flex items-center gap-2">
+                                                        <input type="hidden" name="action" value="addPoints" />
+                                                        <input type="hidden" name="customerId" value="<%=c.getCustomerID()%>" />
+                                                        <input class="w-14 h-10 rounded-lg text-center font-serif font-bold text-sm input-elegant border-hotel-gold/10" name="points" type="number" value="10" />
+                                                        <button type="submit" class="w-10 h-10 rounded-lg bg-hotel-gold text-white flex items-center justify-center shadow-md">
+                                                            <span class="material-symbols-outlined text-sm">bolt</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        <% } } else { %>
+                                            <div class="py-12 text-center text-hotel-muted/40 font-serif italic text-lg uppercase tracking-widest">
+                                                Không tìm thấy dữ liệu hội viên
+                                            </div>
+                                        <% } %>
+                                    </div>
+le>
                                         </div>
                                     </div>
 

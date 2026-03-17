@@ -220,7 +220,7 @@
                                 <div
                                     class="card-elegant p-12 rounded-[2.5rem] flex flex-col group relative overflow-hidden">
                                     <div
-                                        class="absolute inset-0 bg-hotel-gold/[0.02] opacity-0 group-hover:opacity-100 transition-opacity">
+                                        class="absolute inset-0 bg-hotel-gold/[0.02] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                                     </div>
                                     <div
                                         class="w-20 h-20 rounded-3xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold mb-10 border border-hotel-gold/10 group-hover:scale-110 transition-transform">
@@ -240,7 +240,7 @@
                                 <div
                                     class="card-elegant p-12 rounded-[2.5rem] flex flex-col group relative overflow-hidden">
                                     <div
-                                        class="absolute inset-0 bg-hotel-chocolate/[0.02] opacity-0 group-hover:opacity-100 transition-opacity">
+                                        class="absolute inset-0 bg-hotel-chocolate/[0.02] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                                     </div>
                                     <div
                                         class="w-20 h-20 rounded-3xl bg-hotel-chocolate/5 flex items-center justify-center text-hotel-chocolate mb-10 border border-hotel-chocolate/10 group-hover:scale-110 transition-transform">
@@ -260,7 +260,7 @@
                                 <div
                                     class="card-elegant p-12 rounded-[2.5rem] flex flex-col group relative overflow-hidden">
                                     <div
-                                        class="absolute inset-0 bg-hotel-muted/[0.02] opacity-0 group-hover:opacity-100 transition-opacity">
+                                        class="absolute inset-0 bg-hotel-muted/[0.02] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                                     </div>
                                     <div
                                         class="w-20 h-20 rounded-3xl bg-hotel-muted/5 flex items-center justify-center text-hotel-muted mb-10 border border-hotel-muted/10 group-hover:scale-110 transition-transform">

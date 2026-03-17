@@ -169,11 +169,22 @@
             <!-- Control Bar -->
             <div
                 class="no-print flex justify-between items-center mb-8 bg-white/50 backdrop-blur-md px-8 py-4 rounded-2xl border border-hotel-gold/10">
-                <a href="${pageContext.request.contextPath}/admin/bookings"
-                    class="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-hotel-muted hover:text-hotel-gold transition-colors">
-                    <span class="material-symbols-outlined text-lg">arrow_back</span>
-                    Quay lại Quản Lý Đặt Phòng
-                </a>
+                <c:choose>
+                    <c:when test="${isStaffView}">
+                        <a href="${pageContext.request.contextPath}/admin/bookings"
+                            class="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-hotel-muted hover:text-hotel-gold transition-colors">
+                            <span class="material-symbols-outlined text-lg">arrow_back</span>
+                            Quay lại Quản Lý Đặt Phòng
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/guest/history.jsp"
+                            class="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-hotel-muted hover:text-hotel-gold transition-colors">
+                            <span class="material-symbols-outlined text-lg">arrow_back</span>
+                            Quay lại Lịch Sử Đặt Phòng
+                        </a>
+                    </c:otherwise>
+                </c:choose>
                 <button onclick="window.print()"
                     class="flex items-center gap-3 bg-hotel-gold text-white px-8 py-3 rounded-xl font-bold text-[10px] tracking-[0.2em] uppercase hover:bg-hotel-chocolate transition-all group active:scale-95 shadow-md">
                     <span
@@ -226,12 +237,12 @@
                         </div>
                         <div class="md:text-right space-y-4">
                             <div
-                                class="inline-flex px-6 py-2 rounded-full <%= (inv != null) ? "bg-accent-emerald/5 border border-accent-emerald/20 text-accent-emerald" : "bg-amber-500/5 border border-amber-500/20 text-amber-500" %> text-[11px] font-bold tracking-[0.3em] uppercase">
-                                <%= (inv != null) ? "ĐÃ THANH TOÁN" : "CHƯA THANH TOÁN" %>
+                                class="inline-flex px-6 py-2 rounded-full <%= (inv != null || (booking != null && "Confirmed".equalsIgnoreCase(booking.getStatus()))) ? "bg-accent-emerald/5 border border-accent-emerald/20 text-accent-emerald" : "bg-amber-500/5 border border-amber-500/20 text-amber-500" %> text-[11px] font-bold tracking-[0.3em] uppercase">
+                                <%= (inv != null || (booking != null && "Confirmed".equalsIgnoreCase(booking.getStatus()))) ? "ĐÃ THANH TOÁN" : "CHƯA THANH TOÁN" %>
                             </div>
                             <p
                                 class="text-[10px] font-medium tracking-widest text-hotel-muted uppercase italic">
-                                <%= (inv != null) ? "Giao dịch đã được hệ thống xác thực" : "Thông tin đặt phòng hiện tại" %></p>
+                                <%= (inv != null || (booking != null && "Confirmed".equalsIgnoreCase(booking.getStatus()))) ? "Giao dịch đã được hệ thống xác thực" : "Thông tin đặt phòng hiện tại" %></p>
                         </div>
                     </header>
 
@@ -319,7 +330,10 @@
                             <tbody class="divide-y divide-hotel-gold/5">
                                 <% 
                                    double subtotalVal = 0;
+                                   double discountVal = 0;
+                                   
                                    if (inv != null) {
+                                       discountVal = (inv.getDiscount() != null) ? inv.getDiscount() : 0.0;
                                        List<InvoiceItem> items = inv.getItems();
                                        int idx = 1;
                                        for (InvoiceItem it : items) {
@@ -346,14 +360,20 @@
                                    </tr>
                                    <% } 
                                    } else if (booking != null) { 
-                                       subtotalVal = booking.getTotalAmount();
+                                       long diff = booking.getCheckOutDate().getTime() - booking.getCheckInDate().getTime();
+                                       long days = diff / (1000 * 60 * 60 * 24);
+                                       if (days <= 0) days = 1;
+                                       double originalPrice = booking.getRoom().getPrice() * days;
+                                       subtotalVal = originalPrice;
+                                       discountVal = originalPrice - booking.getTotalAmount();
+                                       if (discountVal < 0) discountVal = 0; // Tránh số âm nếu nhỡ có lỗi logic đâu đó
                                    %>
                                    <tr class="hover:bg-hotel-gold/5 transition-colors group">
                                        <td class="py-6 px-10 text-[12px] font-medium text-hotel-muted opacity-50 group-hover:opacity-100 italic transition-all">01</td>
                                        <td class="py-6 px-10 font-serif font-bold text-hotel-text text-[14px] uppercase tracking-wide italic">Dịch vụ đặt phòng (Dự kiến)</td>
-                                       <td class="py-6 px-10 text-center text-hotel-gold font-bold text-[14px]">1</td>
-                                       <td class="py-6 px-10 text-right text-hotel-muted font-medium text-[13px]"><%= String.format("%,.0f", booking.getTotalAmount()) %></td>
-                                       <td class="py-6 px-10 text-right text-hotel-text font-bold text-[14px] tabular-nums"><%= String.format("%,.0f", booking.getTotalAmount()) %> <span class="text-[10px] font-normal text-hotel-muted ml-1">VND</span></td>
+                                       <td class="py-6 px-10 text-center text-hotel-gold font-bold text-[14px]"><%= days %></td>
+                                       <td class="py-6 px-10 text-right text-hotel-muted font-medium text-[13px]"><%= String.format("%,.0f", booking.getRoom().getPrice()) %></td>
+                                       <td class="py-6 px-10 text-right text-hotel-text font-bold text-[14px] tabular-nums"><%= String.format("%,.0f", originalPrice) %> <span class="text-[10px] font-normal text-hotel-muted ml-1">VND</span></td>
                                    </tr>
                                    <% } %>
                             </tbody>
@@ -389,7 +409,7 @@
                                 class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-accent-emerald">
                                 <span class="flex items-center gap-2">Khuyến mãi /
                                     Giảm trừ</span>
-                                <span>- <%= String.format("%,.0f", (inv != null && inv.getDiscount() != null) ? inv.getDiscount() : 0.0) %> <span
+                                <span>- <%= String.format("%,.0f", discountVal) %> <span
                                             class="text-[9px] font-normal">VND</span></span>
                             </div>
                             <div class="h-px bg-hotel-gold/20"></div>
@@ -400,7 +420,7 @@
                                         thanh toán</span>
                                     <span
                                         class="text-4xl font-serif font-bold text-hotel-text tracking-widest uppercase italic leading-none">
-                                        <%= String.format("%,.0f", (inv != null) ? inv.getTotalAmount() : subtotalVal) %>
+                                    <%= String.format("%,.0f", (inv != null) ? inv.getTotalAmount() : (booking != null ? booking.getTotalAmount() : subtotalVal)) %>
                                     </span>
                                 </div>
                                 <span

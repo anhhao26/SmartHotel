@@ -28,8 +28,16 @@ public class CheckoutServlet extends HttpServlet {
             if ("checkin".equalsIgnoreCase(action)) {
                 int bid = Integer.parseInt(req.getParameter("bid"));
                 boolean ok = billingService.processCheckIn(bid);
-                if (ok) resp.sendRedirect(req.getContextPath() + "/reception/home.jsp?msg=Check-in Success");
-                else resp.getWriter().println("Check-in Failed!");
+                
+                String requestedWith = req.getHeader("X-Requested-With");
+                if ("XMLHttpRequest".equalsIgnoreCase(requestedWith)) {
+                    resp.setContentType("text/plain");
+                    if (ok) resp.getWriter().write("OK");
+                    else resp.getWriter().write("FAIL");
+                } else {
+                    if (ok) resp.sendRedirect(req.getContextPath() + "/reception/home.jsp?msg=Check-in Success");
+                    else resp.getWriter().println("Check-in Failed!");
+                }
                 return;
             }
 

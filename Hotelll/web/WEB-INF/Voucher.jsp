@@ -98,11 +98,12 @@
             <body class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
 
                 <jsp:include page="/common/neural_shell_top.jspf">
-                    <jsp:param name="active" value="reception" />
+                    <jsp:param name="active" value="vouchers" />
                 </jsp:include>
 
                 <!-- Voucher Page Content -->
-                <div class="space-y-12 pb-32 animate-[fadeIn_0.5s_ease-out]">
+                <div class="flex-1 h-screen overflow-y-auto pb-32">
+                    <div class="max-w-7xl mx-auto px-12 animate-[fadeIn_0.5s_ease-out] pt-12">
 
                     <!-- Header Section -->
                     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -309,10 +310,7 @@
                                             <p class="text-[10px] font-bold uppercase tracking-[0.4em]">Trống</p>
                                         </div>
                                     </c:if>
-                                </div>
-                            </div>
                         </div>
-
                     </div>
                 </div>
 

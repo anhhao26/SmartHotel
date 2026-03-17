@@ -1,4 +1,4 @@
-﻿<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <!DOCTYPE html>
     <html lang="vi">
 
@@ -117,7 +117,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
+                <div class="grid grid-cols-1 gap-12">
 
                     <!-- Revenue Prediction Card -->
                     <div class="card-elegant rounded-[3rem] p-12 flex flex-col group relative overflow-hidden"
@@ -144,7 +144,7 @@
                                 Series</span>
                         </div>
 
-                        <div class="flex-1 relative min-h-[450px]">
+                        <div class="flex-1 relative min-h-[600px]">
                             <canvas id="revenueChart"></canvas>
                         </div>
                     </div>
@@ -174,7 +174,7 @@
                                 Plan</span>
                         </div>
 
-                        <div class="flex-1 relative min-h-[450px]">
+                        <div class="flex-1 relative min-h-[600px]">
                             <canvas id="bookingChart"></canvas>
                         </div>
                     </div>
@@ -251,7 +251,7 @@
                             const canvas = container.querySelector('canvas');
                             if (canvas) canvas.style.display = 'none';
                             const errorDiv = document.createElement('div');
-                            errorDiv.className = 'p-20 flex flex-col items-center justify-center space-y-6 text-center h-full min-h-[450px] border-2 border-dashed border-hotel-gold/20 rounded-[3rem] mt-10 bg-hotel-gold/[0.02]';
+                            errorDiv.className = 'p-20 flex flex-col items-center justify-center space-y-6 text-center h-full min-h-[600px] border-2 border-dashed border-hotel-gold/20 rounded-[3rem] mt-10 bg-hotel-gold/[0.02]';
                             errorDiv.innerHTML = `
                         <span class="material-symbols-outlined text-6xl text-hotel-gold opacity-50">analytics</span>
                         <div>

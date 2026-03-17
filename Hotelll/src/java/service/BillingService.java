@@ -16,7 +16,7 @@ public class BillingService {
     /**
      * Process check-in: 
      * - Cập nhật booking.status = "Checked-in"
-     * - ĐỔI LẠI THÀNH OCCUPIED: Vì khách đã thực sự xách vali vào phòng
+     * - TUYỆT ĐỐI KHÔNG ĐỔI TRẠNG THÁI PHÒNG (Để phòng luôn Available trên web cho người khác đặt ngày khác)
      */
     public boolean processCheckIn(int bookingId) {
         EntityManager em = JPAUtil.getEntityManager();
@@ -29,14 +29,17 @@ public class BillingService {
                 return false; 
             }
             
+            // Chỉ đổi trạng thái của Hóa đơn thành Đang ở
             b.setStatus("Checked-in"); 
 
-            // ĐÃ MỞ KHÓA: Đổi trạng thái phòng thành Đang có khách (Occupied)
-            Room rm = b.getRoom();
-            if (rm != null) {
-                rm.setStatus("Occupied");
-                em.merge(rm);
-            }
+            // =========================================================
+            // ĐÃ BẮT TẬN TAY VÀ XÓA BỎ LỆNH KHÓA PHÒNG Ở ĐÂY!
+            // Room rm = b.getRoom();
+            // if (rm != null) {
+            //     rm.setStatus("Occupied");
+            //     em.merge(rm);
+            // }
+            // =========================================================
             
             em.merge(b);
             em.getTransaction().commit();

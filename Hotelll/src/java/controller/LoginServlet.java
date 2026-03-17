@@ -12,6 +12,7 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
 
     private final AuthService authService = new AuthService();
+    private final dao.CustomerDAO customerDAO = new dao.CustomerDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -50,6 +51,18 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("acc", acc);
         session.setAttribute("ROLE", acc.getRole());
         session.setAttribute("CUST_ID", acc.getCustomerID());
+        
+        // Set USER attribute for UI display
+        if (acc.getCustomerID() != null) {
+            model.Customer c = customerDAO.findById(acc.getCustomerID());
+            if (c != null) {
+                session.setAttribute("USER", c.getFullName());
+            } else {
+                session.setAttribute("USER", acc.getUsername());
+            }
+        } else {
+            session.setAttribute("USER", acc.getUsername());
+        }
 
         String role = acc.getRole() != null ? acc.getRole().trim().toUpperCase() : "";
         String base = req.getContextPath();

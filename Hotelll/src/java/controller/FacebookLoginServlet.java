@@ -69,11 +69,26 @@ public class FacebookLoginServlet extends HttpServlet {
                 session.setAttribute("acc", acc);
                 session.setAttribute("ROLE", acc.getRole());
                 session.setAttribute("USERNAME", acc.getUsername());
+                
+                // Set USER attribute for UI display
                 if (acc.getCustomerID() != null) {
+                    Customer c = customerDAO.findById(acc.getCustomerID());
+                    if (c != null) {
+                        session.setAttribute("USER", c.getFullName());
+                    } else {
+                        session.setAttribute("USER", acc.getUsername());
+                    }
                     session.setAttribute("CUST_ID", acc.getCustomerID());
+                } else {
+                    session.setAttribute("USER", acc.getUsername());
                 }
 
-                response.sendRedirect(request.getContextPath() + "/index.jsp");
+                String role = acc.getRole() != null ? acc.getRole().trim().toUpperCase() : "";
+                if ("MANAGER".equals(role) || "ADMIN".equals(role) || "SUPERADMIN".equals(role)) {
+                    response.sendRedirect(request.getContextPath() + "/admin");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/index.jsp");
+                }
             } else {
                 response.sendRedirect(request.getContextPath()
                         + "/login.jsp?err=Could not retrieve Facebook profile (make sure your FB account has an email).");

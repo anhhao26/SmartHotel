@@ -16,7 +16,13 @@ public class AdminCustomerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Customer> list = customerService.findAll(); 
+        String search = req.getParameter("search");
+        List<Customer> list;
+        if (search != null && !search.trim().isEmpty()) {
+            list = customerService.searchCustomers(search.trim());
+        } else {
+            list = customerService.findAll(); 
+        }
         req.setAttribute("customers", list);
         req.getRequestDispatcher("/admin/manageCustomers.jsp").forward(req, resp);
     }

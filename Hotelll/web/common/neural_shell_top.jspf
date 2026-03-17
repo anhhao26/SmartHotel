@@ -74,19 +74,26 @@
             </a>
         </c:if>
         
-        <a href="${pageContext.request.contextPath}/RoomServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'rooms' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
-            <span class="material-symbols-outlined mr-4 text-[20px]">bed</span> Sơ Đồ Phòng
-        </a>
+        <c:if test='<%= isAdmin || (currentRole != null && currentRole.equalsIgnoreCase("RECEPTIONIST")) %>'>
+            <a href="${pageContext.request.contextPath}/RoomServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'rooms' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+                <span class="material-symbols-outlined mr-4 text-[20px]">bed</span> Sơ Đồ Phòng
+            </a>
+        </c:if>
 
         <c:if test="<%= isAdmin %>">
             <a href="${pageContext.request.contextPath}/admin/bookings" class="sidebar-item ${(not empty param.active ? param.active : active) == 'bookings' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
                 <span class="material-symbols-outlined mr-4 text-[20px]">calendar_month</span> Quản Lý Đặt Phòng
             </a>
+            <a href="${pageContext.request.contextPath}/VoucherServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'vouchers' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+                <span class="material-symbols-outlined mr-4 text-[20px]">confirmation_number</span> Quản Lý Voucher
+            </a>
         </c:if>
  
-        <a href="${pageContext.request.contextPath}/reception" class="sidebar-item ${(not empty param.active ? param.active : active) == 'reception' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
-            <span class="material-symbols-outlined mr-4 text-[20px]">concierge</span> Tiếp Tân
-        </a>
+        <c:if test='<%= isAdmin || (currentRole != null && currentRole.equalsIgnoreCase("RECEPTIONIST")) %>'>
+            <a href="${pageContext.request.contextPath}/reception" class="sidebar-item ${(not empty param.active ? param.active : active) == 'reception' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+                <span class="material-symbols-outlined mr-4 text-[20px]">concierge</span> Tiếp Tân
+            </a>
+        </c:if>
         
         <c:if test="<%= isAdmin %>">
             <a href="${pageContext.request.contextPath}/products" class="sidebar-item ${(not empty param.active ? param.active : active) == 'inventory' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
@@ -123,9 +130,17 @@
 <main class="flex-1 flex flex-col relative h-screen overflow-hidden bg-hotel-cream">
     <header class="h-28 boutique-glass flex items-center justify-between px-12 z-40 border-b border-hotel-gold/10 relative">
         <div class="flex items-center gap-4 relative">
-            <form action="${pageContext.request.contextPath}/RoomServlet" method="get" class="hidden md:flex items-center bg-white border border-hotel-gold/10 rounded-2xl px-6 py-3.5 w-[450px] group focus-within:border-hotel-gold focus-within:shadow-lg focus-within:shadow-hotel-gold/5 transition-all">
+            <c:set var="searchAction" value="${pageContext.request.contextPath}/RoomServlet" />
+            <c:set var="currentActive" value="${not empty param.active ? param.active : active}" />
+            <c:if test="${currentActive == 'crm'}">
+                <c:set var="searchAction" value="${pageContext.request.contextPath}/admin/customers" />
+            </c:if>
+            <c:if test="${currentActive == 'bookings'}">
+                <c:set var="searchAction" value="${pageContext.request.contextPath}/admin/bookings" />
+            </c:if>
+            <form action="${searchAction}" method="get" class="hidden md:flex items-center bg-white border border-hotel-gold/10 rounded-2xl px-6 py-3.5 w-[450px] group focus-within:border-hotel-gold focus-within:shadow-lg focus-within:shadow-hotel-gold/5 transition-all">
                 <span class="material-symbols-outlined text-hotel-gold opacity-50 group-focus-within:opacity-100 transition-opacity">search</span>
-                <input id="searchInput" name="search" class="bg-transparent border-none focus:ring-0 text-[11px] ml-4 w-full text-hotel-text placeholder-hotel-muted font-bold uppercase tracking-[0.2em]" placeholder="Hệ thống truy vấn thông tin..." type="text"/>
+                <input id="searchInput" name="search" class="bg-transparent border-none focus:ring-0 text-[11px] ml-4 w-full text-hotel-text placeholder-hotel-muted font-bold uppercase tracking-[0.2em]" placeholder="Hệ thống truy vấn thông tin..." type="text" value="${param.search}"/>
             </form>
         </div>
         <div class="flex items-center gap-6">

@@ -31,8 +31,12 @@ public class RoomServlet extends HttpServlet {
         request.setAttribute("typeList", typeList);
 
         String statusFilter = request.getParameter("status");
+        String search = request.getParameter("search");
         List<Room> list;
-        if (statusFilter != null && !statusFilter.isEmpty() && !"All".equals(statusFilter)) {
+        
+        if (search != null && !search.trim().isEmpty()) {
+            list = roomService.searchRooms(search.trim());
+        } else if (statusFilter != null && !statusFilter.isEmpty() && !"All".equals(statusFilter)) {
             list = roomService.getRoomsByStatus(statusFilter);
         } else {
             list = roomService.getRoomBoard(); 
@@ -99,8 +103,8 @@ public class RoomServlet extends HttpServlet {
                     String originalFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
                     String uniqueFileName = java.util.UUID.randomUUID().toString() + "_" + originalFileName;
 
-                    // Lưu file vào thư mục assets/images trong project của bạn
-                    String uploadPath = getServletContext().getRealPath("") + File.separator + "assets" + File.separator + "images";
+                    // Lưu file vào thư mục assets/images trong project của bạn (Đường dẫn tuyệt đối để tránh mất ảnh khi redeploy)
+                    String uploadPath = "D:" + File.separator + "FinalPRJ" + File.separator + "SmartHotel" + File.separator + "Hotelll" + File.separator + "web" + File.separator + "assets" + File.separator + "images";
                     File uploadDir = new File(uploadPath);
                     if (!uploadDir.exists()) uploadDir.mkdirs();
 

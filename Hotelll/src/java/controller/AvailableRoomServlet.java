@@ -17,8 +17,14 @@ public class AvailableRoomServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // ĐÃ SỬA: Lấy toàn bộ phòng thay vì chỉ lấy phòng Available
-        List<Room> rooms = dao.findAllRooms();
+        String search = req.getParameter("search");
+        List<Room> rooms;
+        
+        if (search != null && !search.trim().isEmpty()) {
+            rooms = dao.searchRooms(search.trim());
+        } else {
+            rooms = dao.findAllRooms();
+        }
 
         req.setAttribute("rooms", rooms);
         req.getRequestDispatcher("/WEB-INF/rooms.jsp").forward(req, resp);
