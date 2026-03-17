@@ -7,8 +7,8 @@ import java.net.URL;
 
 public class GoogleLoginUtil {
 
-    public static final String GOOGLE_CLIENT_ID = "1078937497673-5046k9djoj4a9rfivr54qev9kjp202b0.apps.googleusercontent.com";
-    public static final String GOOGLE_CLIENT_SECRET = "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";
+    private static final String CLIENT_ID = System.getenv("GOOGLE_CLIENT_ID");
+private static final String CLIENT_SECRET = System.getenv("GOOGLE_CLIENT_SECRET");
     public static final String GOOGLE_REDIRECT_URL = "http://localhost:8080/Hotelll/login/google";
     public static final String GOOGLE_LINK_GET_TOKEN = "https://accounts.google.com/o/oauth2/token";
 
