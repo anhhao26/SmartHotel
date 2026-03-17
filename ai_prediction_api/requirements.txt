@@ -37,3 +37,4 @@ tzdata==2025.3
 Werkzeug==3.1.6
 pyodbc
 google-generativeai
+gunicorn==21.2.0
