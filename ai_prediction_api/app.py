@@ -88,16 +88,16 @@ def get_hotel_context():
     try:
         # 1. Lấy thông tin phòng
         query_rooms = """
-            SELECT t.TypeName, t.PricePerNight, COUNT(r.RoomID) as AvailableCount
+            SELECT t.TypeName, r.Price, COUNT(r.RoomID) as AvailableCount
             FROM RoomTypes t
-            LEFT JOIN Rooms r ON t.RoomTypeID = r.RoomTypeID AND r.Status = 'Available'
-            GROUP BY t.TypeName, t.PricePerNight
+            JOIN Rooms r ON t.RoomTypeID = r.RoomTypeID AND r.Status = 'Available'
+            GROUP BY t.TypeName, r.Price
         """
         df_rooms = execute_query(query_rooms)
         rooms_info = []
         total_available = 0
         for index, row in df_rooms.iterrows():
-            price = row['PricePerNight']
+            price = row['Price']
             count = int(row['AvailableCount'])
             total_available += count
             
@@ -131,12 +131,37 @@ def get_hotel_context():
         if not items_info:
             items_str = "- Hiện tại khách sạn không kinh doanh hoặc tạm hết hàng hóa/quà lưu niệm."
 
+        # 3. Lấy thông tin lịch đặt phòng sắp tới (30 ngày tới) để báo lịch trống
+        query_bookings = """
+            SELECT r.RoomNumber, t.TypeName, b.CheckInDate, b.CheckOutDate
+            FROM Bookings b
+            JOIN Rooms r ON b.RoomID = r.RoomID
+            JOIN RoomTypes t ON r.RoomTypeID = t.RoomTypeID
+            WHERE b.Status IN ('Pending', 'Confirmed', 'Checked-in')
+              AND b.CheckOutDate >= CAST(GETDATE() AS DATE)
+              AND b.CheckInDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE))
+            ORDER BY b.CheckInDate
+        """
+        df_bookings = execute_query(query_bookings)
+        bookings_info = []
+        for index, row in df_bookings.iterrows():
+            check_in = row['CheckInDate'].strftime("%d/%m") if pd.notnull(row['CheckInDate']) else ""
+            check_out = row['CheckOutDate'].strftime("%d/%m") if pd.notnull(row['CheckOutDate']) else ""
+            bookings_info.append(f"- Phòng {row['RoomNumber']} ({row['TypeName']}) ĐÃ KÍN từ {check_in} đến {check_out}.")
+        
+        bookings_str = "\n".join(bookings_info)
+        if not bookings_info:
+            bookings_str = "- Trong 30 ngày tới, tất cả các phòng đều đang hoàn toàn trống và có thể đặt tự do."
+
         context = f"""
-Thông tin về SmartHotel:
-1. Hiện trạng phòng (Tổng số CÒN TRỐNG: {total_available} phòng):
+Thông tin về SmartHotel (Hôm nay: {datetime.now().strftime('%d/%m/%Y')}):
+1. Hiện trạng phòng NGAY TẠI TRƯỜNG HỢP HIỆN TẠI (Tổng số CÒN TRỐNG: {total_available} phòng):
 {rooms_str}
 
-2. Danh sách dịch vụ/hàng hóa đang bán tại khách sạn:
+2. Lịch đặt phòng ĐÃ KÍN trong 30 ngày tới (Người dùng muốn hỏi lịch trống thì phải trừ đi các ngày này):
+{bookings_str}
+
+3. Danh sách dịch vụ/hàng hóa đang bán tại khách sạn:
 {items_str}
 
 - Các dịch vụ khác: Hồ bơi, Nhà hàng, Spa.
