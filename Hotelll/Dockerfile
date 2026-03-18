@@ -17,4 +17,5 @@ RUN rm -f /usr/local/tomcat/webapps/ROOT/WEB-INF/lib/jakarta.jakartaee-web-api-*
 RUN rm -f /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
 
 EXPOSE 8000
-CMD ["catalina.sh", "run"]
+# Đẩy log báo lỗi chi tiết của Tomcat ra màn hình console của Koyeb
+CMD ["sh", "-c", "catalina.sh run & while [ ! -f /usr/local/tomcat/logs/localhost.$(date +%Y-%m-%d).log ]; do sleep 1; done; tail -f /usr/local/tomcat/logs/localhost.*.log"]
