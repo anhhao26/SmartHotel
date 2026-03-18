@@ -68,7 +68,7 @@ public class PredictRevenueServlet extends HttpServlet {
         // Nếu không có biến môi trường (Chạy local), mặc định sẽ sử dụng http://127.0.0.1:5000
         String aiApiBaseUrl = System.getenv("AI_API_BASE_URL");
         if (aiApiBaseUrl == null || aiApiBaseUrl.trim().isEmpty()) {
-            aiApiBaseUrl = "http://127.0.0.1:5000";
+            aiApiBaseUrl = "https://smarthotel-ai-api.onrender.com";
         }
         
         // 1. Gọi API Doanh thu
