@@ -17,7 +17,7 @@
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
-      <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://ASM_nhom5.mssql.somee.com;databaseName=ASMDB_nhom5;encrypt=false;trustServerCertificate=true"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://ASM_nhom5.mssql.somee.com;databaseName=ASM_nhom5;encrypt=false;trustServerCertificate=true"/>
       <property name="jakarta.persistence.jdbc.user" value="ntphong17_SQLLogin_1"/>
       <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
       <property name="jakarta.persistence.jdbc.password" value="36c3waf7hz"/>
