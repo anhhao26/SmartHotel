@@ -54,7 +54,18 @@ public class VNPayServlet extends HttpServlet {
         // Mã tham chiếu duy nhất: BookingID + Vai trò + Timestamp
         String vnp_TxnRef = bookingId + "_" + roleStr + "_" + System.currentTimeMillis();
         String vnp_OrderInfo = "Thanh toan don dat phong " + bookingId;
-        String vnp_IpAddr = request.getRemoteAddr();
+        // Lấy IP thực của client qua X-Forwarded-For (Koyeb dùng reverse proxy)
+        String vnp_IpAddr = request.getHeader("X-Forwarded-For");
+        if (vnp_IpAddr == null || vnp_IpAddr.isEmpty() || "unknown".equalsIgnoreCase(vnp_IpAddr)) {
+            vnp_IpAddr = request.getRemoteAddr();
+        } else {
+            // X-Forwarded-For có thể chứa nhiều IP (client, proxy1, proxy2...) - lấy cái đầu tiên
+            vnp_IpAddr = vnp_IpAddr.split(",")[0].trim();
+        }
+        // Đảm bảo IP hợp lệ (VNPay không chấp nhận IPv6 hay địa chỉ rỗng)
+        if (vnp_IpAddr == null || vnp_IpAddr.isEmpty()) {
+            vnp_IpAddr = "127.0.0.1";
+        }
         
         TimeZone vnpayTz = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
         Calendar cld = Calendar.getInstance(vnpayTz);
