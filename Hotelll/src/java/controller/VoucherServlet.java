@@ -46,13 +46,21 @@ public class VoucherServlet extends HttpServlet {
             BigDecimal minOrder = new BigDecimal(minOrderStr == null || minOrderStr.isEmpty() ? "0" : minOrderStr);
             int usageLimit = Integer.parseInt(usageLimitStr);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            java.util.Date start = sdf.parse(startDateStr);
+            java.util.Date end = sdf.parse(endDateStr);
+
+            if (start.after(end)) {
+                request.setAttribute("errorMessage", "Lỗi: Ngày bắt đầu không thể sau ngày hết hạn!");
+                doGet(request, response);
+                return;
+            }
 
             Voucher v = new Voucher();
             v.setVoucherCode(code);
             v.setDiscountValue(discount);
             v.setMinOrderValue(minOrder);
-            v.setStartDate(sdf.parse(startDateStr));
-            v.setEndDate(sdf.parse(endDateStr));
+            v.setStartDate(start);
+            v.setEndDate(end);
             v.setUsageLimit(usageLimit);
 
             String result = voucherService.saveVoucher(v);

@@ -40,8 +40,19 @@ public class VNPayServlet extends HttpServlet {
         long amount = (long) (parsedAmount * 100); 
         // -----------------------------------
         
-        // Mã tham chiếu duy nhất (Thêm timestamp để tránh lỗi trùng mã khi test lại)
-        String vnp_TxnRef = bookingId + "_" + System.currentTimeMillis();
+        // 2. Xác định vai trò người thực hiện (Guest hay Receptionist/Admin)
+        HttpSession session = request.getSession();
+        model.Account acc = (model.Account) session.getAttribute("acc");
+        String roleStr = "GUEST"; // Mặc định là khách
+        if (acc != null && acc.getRole() != null) {
+            String r = acc.getRole().trim().toUpperCase();
+            if (r.equals("RECEPTIONIST") || r.equals("STAFF") || r.equals("ADMIN") || r.equals("MANAGER") || r.equals("SUPERADMIN")) {
+                roleStr = "STAFF";
+            }
+        }
+
+        // Mã tham chiếu duy nhất: BookingID + Vai trò + Timestamp
+        String vnp_TxnRef = bookingId + "_" + roleStr + "_" + System.currentTimeMillis();
         String vnp_OrderInfo = "Thanh toan don dat phong " + bookingId;
         String vnp_IpAddr = request.getRemoteAddr();
         

@@ -13,6 +13,7 @@ import java.io.IOException;
  * - /admin/* -> only ADMIN / MANAGER / SUPERADMIN
  * - /reception/* -> only RECEPTIONIST / STAFF / ADMIN (admin nên có quyền xem)
  */
+@WebFilter(urlPatterns = {"/admin/*", "/reception/*"})
 public class AuthorizationFilter implements Filter {
 
     @Override
@@ -23,37 +24,32 @@ public class AuthorizationFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpSession session = req.getSession(false);
 
-        String contextPath = req.getContextPath();
-        String uri = req.getRequestURI();
-        String path = uri.substring(contextPath.length());
-
+        String uri = req.getRequestURI(); // e.g. /SmartHotel/admin/...
         Account acc = null;
         if (session != null) {
             Object o = session.getAttribute("acc");
-            if (o instanceof Account) {
-                acc = (Account) o;
-            }
+            if (o instanceof Account) acc = (Account) o;
         }
 
-        if (path.startsWith("/admin")) {
-            if (acc == null) {
-                resp.sendRedirect(contextPath + "/login");
+        if (uri.contains("/admin/")) {
+            if (acc == null || acc.getRole() == null) {
+                resp.sendRedirect(req.getContextPath() + "/login");
                 return;
             }
-            String r = acc.getRole() != null ? acc.getRole().trim().toUpperCase() : "";
+            String r = acc.getRole().trim().toUpperCase();
             if (!(r.equals("ADMIN") || r.equals("MANAGER") || r.equals("SUPERADMIN"))) {
-                resp.sendRedirect(contextPath + "/403.jsp");
+                resp.sendRedirect(req.getContextPath() + "/login");
                 return;
             }
-        } else if (path.startsWith("/reception")) {
-            if (acc == null) {
-                resp.sendRedirect(contextPath + "/login");
+        } else if (uri.contains("/reception/")) {
+            if (acc == null || acc.getRole() == null) {
+                resp.sendRedirect(req.getContextPath() + "/login");
                 return;
             }
-            String r = acc.getRole() != null ? acc.getRole().trim().toUpperCase() : "";
+            String r = acc.getRole().trim().toUpperCase();
             // reception accessible by receptionist/staff and admin
             if (!(r.equals("RECEPTIONIST") || r.equals("STAFF") || r.equals("ADMIN") || r.equals("MANAGER") || r.equals("SUPERADMIN"))) {
-                resp.sendRedirect(contextPath + "/403.jsp");
+                resp.sendRedirect(req.getContextPath() + "/login");
                 return;
             }
         }

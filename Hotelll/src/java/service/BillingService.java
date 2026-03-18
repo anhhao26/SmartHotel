@@ -71,7 +71,7 @@ public class BillingService {
                 em.getTransaction().rollback(); 
                 return false; 
             }
-            booking.setStatus("Checked-out");
+            // booking.setStatus("Checked-out"); // ĐÃ XÓA: Trạng thái sẽ được cập nhật trong Servlet tùy theo flow thanh toán
             em.merge(booking);
 
             // 2) Load Customer & Initialize Invoice
@@ -92,6 +92,8 @@ public class BillingService {
             // Tiền phòng (sau khi trừ chiết khấu nếu có)
             double finalRoomPrice = roomPrice - discount;
             
+            // Removed room price from checkout invoice as requested: Payment is item-based only
+            /*
             InvoiceItem roomLine = new InvoiceItem();
             roomLine.setQuantity(1);
             roomLine.setUnitPrice(finalRoomPrice);
@@ -99,6 +101,7 @@ public class BillingService {
             inv.addItem(roomLine);
             
             subtotal += finalRoomPrice;
+            */
 
             // 3) Tính tiền items từ Minibar & Trừ kho
             if (items != null) {
@@ -134,7 +137,8 @@ public class BillingService {
             inv.setDiscount(discount);
             em.persist(inv);
 
-            // 4) Update Room status -> Cleaning
+            // 4) Update Room status -> Cleaning (DELIVERED TO BookingDAO.confirm)
+            /*
             Room rm = booking.getRoom();
             if (rm == null) {
                 rm = em.find(Room.class, roomId);
@@ -143,8 +147,10 @@ public class BillingService {
                 rm.setStatus("Cleaning");
                 em.merge(rm);
             }
+            */
 
-            // 5) Update Customer (CRM - Loyalty) CHỈ CỘNG ĐIỂM Ở ĐÂY ĐỂ KHÔNG BỊ NHÂN ĐÔI
+            // 5) Update Customer status (CRM logic is now centralized in BookingDAO.confirm)
+            /*
             if (cust != null) {
                 double prevTotal = cust.getTotalSpending() == null ? 0.0 : cust.getTotalSpending();
                 double newTotal = prevTotal + subtotal;
@@ -163,6 +169,7 @@ public class BillingService {
                 }
                 em.merge(cust);
             }
+            */
 
             em.getTransaction().commit();
             return true;

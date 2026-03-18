@@ -174,7 +174,7 @@
                                                                         <option disabled selected value="">-- LỰA CHỌN MÃ ĐẶT PHÒNG --</option>
                                                                             <% for (BookingShort b : pending) { String
                                                                                 v=b.bookingID + "|" + b.roomID + "|" +
-                                                                                b.customerName; %>
+                                                                                b.customerName + "|" + b.customerID; %>
                                                                                 <option value="<%=v%>">MÃ: BK#
                                                                                     <%=b.bookingID%> -
                                                                                         PHÒNG: <%=b.roomID%> [
@@ -281,12 +281,16 @@
                                                                         onchange="fillCheckout()"
                                                                         class="w-full h-18 px-8 rounded-xl input-elegant font-bold text-[11px] uppercase tracking-widest appearance-none cursor-pointer border-hotel-gold/10">
                                                                         <option disabled selected value="">-- CHỌN SỐ PHÒNG --</option>
-                                                                            <% for (BookingShort b : checked) { String
-                                                                                v=b.bookingID + "|" + b.roomID + "|" +
-                                                                                b.customerID + "|" + b.customerName; %>
-                                                                                <option value="<%=v%>">PHÒNG:
-                                                                                    <%=b.roomID%>
-                                                                                        [<%=b.customerName%>]</option>
+                                                                            <% for (BookingShort b : checked) { 
+                                                                                String v = b.bookingID + "|" + b.roomID + "|" + b.customerID + "|" + b.customerName; 
+                                                                                String label = "PHÒNG: " + b.roomID + " [" + b.customerName + "]";
+                                                                                if ("Payment Pending".equalsIgnoreCase(b.status)) {
+                                                                                    label += " (ĐANG THANH TOÁN)";
+                                                                                }
+                                                                            %>
+                                                                                <option value="<%=v%>">
+                                                                                    <%=label%>
+                                                                                </option>
                                                                                 <% } %>
                                                                         </select>
                                                                         <span
@@ -324,11 +328,16 @@
                                                                         </div>
                                                                     </div>
 
+                                                                    <!-- Removed manual price input as requested -->
+                                                                    <input type="hidden" name="price" value="0">
+
                                                                     <div class="space-y-1">
-                                                                        <label class="label-premium ml-1">Kết toán giá phòng (Standard Rate)</label>
-                                                                        <input type="number" name="price"
-                                                                            value="1000000" required
-                                                                            class="w-full h-18 px-8 text-4xl font-serif font-bold text-hotel-text input-elegant rounded-xl tracking-tighter border-hotel-gold/10">
+                                                                        <label class="label-premium ml-1">Mã Giảm Giá (Voucher)</label>
+                                                                        <div class="relative">
+                                                                            <input type="text" name="voucherCode" placeholder="NHẬP MÃ TẠI ĐÂY..."
+                                                                                class="w-full h-14 px-8 rounded-xl input-elegant font-bold text-[11px] uppercase tracking-[0.2em] border-hotel-gold/10">
+                                                                            <span class="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 text-hotel-gold/40">confirmation_number</span>
+                                                                        </div>
                                                                     </div>
 
                                                                     <div class="space-y-4">
@@ -420,22 +429,27 @@
                                                 function fillCheckin() {
                                                     var v = document.getElementById('pendingSel').value;
                                                     var btn = document.getElementById('btn_checkin');
+                                                    var btnConfirm = document.getElementById('btn_confirm');
+                                                    
                                                     if (!v) {
-                                                        document.getElementById('bid_checkin_display').innerText = "--";
-                                                        document.getElementById('rid_checkin_display').innerText = "--";
-                                                        document.getElementById('name_checkin_display').innerText = "--";
-                                                        btn.disabled = true;
-                                                        if (document.getElementById('btn_confirm')) document.getElementById('btn_confirm').disabled = true;
+                                                        document.getElementById('bid_checkin_display').textContent = "--";
+                                                        document.getElementById('rid_checkin_display').textContent = "--";
+                                                        document.getElementById('name_checkin_display').textContent = "--";
+                                                        if (btn) btn.disabled = true;
+                                                        if (btnConfirm) btnConfirm.disabled = true;
                                                         return;
                                                     }
+                                                    
                                                     var p = v.split('|');
-                                                    document.getElementById('bid_checkin_input').value = p[0];
-                                                    document.getElementById('rid_checkin_input').value = p[1];
-                                                    document.getElementById('bid_checkin_display').innerText = "BK#" + p[0];
-                                                    document.getElementById('rid_checkin_display').innerText = "PHÒNG " + p[1];
-                                                    document.getElementById('name_checkin_display').innerText = p[2];
-                                                    btn.disabled = false;
-                                                    if (document.getElementById('btn_confirm')) document.getElementById('btn_confirm').disabled = false;
+                                                    document.getElementById('bid_checkin_input').value = p[0] || '';
+                                                    document.getElementById('rid_checkin_input').value = p[1] || '';
+                                                    
+                                                    document.getElementById('bid_checkin_display').textContent = "BK#" + (p[0] || "");
+                                                    document.getElementById('rid_checkin_display').textContent = "PHONG " + (p[1] || "");
+                                                    document.getElementById('name_checkin_display').textContent = p[2] || "";
+                                                    
+                                                    if (btn) btn.disabled = false;
+                                                    if (btnConfirm) btnConfirm.disabled = false;
                                                 }
 
                                                 function submitCheckinForm(act) {
@@ -455,7 +469,7 @@
                                                         params.append(pair[0], pair[1]);
                                                     }
 
-                                                    fetch(form.action, {
+                                                    fetch(form.getAttribute('action'), {
                                                         method: 'POST',
                                                         headers: {
                                                             'X-Requested-With': 'XMLHttpRequest',
@@ -467,8 +481,29 @@
                                                     .then(data => {
                                                         if (data.trim() === 'OK') {
                                                             showToast('Hoàn tất nhận phòng thành công!', 'success');
-                                                            // Optionally refresh the pending list or just reset the form
-                                                            setTimeout(() => location.reload(), 1500); // Reload after 1.5s to see updated lists
+                                                            
+                                                            // --- DYNAMIC UI REFRESH (SEAMLESS) ---
+                                                            const sel = document.getElementById('pendingSel');
+                                                            const opt = sel.options[sel.selectedIndex];
+                                                            
+                                                            if (opt && opt.value) {
+                                                                const p = opt.value.split('|'); // [bid, rid, name, cid]
+                                                                const bid = p[0], rid = p[1], name = p[2], cid = p[3] || '0';
+                                                                
+                                                                // 1. Move to Checked-in dropdown
+                                                                const checkedSel = document.getElementById('checkedSel');
+                                                                const newOpt = document.createElement('option');
+                                                                newOpt.value = bid + "|" + rid + "|" + cid + "|" + name;
+                                                                newOpt.textContent = "PHONG: " + rid + " [" + name + "]";
+                                                                checkedSel.appendChild(newOpt);
+                                                                
+                                                                // 2. Remove from Pending dropdown
+                                                                opt.remove();
+                                                                
+                                                                // 3. Reset form display and disable buttons
+                                                                sel.value = "";
+                                                                fillCheckin();
+                                                            }
                                                         } else {
                                                             showToast('Lỗi: ' + data, 'error');
                                                         }
@@ -481,8 +516,9 @@
 
                                                 function showToast(message, type = 'success') {
                                                     const toast = document.createElement('div');
+                                                    const isSuccess = (type === 'success');
                                                     toast.className = `fixed bottom-10 right-10 z-[200] px-8 py-4 rounded-2xl shadow-2xl border backdrop-blur-xl transform translate-y-20 opacity-0 transition-all duration-500 flex items-center gap-4 ${
-                                                        type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600' : 'bg-red-500/10 border-red-500/20 text-red-600'
+                                                        isSuccess ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600' : 'bg-red-500/10 border-red-500/20 text-red-600'
                                                     }`;
                                                     
                                                     const icon = type === 'success' ? 'check_circle' : 'error';
@@ -509,17 +545,19 @@
                                                     var v = document.getElementById('checkedSel').value;
                                                     var btn = document.getElementById('btn_checkout');
                                                     if (!v) {
-                                                        document.getElementById('name_checkout_display').innerText = "--";
-                                                        document.getElementById('room_checkout_display').innerText = "Phòng: --";
-                                                        btn.disabled = true; return;
+                                                        document.getElementById('name_checkout_display').textContent = "--";
+                                                        document.getElementById('room_checkout_display').textContent = "Phong: --";
+                                                        if (btn) btn.disabled = true; 
+                                                        return;
                                                     }
                                                     var p = v.split('|');
-                                                    document.getElementById('bid_checkout_input').value = p[0];
-                                                    document.getElementById('rid_checkout_input').value = p[1];
-                                                    document.getElementById('cid_checkout_input').value = p[2];
-                                                    document.getElementById('room_checkout_display').innerText = "Phòng: " + p[1];
-                                                    document.getElementById('name_checkout_display').innerText = p[3];
-                                                    btn.disabled = false;
+                                                    document.getElementById('bid_checkout_input').value = p[0] || '';
+                                                    document.getElementById('rid_checkout_input').value = p[1] || '';
+                                                    document.getElementById('cid_checkout_input').value = p[2] || '';
+                                                    
+                                                    document.getElementById('room_checkout_display').textContent = "Phong: " + (p[1] || "");
+                                                    document.getElementById('name_checkout_display').textContent = p[3] || "";
+                                                    if (btn) btn.disabled = false;
                                                 }
                                             </script>
                                             <jsp:include page="/common/neural_shell_bottom.jspf" />
