@@ -5,4 +5,3 @@
         <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-hotel-gold/5 blur-[80px] rounded-full -translate-x-1/2 translate-y-1/2"></div>
     </div>
 </main>
-<jsp:include page="/common/chat_box.jspf" />
