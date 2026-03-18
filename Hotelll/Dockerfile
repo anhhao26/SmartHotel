@@ -1,7 +1,5 @@
-# 1. Môi trường Build dùng Ant và JDK 17
-FROM frekele/ant:1.10.3-jdk8 AS build
-# Đổi sang dùng openjdk:17-slim và cài ant thủ công vì frekele/ant cũ quá
-FROM openjdk:17-slim AS build
+# Đổi sang dùng eclipse-temurin:17-jdk và cài ant thủ công
+FROM eclipse-temurin:17-jdk AS build
 
 # Cài đặt Ant
 RUN apt-get update && apt-get install -y ant && rm -rf /var/lib/apt/lists/*
