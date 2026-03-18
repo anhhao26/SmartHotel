@@ -21,6 +21,9 @@
       <property name="jakarta.persistence.jdbc.user" value="ntphong17_SQLLogin_1"/>
       <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
       <property name="jakarta.persistence.jdbc.password" value="36c3waf7hz"/>
+      <!-- Tự động cập nhật Database khi thay đổi Entity -->
+      <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+      <property name="eclipselink.ddl-generation.output-mode" value="database"/>
     </properties>
   </persistence-unit>
 </persistence>
