@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="3.1" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+<persistence version="3.1" xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_1.xsd">
   <persistence-unit name="HotelllPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>model.Account</class>
@@ -17,15 +17,10 @@
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
-          <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://ASM_nhom5.mssql.somee.com;databaseName=ASMDB_nhom5;encrypt=false;trustServerCertificate=true"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://ASM_nhom5.mssql.somee.com;databaseName=ASMDB_nhom5;encrypt=false;trustServerCertificate=true"/>
       <property name="jakarta.persistence.jdbc.user" value="ntphong17_SQLLogin_1"/>
       <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
       <property name="jakarta.persistence.jdbc.password" value="36c3waf7hz"/>
-
-      
-      <!-- Tự động cập nhật Database khi thay đổi Entity -->
-      <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
-      <property name="eclipselink.ddl-generation.output-mode" value="database"/>
     </properties>
   </persistence-unit>
 </persistence>
