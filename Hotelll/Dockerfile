@@ -13,5 +13,8 @@ COPY ./build/web /usr/local/tomcat/webapps/ROOT/
 # XÓA file jakartaee-web-api.jar để tránh xung đột với thư viện lõi của Tomcat (Nguyên nhân gây lỗi Filter)
 RUN rm -f /usr/local/tomcat/webapps/ROOT/WEB-INF/lib/jakarta.jakartaee-web-api-*.jar
 
+# XÓA file context.xml để ép Tomcat chạy Web ở thư mục Gốc (/) thay vì (/Hotelll)
+RUN rm -f /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
+
 EXPOSE 8000
 CMD ["catalina.sh", "run"]
