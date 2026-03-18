@@ -16,6 +16,8 @@ RUN rm -f /usr/local/tomcat/webapps/ROOT/WEB-INF/lib/jakarta.jakartaee-web-api-*
 # XÓA file context.xml để ép Tomcat chạy Web ở thư mục Gốc (/) thay vì (/Hotelll)
 RUN rm -f /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
 
+# Bật log của Tomcat (localhost log) ra màn hình Console để xem chính xác lỗi Filter
+RUN sed -i 's/2localhost.org.apache.juli.AsyncFileHandler/java.util.logging.ConsoleHandler/g' /usr/local/tomcat/conf/logging.properties
+
 EXPOSE 8000
-# Đẩy log báo lỗi chi tiết của Tomcat ra màn hình console của Koyeb
-CMD ["sh", "-c", "catalina.sh run & while [ ! -f /usr/local/tomcat/logs/localhost.$(date +%Y-%m-%d).log ]; do sleep 1; done; tail -f /usr/local/tomcat/logs/localhost.*.log"]
+CMD ["catalina.sh", "run"]
