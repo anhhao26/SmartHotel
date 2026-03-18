@@ -1,6 +1,7 @@
 # --- NetBeans (Ant) ---
 nbproject/private/
-build/
+# Không loại bỏ thư mục build nữa để GitHub có thể lấy code đã biên dịch
+# build/
 dist/
 nbdist/
 .nb-gradle/

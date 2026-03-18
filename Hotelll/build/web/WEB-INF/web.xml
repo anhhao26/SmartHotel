@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+  version="5.0">
+    
+    <filter>
+        <filter-name>AdminNotificationFilter</filter-name>
+        <filter-class>filter.AdminNotificationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminNotificationFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/RoomServlet</url-pattern>
+        <url-pattern>/reception/*</url-pattern>
+        <url-pattern>/products</url-pattern>
+        <url-pattern>/predict-revenue</url-pattern>
+    </filter-mapping>
+
+    
+    <display-name>SmartHotel</display-name>
+
+    <servlet>
+        <servlet-name>jsp</servlet-name>
+        <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>jsp</servlet-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>*.jspx</url-pattern>
+        <url-pattern>*.jspf</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+    
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>
