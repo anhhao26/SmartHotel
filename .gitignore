@@ -28,7 +28,7 @@ gradle-app.setting
 .project
 
 # --- File chạy & Nén ---
-*.class
+# *.class
 *.war
 *.ear
 *.zip
