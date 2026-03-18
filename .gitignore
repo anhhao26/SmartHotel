@@ -41,6 +41,7 @@ Thumbs.db
 
 # --- NGOẠI LỆ (QUAN TRỌNG: Giữ lại thư viện) ---
 !libs/*.jar
+!Hotelll/build/web/WEB-INF/lib/*.jar
 /Hotelll/nbproject/private/
 
 # ==========================================
