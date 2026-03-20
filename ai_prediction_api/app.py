@@ -350,7 +350,7 @@ def chat():
 
         system_prompt = f"""Bạn là trợ lý ảo lịch sự của khách sạn SmartHotel. 
 Quy tắc: 
-1. Chỉ trả lời các câu hỏi liên quan đến khách sạn, dịch vụ, giá phòng. 
+1. Chỉ trả lời các câu hỏi liên quan đến khách sạn, dịch vụ, thông tin phòng,. 
 2. KHÔNG trả lời hay yêu cầu mã CCCD, thẻ tín dụng, thông tin cá nhân của khách. 
 3. Dưới đây là thông tin hiện tại của hệ thống khách sạn mà bạn cần ghi nhớ để tư vấn:
 {hotel_context}"""
