@@ -56,8 +56,10 @@ public class VNPayServlet extends HttpServlet {
         String vnp_OrderInfo = "Thanh toan don dat phong " + bookingId;
         String vnp_IpAddr = request.getRemoteAddr();
         
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+        TimeZone tz = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+        Calendar cld = Calendar.getInstance(tz);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        formatter.setTimeZone(tz); // Rất quan trọng để tránh lệch múi giờ trên Server Koyeb
         String vnp_CreateDate = formatter.format(cld.getTime());
         
         cld.add(Calendar.MINUTE, 15);
