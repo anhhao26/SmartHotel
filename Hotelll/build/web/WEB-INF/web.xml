@@ -4,18 +4,7 @@
   xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
   version="5.0">
     
-    <filter>
-        <filter-name>AdminNotificationFilter</filter-name>
-        <filter-class>filter.AdminNotificationFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>AdminNotificationFilter</filter-name>
-        <url-pattern>/admin/*</url-pattern>
-        <url-pattern>/RoomServlet</url-pattern>
-        <url-pattern>/reception/*</url-pattern>
-        <url-pattern>/products</url-pattern>
-        <url-pattern>/predict-revenue</url-pattern>
-    </filter-mapping>
+
 
     
     <display-name>SmartHotel</display-name>
