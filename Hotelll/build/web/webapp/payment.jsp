@@ -93,7 +93,7 @@
                         <div
                             class="inline-flex items-center gap-3 px-5 py-2 rounded-sm bg-white border border-hotel-gold/20">
                             <span class="material-symbols-outlined text-hotel-gold text-[20px]">shield_person</span>
-                            <span class="text-hotel-gold text-[9px] font-bold tracking-[0.3em] uppercase">Thanh Toán Bảo
+                            <span class="text-hotel-gold text-sm font-bold tracking-[0.3em] uppercase">Thanh Toán Bảo
                                 Mật Quốc Tế</span>
                         </div>
                         <h1
@@ -109,17 +109,17 @@
                     <div class="grid grid-cols-2 gap-8">
                         <div class="card-elegant p-8 rounded-sm space-y-4 group transition-all">
                             <span class="material-symbols-outlined text-hotel-gold text-4xl">verified</span>
-                            <p class="text-hotel-text font-bold text-[10px] tracking-widest uppercase">Giao Dịch An Toàn
+                            <p class="text-hotel-text font-bold text-sm tracking-widest uppercase">Giao Dịch An Toàn
                             </p>
                         </div>
                         <div class="card-elegant p-8 rounded-sm space-y-4 group transition-all">
                             <span class="material-symbols-outlined text-hotel-gold text-4xl">speed</span>
-                            <p class="text-hotel-text font-bold text-[10px] tracking-widest uppercase">Xử Lý Tức Thì</p>
+                            <p class="text-hotel-text font-bold text-sm tracking-widest uppercase">Xử Lý Tức Thì</p>
                         </div>
                     </div>
 
                     <a href="${pageContext.request.contextPath}/rooms"
-                        class="inline-flex items-center gap-3 text-hotel-muted hover:text-hotel-text transition-all text-[10px] font-bold tracking-[0.4em] uppercase group">
+                        class="inline-flex items-center gap-3 text-hotel-muted hover:text-hotel-text transition-all text-sm font-bold tracking-[0.4em] uppercase group">
                         <span
                             class="material-symbols-outlined text-lg group-hover:rotate-90 transition-transform">close</span>
                         Hủy giao dịch
@@ -137,11 +137,11 @@
                             <div class="flex justify-between items-start pb-10 border-b border-hotel-gold/10">
                                 <div class="space-y-2">
                                     <h3 class="text-hotel-text font-bold text-xl tracking-tight">Thông Tin Đơn Đặt</h3>
-                                    <p class="text-[9px] text-hotel-muted font-bold tracking-[0.3em] uppercase">Mã Đơn:
+                                    <p class="text-sm text-hotel-muted font-bold tracking-[0.3em] uppercase">Mã Đơn:
                                         <span class="text-hotel-gold">#BK-${booking.bookingID}</span></p>
                                 </div>
                                 <div class="text-right space-y-2">
-                                    <p class="text-[9px] text-hotel-gold font-bold tracking-[0.3em] uppercase">Tổng Tiền
+                                    <p class="text-sm text-hotel-gold font-bold tracking-[0.3em] uppercase">Tổng Tiền
                                     </p>
                                     <h2 class="text-5xl font-serif font-bold text-hotel-text tracking-tighter">
                                         <fmt:formatNumber value="${booking.totalAmount}" pattern="#,###" />
@@ -187,7 +187,7 @@
                             </form>
 
                             <div
-                                class="flex items-center justify-between text-[9px] font-bold tracking-[0.2em] text-hotel-muted/40 pt-6 border-t border-hotel-gold/10 uppercase">
+                                class="flex items-center justify-between text-sm font-bold tracking-[0.2em] text-hotel-muted/40 pt-6 border-t border-hotel-gold/10 uppercase">
                                 <div class="flex items-center gap-2">
                                     <span class="material-symbols-outlined text-[16px]">verified</span>
                                     SmartSecure v4.2
@@ -200,7 +200,7 @@
             </main>
 
             <footer
-                class="mt-20 text-hotel-muted/30 text-[9px] font-bold tracking-[0.6em] uppercase text-center w-full">
+                class="mt-20 text-hotel-muted/30 text-sm font-bold tracking-[0.6em] uppercase text-center w-full">
                 © 2026 SmartHotel Boutique Collection
             </footer>
 

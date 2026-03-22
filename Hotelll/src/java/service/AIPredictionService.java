@@ -20,6 +20,8 @@ public class AIPredictionService {
             URL url = new URL("http://localhost:5000/api/predict-revenue");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
+            conn.setConnectTimeout(3000); // 3 seconds timeout
+            conn.setReadTimeout(5000); // 5 seconds read timeout
             
             BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line;

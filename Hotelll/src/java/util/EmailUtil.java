@@ -13,17 +13,21 @@ import java.util.Properties;
 
 public class EmailUtil {
 
-    // ⚠️ QUAN TRỌNG: Cấu hình email của hệ thống Khách sạn
     private static final String HOST = "smtp.gmail.com";
     private static final String PORT = "587";
     private static final String EMAIL = "anhhaoqk@gmail.com";
-    private static final String PASSWORD = "wjofjosclewtcpky"; // Mật khẩu ứng dụng đã chuẩn hóa
+    private static final String PASSWORD = "uvdbsdphfuqwkewh";
 
     public static boolean sendPaymentSuccessEmail(Booking booking) {
         // Kiểm tra xem khách có email không, nếu không thì bỏ qua
         if (booking.getCustomer() == null || booking.getCustomer().getEmail() == null
                 || booking.getCustomer().getEmail().isEmpty()) {
-            System.err.println("Không thể gửi email: Khách hàng chưa cập nhật địa chỉ email!");
+            System.err.println("[EmailUtil] LỖI: Khách hàng #" + (booking.getCustomer() != null ? booking.getCustomer().getCustomerID() : "NULL") + " chưa có Email!");
+            return false;
+        }
+
+        if (booking.getRoom() == null) {
+            System.err.println("[EmailUtil] LỖI: Booking #" + booking.getBookingID() + " thiếu thông tin phòng!");
             return false;
         }
 
@@ -95,7 +99,7 @@ public class EmailUtil {
 
             return true;
         } catch (Throwable e) {
-            System.err.println("CRITICAL LỖI TRONG EmailUtil (Thanh toán): " + e.getClass().getName() + " - " + e.getMessage());
+            System.err.println("[EmailUtil] CRITICAL ERROR (Booking #" + booking.getBookingID() + "): " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -158,7 +162,8 @@ public class EmailUtil {
             System.out.println("GỬI MAIL ĐẾN LỄ TÂN THÀNH CÔNG CHO BOOKING: " + booking.getBookingID());
             return true;
         } catch (Throwable e) {
-            System.err.println("CRITICAL LỖI TRONG EmailUtil (Lễ tân): " + e.getClass().getName() + " - " + e.getMessage());
+            System.err.println(
+                    "CRITICAL LỖI TRONG EmailUtil (Lễ tân): " + e.getClass().getName() + " - " + e.getMessage());
             e.printStackTrace();
             return false;
         }

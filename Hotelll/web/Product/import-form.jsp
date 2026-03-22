@@ -124,7 +124,7 @@
                     <!-- Header Section -->
                     <div class="text-center mb-16 space-y-4">
                         <div
-                            class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[10px] font-bold tracking-[0.3em] uppercase">
+                            class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-sm font-bold tracking-[0.3em] uppercase">
                             Giao Thức Tái Cung Ứng Vật Tư
                         </div>
                         <h2
@@ -149,7 +149,7 @@
                             <div class="space-y-8">
                                 <div class="space-y-4">
                                     <label
-                                        class="text-[10px] font-bold text-hotel-muted uppercase tracking-[0.3em] px-2">Số
+                                        class="text-sm font-bold text-hotel-muted uppercase tracking-[0.3em] px-2">Số
                                         lượng tồn hiện tại (Current Stock)</label>
                                     <div class="relative flex items-center">
                                         <input type="text"
@@ -162,14 +162,14 @@
 
                                 <div class="space-y-4">
                                     <label
-                                        class="text-[10px] font-bold text-hotel-muted uppercase tracking-[0.3em] px-2">Số
+                                        class="text-sm font-bold text-hotel-muted uppercase tracking-[0.3em] px-2">Số
                                         lượng NHẬP THÊM (*)</label>
                                     <div class="relative">
                                         <input type="number" name="quantityToAdd"
                                             class="w-full h-24 input-elegant rounded-[2rem] px-10 font-serif font-bold text-hotel-gold text-5xl tracking-tighter border-hotel-gold/20 shadow-sm"
                                             min="1" required placeholder="0">
                                         <p
-                                            class="text-[9px] font-bold text-hotel-muted uppercase tracking-[0.2em] italic mt-3 px-2 opacity-60">
+                                            class="text-sm font-bold text-hotel-muted uppercase tracking-[0.2em] italic mt-3 px-2 opacity-60">
                                             Vui lòng xác nhận số lượng thực tế kiểm kê tại kho.</p>
                                     </div>
                                 </div>
@@ -183,12 +183,12 @@
                                             class="w-full h-24 input-elegant rounded-[2rem] pl-20 pr-8 font-serif font-bold text-hotel-text text-4xl"
                                             value="${product.costPrice}" required>
                                         <span
-                                            class="absolute right-10 text-[10px] font-bold text-hotel-gold uppercase tracking-widest opacity-40 italic">VNĐ
+                                            class="absolute right-10 text-sm font-bold text-hotel-gold uppercase tracking-widest opacity-40 italic">VNĐ
                                             / Đơn vị</span>
                                     </div>
                                 </div>
                                     <p
-                                        class="text-[9px] font-bold text-hotel-muted uppercase tracking-[0.2em] italic px-2 opacity-60">
+                                        class="text-sm font-bold text-hotel-muted uppercase tracking-[0.2em] italic px-2 opacity-60">
                                         Điều chỉnh đơn giá vốn nếu có thay đổi từ nhà cung cấp.</p>
                                 </div>
                             </div>
@@ -201,7 +201,7 @@
                                     Xác Nhận Nhập Kho
                                 </button>
                                 <a href="products"
-                                    class="h-10 flex items-center justify-center font-bold text-[10px] text-hotel-muted/30 hover:text-hotel-gold transition-colors uppercase tracking-[0.4em]">
+                                    class="h-10 flex items-center justify-center font-bold text-sm text-hotel-muted/30 hover:text-hotel-gold transition-colors uppercase tracking-[0.4em]">
                                     Hủy Bỏ Giao Thức
                                 </a>
                             </div>
@@ -209,7 +209,7 @@
                     </div>
 
                     <div class="text-center opacity-40 py-12">
-                        <p class="font-serif italic text-hotel-muted text-[11px] tracking-[0.5em] uppercase">SmartHotel
+                        <p class="font-serif italic text-hotel-muted text-base tracking-[0.5em] uppercase">SmartHotel
                             Luxury Management System • Stock Re-Injection v2.0</p>
                     </div>
                 </div>

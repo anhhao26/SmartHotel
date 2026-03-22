@@ -101,7 +101,7 @@
                     <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
                         <div class="space-y-4">
                             <div
-                                class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[10px] font-bold tracking-[0.2em] uppercase">
+                                class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-sm font-bold tracking-[0.2em] uppercase">
                                 Hệ Thống Quản Lý Đối Tác
                             </div>
                             <h2
@@ -115,7 +115,7 @@
                         </div>
                         <div class="flex gap-4">
                             <a href="products?action=newSupplier"
-                                class="px-8 py-4 rounded-xl btn-gold font-bold text-[10px] tracking-[0.2em] uppercase flex items-center gap-3 shadow-lg">
+                                class="px-8 py-4 rounded-xl btn-gold font-bold text-sm tracking-[0.2em] uppercase flex items-center gap-3 shadow-lg">
                                 <span class="material-symbols-outlined text-lg text-white/80">person_add</span> Thêm nhà
                                 cung cấp
                             </a>
@@ -127,7 +127,7 @@
                             class="p-8 rounded-[2rem] bg-accent-ruby/5 border border-accent-ruby/20 flex items-center gap-6 group animate-[bounce_2s_infinite]">
                             <span class="material-symbols-outlined text-accent-ruby text-3xl">report</span>
                             <p
-                                class="text-[11px] font-bold text-accent-ruby uppercase tracking-widest italic leading-relaxed">
+                                class="text-base font-bold text-accent-ruby uppercase tracking-widest italic leading-relaxed">
                                 Hệ thống: Vui lòng kiểm tra tồn kho liên quan hoặc các liên kết dữ liệu trước khi xóa
                                 nhà cung cấp này.
                             </p>
@@ -140,7 +140,7 @@
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
                                 <thead class="table-header">
-                                    <tr class="text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
+                                    <tr class="text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
                                         <th class="px-10 py-8">Mã số đối tác</th>
                                         <th class="px-10 py-8">Tên Công Ty / Đối Tác</th>
                                         <th class="px-10 py-8">Thông tin Liên hệ</th>
@@ -153,13 +153,13 @@
                                         <tr class="hover:bg-hotel-gold/5 transition-all duration-300 group">
                                             <td class="px-10 py-8">
                                                 <span
-                                                    class="text-[12px] font-bold text-hotel-muted/40 italic tracking-widest group-hover:text-hotel-gold transition-colors">
+                                                    class="text-base font-bold text-hotel-muted/40 italic tracking-widest group-hover:text-hotel-gold transition-colors">
                                                     SUPP_#${s.supplierID}</span>
                                             </td>
                                             <td class="px-10 py-8">
                                                 <div class="flex items-center gap-5">
                                                     <div
-                                                        class="w-12 h-12 rounded-xl bg-hotel-gold/10 flex items-center justify-center text-hotel-gold border border-hotel-gold/10 group-hover:scale-110 transition-transform">
+                                                        class="w-12 h-16 rounded-xl bg-hotel-gold/10 flex items-center justify-center text-hotel-gold border border-hotel-gold/10 group-hover:scale-110 transition-transform">
                                                         <span class="material-symbols-outlined text-2xl">business</span>
                                                     </div>
                                                     <span
@@ -169,7 +169,7 @@
                                             </td>
                                             <td class="px-10 py-8">
                                                 <div
-                                                    class="flex items-center gap-2 text-hotel-muted font-bold tracking-widest text-[11px]">
+                                                    class="flex items-center gap-2 text-hotel-muted font-bold tracking-widest text-base">
                                                     <span
                                                         class="material-symbols-outlined text-sm opacity-40">call</span>
                                                     ${s.contactPhone}
@@ -177,19 +177,19 @@
                                             </td>
                                             <td class="px-10 py-8">
                                                 <p
-                                                    class="text-[11px] font-medium text-hotel-muted group-hover:text-hotel-text transition-colors uppercase tracking-wider italic truncate max-w-[250px]">
+                                                    class="text-base font-medium text-hotel-muted group-hover:text-hotel-text transition-colors uppercase tracking-wider italic truncate max-w-[250px]">
                                                     ${s.address}</p>
                                             </td>
                                             <td class="px-10 py-8">
                                                 <div class="flex items-center justify-center gap-4">
                                                     <a href="products?action=editSupplier&id=${s.supplierID}"
-                                                        class="w-12 h-12 rounded-xl bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold hover:bg-hotel-gold hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
+                                                        class="w-12 h-16 rounded-xl bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold hover:bg-hotel-gold hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
                                                         title="Chỉnh sửa">
                                                         <span class="material-symbols-outlined text-xl">edit</span>
                                                     </a>
                                                     <a href="products?action=deleteSupplier&id=${s.supplierID}"
                                                         onclick="return confirm('CẢNH BÁO: Tiếp tục gỡ bỏ đối tác? Các sản phẩm liên kết sẽ bị ảnh hưởng.');"
-                                                        class="w-12 h-12 rounded-xl bg-accent-ruby/5 border border-accent-ruby/10 text-accent-ruby hover:bg-accent-ruby hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
+                                                        class="w-12 h-16 rounded-xl bg-accent-ruby/5 border border-accent-ruby/10 text-accent-ruby hover:bg-accent-ruby hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
                                                         title="Xóa đối tác">
                                                         <span class="material-symbols-outlined text-xl">delete</span>
                                                     </a>
@@ -205,7 +205,7 @@
                                                     <span
                                                         class="material-symbols-outlined text-8xl text-hotel-gold">public_off</span>
                                                     <p
-                                                        class="text-[12px] font-bold text-hotel-muted uppercase tracking-[0.5em]">
+                                                        class="text-base font-bold text-hotel-muted uppercase tracking-[0.5em]">
                                                         Hiện chưa có thông tin đối tác cung cấp</p>
                                                 </div>
                                             </td>
@@ -217,7 +217,7 @@
                     </div>
 
                     <div class="text-center opacity-40 py-8">
-                        <p class="font-serif italic text-hotel-muted text-[11px] tracking-[0.5em] uppercase">SmartHotel
+                        <p class="font-serif italic text-hotel-muted text-base tracking-[0.5em] uppercase">SmartHotel
                             Luxury Management System • Partner Network v2.0</p>
                     </div>
                 </div>

@@ -121,7 +121,7 @@
                                         class="mx-auto flex h-24 max-w-[1700px] items-center justify-between px-12 md:px-24">
                                         <a href="<%=request.getContextPath()%>/" class="flex items-center gap-5 group">
                                             <div
-                                                class="w-12 h-12 rounded-sm bg-hotel-gold/5 border border-hotel-gold/20 flex items-center justify-center transition-transform duration-500">
+                                                class="w-12 h-16 rounded-sm bg-hotel-gold/5 border border-hotel-gold/20 flex items-center justify-center transition-transform duration-500">
                                                 <span
                                                     class="material-symbols-outlined text-hotel-gold text-3xl">hotel</span>
                                             </div>
@@ -130,7 +130,7 @@
                                                     class="text-hotel-text text-xl font-serif font-bold tracking-tight uppercase leading-none">
                                                     SmartHotel</h2>
                                                 <span
-                                                    class="text-[8px] font-bold text-hotel-gold uppercase tracking-widest">HÀNH
+                                                    class="text-xs font-bold text-hotel-gold uppercase tracking-widest">HÀNH
                                                     TRÌNH NGHỈ DƯỠNG</span>
                                             </div>
                                         </a>
@@ -140,7 +140,7 @@
                                                 class="flex items-center gap-3 group text-hotel-muted hover:text-hotel-gold transition-all">
                                                 <span
                                                     class="material-symbols-outlined text-[20px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
-                                                <span class="text-[10px] font-bold uppercase tracking-widest">VỀ HỒ
+                                                <span class="text-sm font-bold uppercase tracking-widest">VỀ HỒ
                                                     SƠ</span>
                                             </a>
                                         </nav>
@@ -155,7 +155,7 @@
                                             class="inline-flex items-center gap-4 px-6 py-2.5 rounded-sm border border-hotel-gold/20 bg-hotel-gold/5 mb-4">
                                             <span class="w-2 h-2 rounded-full bg-hotel-gold"></span>
                                             <span
-                                                class="text-[10px] font-bold text-hotel-gold uppercase tracking-widest">LỊCH
+                                                class="text-sm font-bold text-hotel-gold uppercase tracking-widest">LỊCH
                                                 SỬ LƯU TRÚ</span>
                                         </div>
                                         <h1
@@ -201,7 +201,7 @@
                                                 <div class="relative group">
                                                     <!-- Timeline Marker -->
                                                     <div
-                                                        class="absolute -left-[16.5px] md:-left-[28.5px] top-0 w-8 h-8 md:w-12 md:h-12 rounded-full border border-hotel-gold bg-white flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
+                                                        class="absolute -left-[16.5px] md:-left-[28.5px] top-0 w-8 h-8 md:w-12 md:h-16 rounded-full border border-hotel-gold bg-white flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
                                                         <span
                                                             class="material-symbols-outlined text-[16px] md:text-[24px] text-hotel-gold">
                                                             <%= isCompleted ? "check_circle" : "schedule" %>
@@ -217,7 +217,7 @@
                                                                     <div
                                                                         class="px-5 py-1.5 rounded-sm bg-hotel-cream border border-hotel-gold/10">
                                                                         <span
-                                                                            class="text-[9px] font-bold text-hotel-gold uppercase tracking-widest">MÃ
+                                                                            class="text-sm font-bold text-hotel-gold uppercase tracking-widest">MÃ
                                                                             ĐƠN: #<%= h.getBookingID() %></span>
                                                                     </div>
                                                                     <div class="h-[1px] w-12 bg-hotel-gold/10"></div>
@@ -232,7 +232,7 @@
                                                                         Phòng <%= roomNum %>
                                                                     </h3>
                                                                     <p
-                                                                        class="text-hotel-muted text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                                                                        class="text-hotel-muted text-sm font-bold uppercase tracking-widest flex items-center gap-2">
                                                                         <span
                                                                             class="material-symbols-outlined text-sm">room_service</span>
                                                                         HẠNG PHÒNG: <%= h.getRoom() !=null ?
@@ -244,7 +244,7 @@
                                                                 <div class="flex items-center gap-12 pt-6">
                                                                     <div class="space-y-1">
                                                                         <p
-                                                                            class="text-[8px] font-bold text-hotel-muted uppercase tracking-widest">
+                                                                            class="text-xs font-bold text-hotel-muted uppercase tracking-widest">
                                                                             CHECK-IN</p>
                                                                         <p
                                                                             class="text-lg font-serif font-bold text-hotel-text border-b border-hotel-gold/30">
@@ -254,7 +254,7 @@
                                                                     <div class="w-8 h-[1px] bg-hotel-gold/10"></div>
                                                                     <div class="space-y-1">
                                                                         <p
-                                                                            class="text-[8px] font-bold text-hotel-muted uppercase tracking-widest">
+                                                                            class="text-xs font-bold text-hotel-muted uppercase tracking-widest">
                                                                             CHECK-OUT</p>
                                                                         <p
                                                                             class="text-lg font-serif font-bold text-hotel-muted">
@@ -268,7 +268,7 @@
                                                                 class="xl:text-right flex flex-col justify-between items-start xl:items-end gap-10">
                                                                 <div class="space-y-2">
                                                                     <p
-                                                                        class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest">
+                                                                        class="text-sm font-bold text-hotel-muted uppercase tracking-widest">
                                                                         TỔNG THANH TOÁN</p>
                                                                     <p
                                                                         class="text-5xl font-serif font-bold text-hotel-text leading-none tracking-tighter">
@@ -279,7 +279,7 @@
 
                                                                 <div class="flex gap-4">
                                                                     <a href="<%=request.getContextPath()%>/invoice?bookingId=<%= h.getBookingID() %>"
-                                                                        class="h-14 px-8 rounded-sm border border-hotel-gold/20 text-[10px] font-bold text-hotel-muted uppercase tracking-widest flex items-center gap-3 hover:bg-hotel-gold hover:text-white hover:border-hotel-gold transition-all">
+                                                                        class="h-16 px-8 rounded-sm border border-hotel-gold/20 text-sm font-bold text-hotel-muted uppercase tracking-widest flex items-center gap-3 hover:bg-hotel-gold hover:text-white hover:border-hotel-gold transition-all">
                                                                         XEM CHI TIẾT <span
                                                                             class="material-symbols-outlined text-lg">receipt_long</span>
                                                                     </a>
@@ -299,12 +299,12 @@
                                                                 class="text-2xl font-serif font-bold uppercase tracking-widest text-hotel-text">
                                                                 Chưa Có Dữ Liệu.</p>
                                                             <p
-                                                                class="text-[10px] font-bold uppercase tracking-widest text-hotel-muted">
+                                                                class="text-sm font-bold uppercase tracking-widest text-hotel-muted">
                                                                 Quý khách chưa có hành trình lưu trú nào tại SmartHotel.
                                                             </p>
                                                         </div>
                                                         <a href="<%=request.getContextPath()%>/rooms"
-                                                            class="inline-block px-14 py-5 rounded-sm bg-hotel-gold text-white text-[10px] font-bold uppercase tracking-widest hover:bg-hotel-text transition-all">
+                                                            class="inline-block px-14 py-5 rounded-sm bg-hotel-gold text-white text-sm font-bold uppercase tracking-widest hover:bg-hotel-text transition-all">
                                                             ĐẶT PHÒNG NGAY
                                                         </a>
                                                     </div>
@@ -320,7 +320,7 @@
                                             </div>
                                             <div class="space-y-1">
                                                 <p
-                                                    class="text-[11px] font-bold text-hotel-muted uppercase tracking-widest">
+                                                    class="text-base font-bold text-hotel-muted uppercase tracking-widest">
                                                     TỔNG LẦN LƯU TRÚ</p>
                                                 <p
                                                     class="text-5xl font-serif font-bold text-hotel-text tracking-tighter">
@@ -337,7 +337,7 @@
                                             </div>
                                             <div class="space-y-1">
                                                 <p
-                                                    class="text-[11px] font-bold text-hotel-muted uppercase tracking-widest">
+                                                    class="text-base font-bold text-hotel-muted uppercase tracking-widest">
                                                     LOYALTY STATUS</p>
                                                 <p
                                                     class="text-4xl font-serif font-bold text-hotel-text uppercase tracking-tight">
@@ -353,7 +353,7 @@
                                             </div>
                                             <div class="space-y-1">
                                                 <p
-                                                    class="text-[11px] font-bold text-hotel-muted uppercase tracking-widest">
+                                                    class="text-base font-bold text-hotel-muted uppercase tracking-widest">
                                                     MÃ ĐỊNH DANH</p>
                                                 <p
                                                     class="text-3xl font-serif font-bold text-hotel-gold italic tracking-widest">
@@ -370,24 +370,24 @@
                                         <div class="flex items-center gap-5">
                                             <span
                                                 class="material-symbols-outlined text-hotel-gold text-4xl">hotel</span>
-                                            <p class="text-[11px] font-bold text-hotel-muted uppercase tracking-widest">
+                                            <p class="text-base font-bold text-hotel-muted uppercase tracking-widest">
                                                 © 2026 SmartHotel - Tuyệt tác nghỉ dưỡng boutique</p>
                                         </div>
                                         <div class="flex gap-16">
                                             <div class="text-right">
                                                 <p
-                                                    class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest mb-1">
+                                                    class="text-sm font-bold text-hotel-muted uppercase tracking-widest mb-1">
                                                     DATA SOURCE</p>
                                                 <p
-                                                    class="text-[10px] font-bold text-hotel-gold uppercase tracking-widest">
+                                                    class="text-sm font-bold text-hotel-gold uppercase tracking-widest">
                                                     SYNCED RECOVERY</p>
                                             </div>
                                             <div class="text-right">
                                                 <p
-                                                    class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest mb-1">
+                                                    class="text-sm font-bold text-hotel-muted uppercase tracking-widest mb-1">
                                                     MÁY CHỦ</p>
                                                 <p
-                                                    class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-2">
+                                                    class="text-sm font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-2">
                                                     LUX-CENTRAL <span
                                                         class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span></p>
                                             </div>

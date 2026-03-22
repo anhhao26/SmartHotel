@@ -13,7 +13,7 @@ import java.io.IOException;
  * - /admin/* -> only ADMIN / MANAGER / SUPERADMIN
  * - /reception/* -> only RECEPTIONIST / STAFF / ADMIN (admin nên có quyền xem)
  */
-@WebFilter(urlPatterns = {"/admin/*", "/reception/*"})
+@WebFilter(urlPatterns = {"/admin/*", "/reception/*", "/RoomServlet"})
 public class AuthorizationFilter implements Filter {
 
     @Override
@@ -24,7 +24,7 @@ public class AuthorizationFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpSession session = req.getSession(false);
 
-        String uri = req.getRequestURI(); // e.g. /SmartHotel/admin/...
+        String uri = req.getRequestURI(); // e.g. /SmartHotel/admin/...\r
         Account acc = null;
         if (session != null) {
             Object o = session.getAttribute("acc");
@@ -50,6 +50,17 @@ public class AuthorizationFilter implements Filter {
             // reception accessible by receptionist/staff and admin
             if (!(r.equals("RECEPTIONIST") || r.equals("STAFF") || r.equals("ADMIN") || r.equals("MANAGER") || r.equals("SUPERADMIN"))) {
                 resp.sendRedirect(req.getContextPath() + "/login");
+                return;
+            }
+        } else if (uri.endsWith("/RoomServlet")) {
+            // /RoomServlet: chỉ dành cho nhân viên và admin, không dành cho khách hàng thường
+            if (acc == null || acc.getRole() == null) {
+                resp.sendRedirect(req.getContextPath() + "/login");
+                return;
+            }
+            String r = acc.getRole().trim().toUpperCase();
+            if (!(r.equals("RECEPTIONIST") || r.equals("STAFF") || r.equals("ADMIN") || r.equals("MANAGER") || r.equals("SUPERADMIN"))) {
+                resp.sendRedirect(req.getContextPath() + "/403.jsp");
                 return;
             }
         }

@@ -14,6 +14,9 @@ import java.nio.charset.StandardCharsets;
 
 @WebServlet("/vnpay_return")
 public class VNPayReturnServlet extends HttpServlet {
+    private final BookingDAO bookingDAO = new BookingDAO();
+    private final dao.CustomerDAO customerDAO = new dao.CustomerDAO();
+    private final dao.AccountDAO accountDAO = new dao.AccountDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -74,10 +77,9 @@ public class VNPayReturnServlet extends HttpServlet {
                 }
                 
                 int bookingId = Integer.parseInt(bookingIdStr);
-                BookingDAO bDao = new BookingDAO();
-                bDao.confirm(bookingId); // Cập nhật trạng thái booking/phòng
+                bookingDAO.confirm(bookingId); // Cập nhật trạng thái booking/phòng
                 
-                Booking confirmedBooking = bDao.find(bookingId);
+                Booking confirmedBooking = bookingDAO.findFull(bookingId); // JOIN FETCH để tránh LazyInit khi gửi mail
                 if (confirmedBooking != null) {
                     model.Customer cus = confirmedBooking.getCustomer();
                     if (cus != null) {
@@ -92,9 +94,8 @@ public class VNPayReturnServlet extends HttpServlet {
                             if (processed == null) processed = new HashSet<>();
                             
                             if (!processed.contains(rawTxnRef)) {
-                                dao.CustomerDAO cDao = new dao.CustomerDAO();
                                 // ĐÃ FIX: Fetch lại Customer để tránh LazyInitializationException khi EM đã đóng
-                                model.Customer actualCus = cDao.findById(cus.getCustomerID());
+                                model.Customer actualCus = customerDAO.findById(cus.getCustomerID());
                                 
                                 if (actualCus != null) {
                                     double currentTotal = actualCus.getTotalSpending() != null ? actualCus.getTotalSpending() : 0.0;
@@ -108,7 +109,7 @@ public class VNPayReturnServlet extends HttpServlet {
                                     if (newTotal >= 10000000.0) actualCus.setMemberType("VIP");
                                     else if (newTotal > 0 && !"VIP".equalsIgnoreCase(actualCus.getMemberType())) actualCus.setMemberType("Member");
                                     
-                                    cDao.update(actualCus);
+                                    customerDAO.update(actualCus);
                                     System.out.println("[VNPay] Updated CRM for Cust #" + actualCus.getCustomerID() + ": +" + amountPaid + " VND, +" + addedPoints + " pts");
                                     
                                     processed.add(rawTxnRef);
@@ -122,8 +123,7 @@ public class VNPayReturnServlet extends HttpServlet {
                             HttpSession session = request.getSession(true);
                             if (session.getAttribute("acc") == null) {
                                 session.setAttribute("CUST_ID", cus.getCustomerID());
-                                dao.AccountDAO aDao = new dao.AccountDAO();
-                                model.Account acc = aDao.findByCustomerId(cus.getCustomerID());
+                                model.Account acc = accountDAO.findByCustomerId(cus.getCustomerID());
                                 if (acc != null) session.setAttribute("acc", acc);
                             }
                         }

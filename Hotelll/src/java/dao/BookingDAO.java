@@ -33,6 +33,20 @@ public class BookingDAO {
         }
     }
 
+    public Booking findFull(int id) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT b FROM Booking b LEFT JOIN FETCH b.customer LEFT JOIN FETCH b.room WHERE b.bookingID = :id";
+            return em.createQuery(jpql, Booking.class)
+                     .setParameter("id", id)
+                     .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
     public void merge(Booking b, EntityManager em) { 
         em.merge(b); 
     }
@@ -102,10 +116,35 @@ public class BookingDAO {
         }
     }
 
-    // Hàm kiểm tra lịch trống cho người dùng - LUÔN CHO PHÉP ĐẶT
+    // ==============================================================================
+    // ĐÃ FIX: HÀM KIỂM TRA LỊCH TRỐNG THỰC TẾ (CHỐNG OVERBOOKING)
+    // ==============================================================================
     public boolean isRoomAvailable(String roomNumber, Date reqCheckIn, Date reqCheckOut) {
-        return true; 
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            // Chỉ chặn các đơn đã Confirmed hoặc đang Checked-in (bỏ qua Pending)
+            String jpql = "SELECT COUNT(b) FROM Booking b " +
+                          "WHERE b.room.roomNumber = :roomNumber " +
+                          "AND b.status IN ('Confirmed', 'CONFIRMED', 'Checked-in', 'CHECKED-IN') " +
+                          "AND b.checkInDate < :checkOut " +
+                          "AND b.checkOutDate > :checkIn";
+
+            Long count = em.createQuery(jpql, Long.class)
+                           .setParameter("roomNumber", roomNumber)
+                           .setParameter("checkIn", reqCheckIn)
+                           .setParameter("checkOut", reqCheckOut)
+                           .getSingleResult();
+
+            // Nếu count == 0 tức là không có lịch nào đè lên lịch khách đang chọn -> Trống
+            return count == 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // Có lỗi Database thì cứ chặn không cho đặt để an toàn
+        } finally {
+            em.close();
+        }
     }
+    // ==============================================================================
 
     // ĐÃ FIX: Cho phép xác nhận từ nhiều trạng thái (Pending, Checked-in, Checked-out)
     // Cập nhật chi tiêu và tích điểm Customer, dùng confirmedAt làm guard để không cộng trùng.
@@ -114,22 +153,23 @@ public class BookingDAO {
         try {
             em.getTransaction().begin();
             Booking b = em.find(Booking.class, id);
-            
+
             if (b != null) {
                 if (b.getConfirmedAt() == null) {
                     // Cập nhật ngày xác nhận thanh toán lần đầu
                     b.setConfirmedAt(new Date());
                 }
 
-                // 1. Cập nhật trạng thái Booking: 
+                // 1. Cập nhật trạng thái Booking:
                 // - Pending -> Confirmed (Trường hợp đặt phòng mới)
                 // - Checked-in / Payment Pending -> Checked-out (Trường hợp trả phòng)
                 if ("Pending".equalsIgnoreCase(b.getStatus())) {
-                    b.setStatus("Confirmed"); 
-                } else if ("Checked-in".equalsIgnoreCase(b.getStatus()) || "Payment Pending".equalsIgnoreCase(b.getStatus())) {
+                    b.setStatus("Confirmed");
+                } else if ("Checked-in".equalsIgnoreCase(b.getStatus())
+                        || "Payment Pending".equalsIgnoreCase(b.getStatus())) {
                     b.setStatus("Checked-out");
                 }
-                
+
                 // 2. CẬP NHẬT TRẠNG THÁI PHÒNG
                 if (b.getRoom() != null) {
                     if ("Confirmed".equalsIgnoreCase(b.getStatus())) {
@@ -138,14 +178,15 @@ public class BookingDAO {
                         b.getRoom().setStatus("Cleaning");
                     }
                 }
-                
+
                 em.merge(b);
                 em.getTransaction().commit();
                 return true;
             }
             return false;
         } catch (Exception e) {
-            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            if (em.getTransaction().isActive())
+                em.getTransaction().rollback();
             e.printStackTrace();
             return false;
         } finally {
@@ -271,8 +312,8 @@ public class BookingDAO {
         try {
             String jpql = "SELECT b FROM Booking b LEFT JOIN FETCH b.customer LEFT JOIN FETCH b.room LEFT JOIN FETCH b.room.roomType ORDER BY b.bookingID DESC";
             return em.createQuery(jpql, Booking.class)
-                     .setMaxResults(limit)
-                     .getResultList();
+                    .setMaxResults(limit)
+                    .getResultList();
         } finally {
             em.close();
         }

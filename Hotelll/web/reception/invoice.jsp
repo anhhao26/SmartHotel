@@ -172,21 +172,21 @@
                 <c:choose>
                     <c:when test="${isStaffView}">
                         <a href="${pageContext.request.contextPath}/admin/bookings"
-                            class="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-hotel-muted hover:text-hotel-gold transition-colors">
+                            class="flex items-center gap-2 text-sm font-bold tracking-[0.2em] uppercase text-hotel-muted hover:text-hotel-gold transition-colors">
                             <span class="material-symbols-outlined text-lg">arrow_back</span>
                             Quay lại Quản Lý Đặt Phòng
                         </a>
                     </c:when>
                     <c:otherwise>
                         <a href="${pageContext.request.contextPath}/guest/history.jsp"
-                            class="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-hotel-muted hover:text-hotel-gold transition-colors">
+                            class="flex items-center gap-2 text-sm font-bold tracking-[0.2em] uppercase text-hotel-muted hover:text-hotel-gold transition-colors">
                             <span class="material-symbols-outlined text-lg">arrow_back</span>
                             Quay lại Lịch Sử Đặt Phòng
                         </a>
                     </c:otherwise>
                 </c:choose>
                 <button onclick="window.print()"
-                    class="flex items-center gap-3 bg-hotel-gold text-white px-8 py-3 rounded-xl font-bold text-[10px] tracking-[0.2em] uppercase hover:bg-hotel-chocolate transition-all group active:scale-95 shadow-md">
+                    class="flex items-center gap-3 bg-hotel-gold text-white px-8 py-3 rounded-xl font-bold text-sm tracking-[0.2em] uppercase hover:bg-hotel-chocolate transition-all group active:scale-95 shadow-md">
                     <span
                         class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">print</span>
                     In Thông Tin
@@ -203,7 +203,7 @@
                             class="text-2xl font-serif italic text-hotel-text tracking-widest uppercase">
                             Hóa đơn không tồn tại</p>
                         <p
-                            class="text-hotel-muted uppercase text-[10px] tracking-widest">
+                            class="text-hotel-muted uppercase text-sm tracking-widest">
                             Hệ thống không tìm thấy dữ liệu đặt phòng hoặc hóa đơn này</p>
                     </div>
                 <% } else { %>
@@ -223,12 +223,12 @@
                                         class="text-4xl font-serif font-bold text-hotel-text tracking-tight uppercase italic">
                                         SmartHotel</h1>
                                     <p
-                                        class="text-[10px] font-bold text-hotel-gold tracking-[0.4em] uppercase mt-1">
+                                        class="text-sm font-bold text-hotel-gold tracking-[0.4em] uppercase mt-1">
                                         Trải Nghệm Đẳng Cấp Thượng Lưu</p>
                                 </div>
                             </div>
                             <div
-                                class="text-[11px] font-medium tracking-wide text-hotel-muted uppercase space-y-1 italic">
+                                class="text-base font-medium tracking-wide text-hotel-muted uppercase space-y-1 italic">
                                 <p>Địa chỉ: 01 Nguyễn Văn Linh, Hải Châu, Đà Nẵng
                                 </p>
                                 <p>Hotline: (+84) 123 456 789 | Email:
@@ -237,11 +237,11 @@
                         </div>
                         <div class="md:text-right space-y-4">
                             <div
-                                class="inline-flex px-6 py-2 rounded-full <%= (inv != null || (booking != null && "Confirmed".equalsIgnoreCase(booking.getStatus()))) ? "bg-accent-emerald/5 border border-accent-emerald/20 text-accent-emerald" : "bg-amber-500/5 border border-amber-500/20 text-amber-500" %> text-[11px] font-bold tracking-[0.3em] uppercase">
+                                class="inline-flex px-6 py-2 rounded-full <%= (inv != null || (booking != null && "Confirmed".equalsIgnoreCase(booking.getStatus()))) ? "bg-accent-emerald/5 border border-accent-emerald/20 text-accent-emerald" : "bg-amber-500/5 border border-amber-500/20 text-amber-500" %> text-base font-bold tracking-[0.3em] uppercase">
                                 <%= (inv != null || (booking != null && "Confirmed".equalsIgnoreCase(booking.getStatus()))) ? "ĐÃ THANH TOÁN" : "CHƯA THANH TOÁN" %>
                             </div>
                             <p
-                                class="text-[10px] font-medium tracking-widest text-hotel-muted uppercase italic">
+                                class="text-sm font-medium tracking-widest text-hotel-muted uppercase italic">
                                 <%= (inv != null || (booking != null && "Confirmed".equalsIgnoreCase(booking.getStatus()))) ? "Giao dịch đã được hệ thống xác thực" : "Thông tin đặt phòng hiện tại" %></p>
                         </div>
                     </header>
@@ -251,7 +251,7 @@
                         <div class="space-y-8">
                             <div class="space-y-3">
                                 <p
-                                    class="text-[10px] font-bold text-hotel-muted tracking-[0.3em] uppercase border-b border-hotel-gold/10 pb-2">
+                                    class="text-sm font-bold text-hotel-muted tracking-[0.3em] uppercase border-b border-hotel-gold/10 pb-2">
                                     Người nhận thanh toán</p>
                                 <h3
                                     class="text-2xl font-serif font-bold text-hotel-text uppercase italic tracking-tight">
@@ -261,7 +261,7 @@
                                 </h3>
                                 <div class="flex items-center gap-3">
                                     <span
-                                        class="text-hotel-gold text-[11px] font-bold tracking-[0.2em] uppercase">
+                                        class="text-hotel-gold text-base font-bold tracking-[0.2em] uppercase">
                                         Mã số khách: #<%= (booking != null && booking.getCustomer() != null) ? 
                                             booking.getCustomer().getCustomerID() : 
                                             (inv != null && inv.getCustomer() != null ? inv.getCustomer().getCustomerID() : "---") %>
@@ -270,7 +270,7 @@
                             </div>
                             <div class="space-y-2">
                                 <p
-                                    class="text-[10px] font-bold text-hotel-muted tracking-[0.3em] uppercase">
+                                    class="text-sm font-bold text-hotel-muted tracking-[0.3em] uppercase">
                                     Mã đặt phòng tham chiếu</p>
                                 <p
                                     class="text-hotel-chocolate font-serif font-bold text-xl tracking-widest italic uppercase">
@@ -281,7 +281,7 @@
                         <div class="md:text-right space-y-8">
                             <div class="space-y-2">
                                 <p
-                                    class="text-[10px] font-bold text-hotel-muted tracking-[0.3em] uppercase">
+                                    class="text-sm font-bold text-hotel-muted tracking-[0.3em] uppercase">
                                     Số hóa đơn định danh</p>
                                 <p
                                     class="text-hotel-text font-serif font-bold text-4xl tracking-tighter uppercase italic">
@@ -291,7 +291,7 @@
                             </div>
                             <div class="space-y-2">
                                 <p
-                                    class="text-[10px] font-bold text-hotel-muted tracking-[0.3em] uppercase">
+                                    class="text-sm font-bold text-hotel-muted tracking-[0.3em] uppercase">
                                     Ngày khởi tạo</p>
                                 <p
                                     class="text-hotel-text font-bold text-[13px] uppercase tracking-widest italic">
@@ -311,19 +311,19 @@
                                 <tr
                                     class="bg-hotel-gold/5 border-b border-hotel-gold/10">
                                     <th
-                                        class="py-6 px-10 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
+                                        class="py-6 px-10 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
                                         STT</th>
                                     <th
-                                        class="py-6 px-10 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
+                                        class="py-6 px-10 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
                                         Dịch Vụ & Tiện Ích</th>
                                     <th
-                                        class="py-6 px-10 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-center">
+                                        class="py-6 px-10 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-center">
                                         SL</th>
                                     <th
-                                        class="py-6 px-10 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-right">
+                                        class="py-6 px-10 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-right">
                                         Đơn Giá</th>
                                     <th
-                                        class="py-6 px-10 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-right">
+                                        class="py-6 px-10 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-right">
                                         Thành Tiền</th>
                                 </tr>
                             </thead>
@@ -341,21 +341,21 @@
                                            subtotalVal += line;
                                    %>
                                    <tr class="hover:bg-hotel-gold/5 transition-colors group">
-                                       <td class="py-6 px-10 text-[12px] font-medium text-hotel-muted opacity-50 group-hover:opacity-100 italic transition-all">
+                                       <td class="py-6 px-10 text-base font-medium text-hotel-muted opacity-50 group-hover:opacity-100 italic transition-all">
                                            <%= String.format("%02d", idx++) %>
                                        </td>
-                                       <td class="py-6 px-10 font-serif font-bold text-hotel-text text-[14px] uppercase tracking-wide italic">
+                                       <td class="py-6 px-10 font-serif font-bold text-hotel-text text-lg uppercase tracking-wide italic">
                                            <%= it.getInventory() != null ? it.getInventory().getItemName() : "Dịch vụ phòng / Nghỉ dưỡng" %>
                                        </td>
-                                       <td class="py-6 px-10 text-center text-hotel-gold font-bold text-[14px]">
+                                       <td class="py-6 px-10 text-center text-hotel-gold font-bold text-lg">
                                            <%= it.getQuantity() != null ? it.getQuantity() : 0 %>
                                        </td>
                                        <td class="py-6 px-10 text-right text-hotel-muted font-medium text-[13px]">
                                            <%= String.format("%,.0f", it.getUnitPrice() != null ? it.getUnitPrice() : 0.0) %>
                                        </td>
-                                       <td class="py-6 px-10 text-right text-hotel-text font-bold text-[14px] tabular-nums">
+                                       <td class="py-6 px-10 text-right text-hotel-text font-bold text-lg tabular-nums">
                                            <%= String.format("%,.0f", line) %>
-                                           <span class="text-[10px] font-normal text-hotel-muted ml-1">VND</span>
+                                           <span class="text-sm font-normal text-hotel-muted ml-1">VND</span>
                                        </td>
                                    </tr>
                                    <% } 
@@ -369,11 +369,11 @@
                                        if (discountVal < 0) discountVal = 0; // Tránh số âm nếu nhỡ có lỗi logic đâu đó
                                    %>
                                    <tr class="hover:bg-hotel-gold/5 transition-colors group">
-                                       <td class="py-6 px-10 text-[12px] font-medium text-hotel-muted opacity-50 group-hover:opacity-100 italic transition-all">01</td>
-                                       <td class="py-6 px-10 font-serif font-bold text-hotel-text text-[14px] uppercase tracking-wide italic">Dịch vụ đặt phòng (Dự kiến)</td>
-                                       <td class="py-6 px-10 text-center text-hotel-gold font-bold text-[14px]"><%= days %></td>
+                                       <td class="py-6 px-10 text-base font-medium text-hotel-muted opacity-50 group-hover:opacity-100 italic transition-all">01</td>
+                                       <td class="py-6 px-10 font-serif font-bold text-hotel-text text-lg uppercase tracking-wide italic">Dịch vụ đặt phòng (Dự kiến)</td>
+                                       <td class="py-6 px-10 text-center text-hotel-gold font-bold text-lg"><%= days %></td>
                                        <td class="py-6 px-10 text-right text-hotel-muted font-medium text-[13px]"><%= String.format("%,.0f", booking.getRoom().getPrice()) %></td>
-                                       <td class="py-6 px-10 text-right text-hotel-text font-bold text-[14px] tabular-nums"><%= String.format("%,.0f", originalPrice) %> <span class="text-[10px] font-normal text-hotel-muted ml-1">VND</span></td>
+                                       <td class="py-6 px-10 text-right text-hotel-text font-bold text-lg tabular-nums"><%= String.format("%,.0f", originalPrice) %> <span class="text-sm font-normal text-hotel-muted ml-1">VND</span></td>
                                    </tr>
                                    <% } %>
                             </tbody>
@@ -385,10 +385,10 @@
                         class="flex flex-col md:flex-row justify-between gap-16 pt-8">
                         <div class="max-w-md space-y-4">
                             <p
-                                class="text-[10px] font-bold text-hotel-muted tracking-[0.3em] uppercase">
+                                class="text-sm font-bold text-hotel-muted tracking-[0.3em] uppercase">
                                 Ghi Chú</p>
                             <p
-                                class="text-hotel-muted text-[11px] leading-relaxed font-medium uppercase italic tracking-widest opacity-80 decoration-hotel-gold/30">
+                                class="text-hotel-muted text-base leading-relaxed font-medium uppercase italic tracking-widest opacity-80 decoration-hotel-gold/30">
                                 Hóa đơn này được xác thực tự động bởi hệ thống quản
                                 lý SmartHotel ngay sau khi giao dịch thành công.
                                 Mọi chi tiết về dịch vụ thượng lưu (Elite Benefits)
@@ -397,26 +397,26 @@
                         </div>
                         <div class="w-full md:w-80 space-y-6 pt-4">
                             <div
-                                class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider">
+                                class="flex justify-between items-center text-base font-bold uppercase tracking-wider">
                                 <span class="text-hotel-muted">Tổng phí dịch
                                     vụ</span>
                                 <span class="text-hotel-text">
                                     <%= String.format("%,.0f", subtotalVal) %> <span
-                                            class="text-[9px] font-normal">VND</span>
+                                            class="text-sm font-normal">VND</span>
                                 </span>
                             </div>
                             <div
-                                class="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider text-accent-emerald">
+                                class="flex justify-between items-center text-base font-bold uppercase tracking-wider text-accent-emerald">
                                 <span class="flex items-center gap-2">Khuyến mãi /
                                     Giảm trừ</span>
                                 <span>- <%= String.format("%,.0f", discountVal) %> <span
-                                            class="text-[9px] font-normal">VND</span></span>
+                                            class="text-sm font-normal">VND</span></span>
                             </div>
                             <div class="h-px bg-hotel-gold/20"></div>
                             <div class="flex justify-between items-end">
                                 <div class="space-y-1">
                                     <span
-                                        class="text-[9px] font-bold text-hotel-gold tracking-[0.4em] uppercase block">Tổng
+                                        class="text-sm font-bold text-hotel-gold tracking-[0.4em] uppercase block">Tổng
                                         thanh toán</span>
                                     <span
                                         class="text-4xl font-serif font-bold text-hotel-text tracking-widest uppercase italic leading-none">
@@ -434,7 +434,7 @@
                         <div class="grid grid-cols-2 gap-20">
                             <div class="space-y-6">
                                 <p
-                                    class="text-[9px] font-bold tracking-[0.4em] text-hotel-muted uppercase italic">
+                                    class="text-sm font-bold tracking-[0.4em] text-hotel-muted uppercase italic">
                                     Đại diện khách sạn</p>
                                 <div class="w-full h-[1px] bg-hotel-gold/10 mb-8">
                                 </div>
@@ -443,13 +443,13 @@
                                         class="font-serif italic text-hotel-gold text-2xl">
                                         Quản lý hệ thống</p>
                                     <p
-                                        class="text-[10px] font-bold text-hotel-muted uppercase tracking-widest mt-2">
+                                        class="text-sm font-bold text-hotel-muted uppercase tracking-widest mt-2">
                                         SmartHotel Administration</p>
                                 </div>
                             </div>
                             <div class="space-y-6 text-right">
                                 <p
-                                    class="text-[9px] font-bold tracking-[0.4em] text-hotel-muted uppercase italic">
+                                    class="text-sm font-bold tracking-[0.4em] text-hotel-muted uppercase italic">
                                     Xác nhận của Khách hàng</p>
                                 <div class="w-full h-[1px] bg-hotel-gold/10 mb-8">
                                 </div>
@@ -463,10 +463,10 @@
                         </div>
                         <div class="pt-24 text-center space-y-6">
                             <p
-                                class="text-[10px] font-bold tracking-[1em] text-hotel-muted uppercase italic opacity-60">
+                                class="text-sm font-bold tracking-[1em] text-hotel-muted uppercase italic opacity-60">
                                 Cảm ơn quý khách đã tin tưởng và sử dụng dịch vụ</p>
                             <div
-                                class="flex justify-center gap-8 text-[9px] font-bold text-hotel-gold tracking-[0.3em] uppercase">
+                                class="flex justify-center gap-8 text-sm font-bold text-hotel-gold tracking-[0.3em] uppercase">
                                 <span>Lưu Trú Nghệ Thuật</span>
                                 <span class="opacity-30">•</span>
                                 <span>Tiện Nghi Đẳng Cấp</span>

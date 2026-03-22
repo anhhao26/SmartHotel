@@ -80,7 +80,7 @@
                     <!-- Welcome Section -->
                     <div class="text-center py-20">
                         <div
-                            class="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-[10px] font-bold tracking-[0.4em] uppercase mb-8">
+                            class="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-sm font-bold tracking-[0.4em] uppercase mb-8">
                             <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
                             Phân Hệ Tiếp Tân Cao Cấp v4.0
                         </div>
@@ -126,7 +126,7 @@
                                         <span
                                             class="material-symbols-outlined text-hotel-gold text-2xl">receipt_long</span>
                                         <span
-                                            class="text-[10px] font-bold text-hotel-muted group-hover/item:text-hotel-text transition-colors tracking-widest uppercase">Thanh
+                                            class="text-sm font-bold text-hotel-muted group-hover/item:text-hotel-text transition-colors tracking-widest uppercase">Thanh
                                             Toán</span>
                                     </div>
                                     <div
@@ -134,14 +134,14 @@
                                         <span
                                             class="material-symbols-outlined text-hotel-gold text-2xl">room_service</span>
                                         <span
-                                            class="text-[10px] font-bold text-hotel-muted group-hover/item:text-hotel-text transition-colors tracking-widest uppercase">Dịch
+                                            class="text-sm font-bold text-hotel-muted group-hover/item:text-hotel-text transition-colors tracking-widest uppercase">Dịch
                                             Vụ</span>
                                     </div>
                                 </div>
 
                                 <div class="flex justify-center md:justify-start pt-6">
                                     <a href="${pageContext.request.contextPath}/reception/checkout.jsp"
-                                        class="inline-flex items-center gap-5 bg-hotel-gold text-white px-14 py-6 rounded-xl font-bold text-[11px] tracking-[0.3em] uppercase hover:bg-hotel-text hover:shadow-xl hover:shadow-hotel-gold/20 transition-all hover:scale-105 active:scale-95">
+                                        class="inline-flex items-center gap-5 bg-hotel-gold text-white px-14 py-6 rounded-xl font-bold text-base tracking-[0.3em] uppercase hover:bg-hotel-text hover:shadow-xl hover:shadow-hotel-gold/20 transition-all hover:scale-105 active:scale-95">
                                         KHỞI CHẠY NGHIỆP VỤ <span class="material-symbols-outlined">point_of_sale</span>
                                     </a>
                                 </div>
@@ -162,7 +162,7 @@
                                 <span class="material-symbols-outlined text-4xl text-hotel-gold">verified_user</span>
                             </div>
                             <div class="space-y-4 relative z-10">
-                                <h4 class="text-[11px] font-bold text-hotel-gold uppercase tracking-[0.5em]">Thông báo
+                                <h4 class="text-base font-bold text-hotel-gold uppercase tracking-[0.5em]">Thông báo
                                     hệ thống: Quy trình Checkout</h4>
                                 <p
                                     class="text-hotel-muted text-base font-medium leading-relaxed italic max-w-4xl uppercase tracking-widest opacity-80">

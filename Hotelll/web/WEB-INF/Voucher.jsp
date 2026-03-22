@@ -122,14 +122,14 @@
                 </jsp:include>
 
                 <!-- Voucher Page Content -->
-                <div class="flex-1 h-screen overflow-y-auto pb-32">
+                <div class="overflow-y-auto w-full pb-32" style="height: calc(100vh - 13rem);">
                     <div class="max-w-[1600px] mx-auto px-12 animate-[fadeIn_0.5s_ease-out] pt-12">
 
-                    <!-- Header Section -->
-                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <!-- Header Section -->
+                        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
                             <div
-                                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[9px] font-bold tracking-[0.3em] uppercase mb-4">
+                                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-sm font-bold tracking-[0.3em] uppercase mb-4">
                                 Marketing Protocol
                             </div>
                             <h2
@@ -144,7 +144,7 @@
                                 <span
                                     class="material-symbols-outlined text-hotel-gold text-4xl group-hover:rotate-12 transition-transform">confirmation_number</span>
                                 <div>
-                                    <p class="text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] mb-1">
+                                    <p class="text-sm font-bold text-hotel-muted uppercase tracking-[0.3em] mb-1">
                                         Chiến dịch hiện tại</p>
                                     <p class="text-2xl font-bold text-hotel-text tracking-tight">${voucherList.size()}
                                     </p>
@@ -155,12 +155,12 @@
 
                     <c:if test="${not empty errorMessage}">
                         <div
-                            class="p-6 rounded-sm bg-red-50 border border-red-200 text-red-600 font-bold text-[10px] uppercase tracking-[0.2em]">
+                            class="p-6 rounded-sm bg-red-50 border border-red-200 text-red-600 font-bold text-sm uppercase tracking-[0.2em]">
                             ${errorMessage}</div>
                     </c:if>
                     <c:if test="${not empty successMessage}">
                         <div
-                            class="p-6 rounded-sm bg-emerald-50 border border-emerald-200 text-emerald-600 font-bold text-[10px] uppercase tracking-[0.2em]">
+                            class="p-6 rounded-sm bg-emerald-50 border border-emerald-200 text-emerald-600 font-bold text-sm uppercase tracking-[0.2em]">
                             ${successMessage}</div>
                     </c:if>
 
@@ -174,7 +174,7 @@
                                         class="text-2xl font-serif font-bold text-hotel-text tracking-tight uppercase italic">
                                         Tạo Mới</h3>
                                     <p
-                                        class="text-[9px] text-hotel-muted font-bold uppercase tracking-[0.2em] leading-relaxed">
+                                        class="text-sm text-hotel-muted font-bold uppercase tracking-[0.2em] leading-relaxed">
                                         Thiết lập mã khuyến mãi mới cho hệ thống khách hàng.</p>
                                 </div>
 
@@ -186,14 +186,14 @@
                                         <div class="space-y-1">
                                             <label class="label-premium">Mã định danh (Voucher Code)</label>
                                             <input name="voucherCode" required
-                                                class="w-full h-14 input-elegant rounded-xl px-6 font-bold text-hotel-text tracking-widest uppercase placeholder:text-hotel-gold/20 text-[11px] border-hotel-gold/10"
+                                                class="w-full h-16 input-elegant rounded-xl px-6 font-bold text-hotel-text tracking-widest uppercase placeholder:text-hotel-gold/20 text-base border-hotel-gold/10"
                                                 placeholder="VD: BOUTIQUE2026" type="text" />
                                         </div>
 
                                         <div class="space-y-1">
                                             <label class="label-premium">Giá trị đặc quyền (VNĐ)</label>
                                             <input name="discountValue" required
-                                                class="w-full h-14 input-elegant rounded-xl px-6 font-serif font-bold text-hotel-gold text-3xl tracking-tighter border-hotel-gold/10"
+                                                class="w-full h-16 input-elegant rounded-xl px-6 font-serif font-bold text-hotel-gold text-3xl tracking-tighter border-hotel-gold/10"
                                                 placeholder="0" type="number" />
                                         </div>
 
@@ -202,7 +202,7 @@
                                                 <label class="label-premium">Ngày kích hoạt</label>
                                                 <div class="relative">
                                                     <input name="startDate" id="startDate" required
-                                                        class="w-full h-14 input-elegant rounded-xl pl-12 pr-4 font-bold text-hotel-text uppercase border-hotel-gold/10 text-[11px]"
+                                                        class="w-full h-16 input-elegant rounded-xl pl-12 pr-4 font-bold text-hotel-text uppercase border-hotel-gold/10 text-base"
                                                         placeholder="CHỌN NGÀY..." type="text" readonly />
                                                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-hotel-gold text-lg">calendar_today</span>
                                                 </div>
@@ -211,7 +211,7 @@
                                                 <label class="label-premium">Ngày hết hạn</label>
                                                 <div class="relative">
                                                     <input name="endDate" id="endDate" required
-                                                        class="w-full h-14 input-elegant rounded-xl pl-12 pr-4 font-bold text-hotel-text uppercase border-hotel-gold/10 text-[11px]"
+                                                        class="w-full h-16 input-elegant rounded-xl pl-12 pr-4 font-bold text-hotel-text uppercase border-hotel-gold/10 text-base"
                                                         placeholder="CHỌN NGÀY..." type="text" readonly />
                                                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-hotel-gold text-lg">event_busy</span>
                                                 </div>
@@ -222,20 +222,20 @@
                                             <div class="space-y-1">
                                                 <label class="label-premium">Hạn mức chi tối thiểu</label>
                                                 <input name="minOrderValue" value="0"
-                                                    class="w-full h-12 input-elegant rounded-xl px-6 font-bold text-hotel-text text-[11px] border-hotel-gold/10"
+                                                    class="w-full h-16 input-elegant rounded-xl px-6 font-bold text-hotel-text text-base border-hotel-gold/10"
                                                     type="number" />
                                             </div>
                                             <div class="space-y-1">
                                                 <label class="label-premium">Số lượng phát hành</label>
                                                 <input name="usageLimit" value="100"
-                                                    class="w-full h-12 input-elegant rounded-xl px-6 font-bold text-hotel-text text-[11px] border-hotel-gold/10"
+                                                    class="w-full h-16 input-elegant rounded-xl px-6 font-bold text-hotel-text text-base border-hotel-gold/10"
                                                     type="number" />
                                             </div>
                                         </div>
                                     </div>
 
                                     <button type="submit"
-                                        class="w-full py-5 rounded-sm btn-gold text-white font-bold text-[9px] tracking-[0.4em] uppercase flex items-center justify-center gap-4">
+                                        class="w-full py-5 rounded-sm btn-gold text-white font-bold text-sm tracking-[0.4em] uppercase flex items-center justify-center gap-4">
                                         <span class="material-symbols-outlined text-lg">add_circle</span> PHÁT HÀNH
                                         VOUCHER
                                     </button>
@@ -265,7 +265,7 @@
                                                 </div>
                                                 <div>
                                                     <span
-                                                        class="text-[10px] font-bold text-hotel-gold tracking-[0.3em] uppercase italic">
+                                                        class="text-sm font-bold text-hotel-gold tracking-[0.3em] uppercase italic">
                                                         ${v.voucherCode}
                                                     </span>
                                                     <div class="flex items-center gap-4 mt-1">
@@ -278,13 +278,13 @@
                                                         <div class="h-6 w-[1px] bg-hotel-gold/10"></div>
                                                         <div class="space-y-0.5">
                                                             <p
-                                                                class="text-[8px] font-bold text-hotel-muted uppercase tracking-widest">
+                                                                class="text-xs font-bold text-hotel-muted uppercase tracking-widest">
                                                                 Tối thiểu</p>
                                                             <p
-                                                                class="text-[10px] font-bold text-hotel-text tracking-tight">
+                                                                class="text-sm font-bold text-hotel-text tracking-tight">
                                                                 <fmt:formatNumber value="${v.minOrderValue}"
                                                                     pattern="#,###" /> <span
-                                                                    class="text-[8px] opacity-50">₫</span>
+                                                                    class="text-xs opacity-50">₫</span>
                                                             </p>
                                                         </div>
                                                     </div>
@@ -294,7 +294,7 @@
                                             <div
                                                 class="flex-1 flex flex-col gap-3 max-w-sm lg:px-10 border-hotel-gold/10 lg:border-l lg:border-r">
                                                 <div
-                                                    class="flex justify-between text-[9px] font-bold uppercase tracking-widest">
+                                                    class="flex justify-between text-sm font-bold uppercase tracking-widest">
                                                     <span class="text-hotel-muted">Đã sử dụng: <span
                                                             class="text-hotel-text">${v.usedCount}</span> /
                                                         ${v.usageLimit}</span>
@@ -307,12 +307,12 @@
                                                         style="width: ${(v.usedCount / v.usageLimit) * 100}%"></div>
                                                 </div>
                                                 <div
-                                                    class="flex justify-between items-center text-[8px] font-bold text-hotel-muted tracking-widest uppercase italic">
+                                                    class="flex justify-between items-center text-xs font-bold text-hotel-muted tracking-widest uppercase italic">
                                                     <span>
                                                         <fmt:formatDate value="${v.startDate}" pattern="dd/MM/yyyy" />
                                                     </span>
                                                     <span
-                                                        class="material-symbols-outlined text-[10px]">arrow_right_alt</span>
+                                                        class="material-symbols-outlined text-sm">arrow_right_alt</span>
                                                     <span class="text-hotel-gold/60">
                                                         <fmt:formatDate value="${v.endDate}" pattern="dd/MM/yyyy" />
                                                     </span>
@@ -322,7 +322,7 @@
                                             <div class="flex items-center justify-end">
                                                 <a href="${pageContext.request.contextPath}/VoucherServlet?action=delete&code=${v.voucherCode}"
                                                     onclick="return confirm('Bạn có chắc muốn xóa mã ưu đãi này?');"
-                                                    class="w-12 h-12 rounded-sm bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                                                    class="w-12 h-16 rounded-sm bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
                                                     <span class="material-symbols-outlined text-xl">delete</span>
                                                 </a>
                                             </div>
@@ -333,12 +333,15 @@
                                         <div
                                             class="py-32 flex flex-col items-center justify-center space-y-4 opacity-20">
                                             <span class="material-symbols-outlined text-6xl">cloud_off</span>
-                                            <p class="text-[10px] font-bold uppercase tracking-[0.4em]">Trống</p>
+                                            <p class="text-sm font-bold uppercase tracking-[0.4em]">Trống</p>
                                         </div>
                                     </c:if>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
                 <jsp:include page="/common/neural_shell_bottom.jspf" />
 

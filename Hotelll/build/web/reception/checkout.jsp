@@ -105,7 +105,7 @@
                             </head>
 
                             <body
-                                class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
+                                class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-auto">
                                 <% BookingDAO bdao=new BookingDAO(); List<BookingShort> pending =
                                     bdao.findPendingBookings();
                                     List<BookingShort> checked = bdao.findCheckedInBookings();
@@ -118,7 +118,7 @@
                                             </jsp:include>
 
                                             <!-- Checkout Console Content -->
-                                            <div class="flex-1 h-screen overflow-y-auto pb-32">
+                                            <div class="flex-1 min-h-screen overflow-y-auto pb-32">
                                                 <div class="max-w-7xl mx-auto px-12 animate-[fadeIn_0.8s_ease-out]">
 
                                                     <!-- Header Section -->
@@ -126,7 +126,7 @@
                                                         class="flex flex-col md:flex-row md:items-end justify-between gap-6 py-12">
                                                         <div>
                                                             <div
-                                                                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-[9px] font-bold tracking-[0.3em] uppercase mb-4">
+                                                                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-sm font-bold tracking-[0.3em] uppercase mb-4">
                                                                 Quản Trị Lưu Trú Cao Cấp
                                                             </div>
                                                             <h2
@@ -150,7 +150,7 @@
                                                                 class="bg-hotel-bone border-b border-hotel-gold/10 p-10 flex items-center justify-between">
                                                                 <div class="flex items-center gap-5">
                                                                     <div
-                                                                        class="w-14 h-14 rounded-2xl bg-hotel-gold/10 text-hotel-gold flex items-center justify-center border border-hotel-gold/20 shadow-sm group-hover:rotate-6 transition-transform">
+                                                                        class="w-14 h-16 rounded-2xl bg-hotel-gold/10 text-hotel-gold flex items-center justify-center border border-hotel-gold/20 shadow-sm group-hover:rotate-6 transition-transform">
                                                                         <span
                                                                             class="material-symbols-outlined text-2xl">door_front</span>
                                                                     </div>
@@ -159,7 +159,7 @@
                                                                             class="text-2xl font-serif font-bold text-hotel-text uppercase tracking-tight">
                                                                             Quy Trình Nhận Phòng</h3>
                                                                         <p
-                                                                            class="text-[9px] text-hotel-gold font-bold uppercase tracking-[0.3em] opacity-60">
+                                                                            class="text-sm text-hotel-gold font-bold uppercase tracking-[0.3em] opacity-60">
                                                                             Danh sách chờ nhận phòng</p>
                                                                     </div>
                                                                 </div>
@@ -170,7 +170,7 @@
                                                                 <label class="label-premium ml-1">Khai thác danh sách đặt trước (*)</label>
                                                                 <div class="relative">
                                                                     <select id="pendingSel" onchange="fillCheckin()"
-                                                                        class="w-full h-18 px-8 rounded-xl input-elegant font-bold text-[11px] uppercase tracking-widest appearance-none cursor-pointer border-hotel-gold/10">
+                                                                        class="w-full h-18 px-8 rounded-xl input-elegant font-bold text-base uppercase tracking-widest appearance-none cursor-pointer border-hotel-gold/10">
                                                                         <option disabled selected value="">-- LỰA CHỌN MÃ ĐẶT PHÒNG --</option>
                                                                             <% for (BookingShort b : pending) { String
                                                                                 v=b.bookingID + "|" + b.roomID + "|" +
@@ -202,7 +202,7 @@
                                                                         <div class="grid grid-cols-2 gap-10 relative">
                                                                             <div class="space-y-1">
                                                                                 <span
-                                                                                    class="text-[8px] font-bold text-hotel-muted uppercase tracking-[0.3em]">Mã
+                                                                                    class="text-xs font-bold text-hotel-muted uppercase tracking-[0.3em]">Mã
                                                                                     Đặt Phòng</span>
                                                                                 <p id="bid_checkin_display"
                                                                                     class="text-2xl font-serif font-bold text-hotel-text tracking-widest italic">
@@ -210,7 +210,7 @@
                                                                             </div>
                                                                             <div class="space-y-1">
                                                                                 <span
-                                                                                    class="text-[8px] font-bold text-hotel-muted uppercase tracking-[0.3em]">Số
+                                                                                    class="text-xs font-bold text-hotel-muted uppercase tracking-[0.3em]">Số
                                                                                     Phòng</span>
                                                                                 <p id="rid_checkin_display"
                                                                                     class="text-2xl font-serif font-bold text-hotel-gold tracking-widest">
@@ -220,7 +220,7 @@
                                                                         <div class="h-px bg-hotel-gold/10"></div>
                                                                         <div class="space-y-1 relative">
                                                                             <span
-                                                                                class="text-[8px] font-bold text-hotel-muted uppercase tracking-[0.3em]">Họ
+                                                                                class="text-xs font-bold text-hotel-muted uppercase tracking-[0.3em]">Họ
                                                                                 Tên Khách Hàng</span>
                                                                             <p id="name_checkin_display"
                                                                                 class="text-xl font-serif font-bold text-hotel-text uppercase italic tracking-tight italic">
@@ -232,7 +232,7 @@
                                                                         class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-4">
                                                                         <button type="button" id="btn_confirm"
                                                                             onclick="submitCheckinForm('confirm')"
-                                                                            class="h-18 bg-white border border-accent-emerald/30 text-accent-emerald font-bold text-[10px] tracking-[0.2em] uppercase rounded-xl hover:bg-accent-emerald hover:text-white transition-all disabled:opacity-20 flex items-center justify-center gap-3 active:scale-95 shadow-sm"
+                                                                            class="h-18 bg-white border border-accent-emerald/30 text-accent-emerald font-bold text-sm tracking-[0.2em] uppercase rounded-xl hover:bg-accent-emerald hover:text-white transition-all disabled:opacity-20 flex items-center justify-center gap-3 active:scale-95 shadow-sm"
                                                                             disabled>
                                                                             <span
                                                                                 class="material-symbols-outlined text-lg">fact_check</span>
@@ -240,7 +240,7 @@
                                                                         </button>
                                                                         <button type="button" id="btn_checkin"
                                                                             onclick="submitCheckinForm('checkin')"
-                                                                            class="h-18 btn-gold font-bold text-[10px] tracking-[0.2em] uppercase rounded-xl disabled:opacity-20 flex items-center justify-center gap-3 active:scale-95 shadow-lg shadow-hotel-gold/10"
+                                                                            class="h-18 btn-gold font-bold text-sm tracking-[0.2em] uppercase rounded-xl disabled:opacity-20 flex items-center justify-center gap-3 active:scale-95 shadow-lg shadow-hotel-gold/10"
                                                                             disabled>
                                                                             <span
                                                                                 class="material-symbols-outlined text-lg">vpn_key</span>
@@ -258,7 +258,7 @@
                                                                 class="bg-hotel-bone border-b border-hotel-gold/10 p-10 flex items-center justify-between">
                                                                 <div class="flex items-center gap-5">
                                                                     <div
-                                                                        class="w-14 h-14 rounded-2xl bg-hotel-text/10 text-hotel-text flex items-center justify-center border border-hotel-gold/20 shadow-sm group-hover:rotate-6 transition-transform">
+                                                                        class="w-14 h-16 rounded-2xl bg-hotel-text/10 text-hotel-text flex items-center justify-center border border-hotel-gold/20 shadow-sm group-hover:rotate-6 transition-transform">
                                                                         <span
                                                                             class="material-symbols-outlined text-2xl">logout</span>
                                                                     </div>
@@ -267,7 +267,7 @@
                                                                             class="text-2xl font-serif font-bold text-hotel-text uppercase tracking-tight">
                                                                             Quy Trình Trả Phòng</h3>
                                                                         <p
-                                                                            class="text-[9px] text-hotel-muted font-bold uppercase tracking-[0.3em] opacity-60">
+                                                                            class="text-sm text-hotel-muted font-bold uppercase tracking-[0.3em] opacity-60">
                                                                             Kết toán & Chụp hóa đơn</p>
                                                                     </div>
                                                                 </div>
@@ -279,7 +279,7 @@
                                                                 <div class="relative">
                                                                     <select id="checkedSel"
                                                                         onchange="fillCheckout()"
-                                                                        class="w-full h-18 px-8 rounded-xl input-elegant font-bold text-[11px] uppercase tracking-widest appearance-none cursor-pointer border-hotel-gold/10">
+                                                                        class="w-full h-18 px-8 rounded-xl input-elegant font-bold text-base uppercase tracking-widest appearance-none cursor-pointer border-hotel-gold/10">
                                                                         <option disabled selected value="">-- CHỌN SỐ PHÒNG --</option>
                                                                             <% for (BookingShort b : checked) { 
                                                                                 String v = b.bookingID + "|" + b.roomID + "|" + b.customerID + "|" + b.customerName; 
@@ -313,7 +313,7 @@
                                                                         class="bg-hotel-bone rounded-2xl p-6 border border-hotel-gold/5 flex items-center justify-between group/user relative overflow-hidden shadow-sm">
                                                                         <div class="flex items-center gap-5 relative">
                                                                             <div
-                                                                                class="w-12 h-12 rounded-full bg-hotel-gold/10 flex items-center justify-center text-hotel-gold border border-hotel-gold/20">
+                                                                                class="w-12 h-16 rounded-full bg-hotel-gold/10 flex items-center justify-center text-hotel-gold border border-hotel-gold/20">
                                                                                 <span
                                                                                     class="material-symbols-outlined text-2xl">person</span>
                                                                             </div>
@@ -322,7 +322,7 @@
                                                                                     class="text-lg font-serif font-bold text-hotel-text tracking-tight uppercase italic">
                                                                                     --</p>
                                                                                 <p id="room_checkout_display"
-                                                                                    class="text-[9px] text-hotel-gold font-bold uppercase tracking-[0.1em] mt-0.5">
+                                                                                    class="text-sm text-hotel-gold font-bold uppercase tracking-[0.1em] mt-0.5">
                                                                                     Phòng: --</p>
                                                                             </div>
                                                                         </div>
@@ -335,7 +335,7 @@
                                                                         <label class="label-premium ml-1">Mã Giảm Giá (Voucher)</label>
                                                                         <div class="relative">
                                                                             <input type="text" name="voucherCode" placeholder="NHẬP MÃ TẠI ĐÂY..."
-                                                                                class="w-full h-14 px-8 rounded-xl input-elegant font-bold text-[11px] uppercase tracking-[0.2em] border-hotel-gold/10">
+                                                                                class="w-full h-16 px-8 rounded-xl input-elegant font-bold text-base uppercase tracking-[0.2em] border-hotel-gold/10">
                                                                             <span class="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 text-hotel-gold/40">confirmation_number</span>
                                                                         </div>
                                                                     </div>
@@ -343,7 +343,7 @@
                                                                     <div class="space-y-4">
                                                                         <div class="flex items-center justify-between">
                                                                             <h4
-                                                                                class="text-[10px] font-bold text-hotel-gold uppercase tracking-[0.4em] flex items-center gap-2">
+                                                                                class="text-sm font-bold text-hotel-gold uppercase tracking-[0.4em] flex items-center gap-2">
                                                                                 <span
                                                                                     class="material-symbols-outlined text-hotel-gold text-lg">local_bar</span>
                                                                                 Dịch Vụ Tiện Ích
@@ -357,7 +357,7 @@
                                                                                     <thead
                                                                                         class="bg-hotel-bone border-b border-hotel-gold/10 sticky top-0 z-10">
                                                                                         <tr
-                                                                                            class="text-[8px] font-bold text-hotel-muted uppercase tracking-[0.4em]">
+                                                                                            class="text-xs font-bold text-hotel-muted uppercase tracking-[0.4em]">
                                                                                             <th class="px-6 py-4">Chọn
                                                                                             </th>
                                                                                             <th class="px-6 py-4">Tên
@@ -385,12 +385,12 @@
                                                                                                         class="w-5 h-5 rounded border-hotel-gold/20 text-hotel-gold focus:ring-hotel-gold/40 cursor-pointer">
                                                                                                 </td>
                                                                                                 <td
-                                                                                                    class="px-6 py-4 text-[11px] font-bold text-hotel-text group-hover/row:text-hotel-gold transition-colors uppercase tracking-widest">
+                                                                                                    class="px-6 py-4 text-base font-bold text-hotel-text group-hover/row:text-hotel-gold transition-colors uppercase tracking-widest">
                                                                                                     <%= it.getItemName()
                                                                                                         %>
                                                                                                 </td>
                                                                                                 <td
-                                                                                                    class="px-6 py-4 text-[10px] text-hotel-muted text-center font-bold">
+                                                                                                    class="px-6 py-4 text-sm text-hotel-muted text-center font-bold">
                                                                                                     <%= String.format("%,.0f",
                                                                                                         it.getSellingPrice())
                                                                                                         %>đ
@@ -401,7 +401,7 @@
                                                                                                         name="qty_<%=it.getItemID()%>"
                                                                                                         value="1"
                                                                                                         min="1"
-                                                                                                        class="w-14 h-8 bg-hotel-bone border border-hotel-gold/10 rounded-lg text-center font-bold text-[10px] text-hotel-text focus:border-hotel-gold outline-none">
+                                                                                                        class="w-14 h-8 bg-hotel-bone border border-hotel-gold/10 rounded-lg text-center font-bold text-sm text-hotel-text focus:border-hotel-gold outline-none">
                                                                                                 </td>
                                                                                             </tr>
                                                                                             <% } %>
@@ -412,7 +412,7 @@
                                                                     </div>
 
                                                                     <button type="submit" id="btn_checkout"
-                                                                        class="w-full h-20 btn-gold font-bold text-[10px] tracking-[0.3em] uppercase rounded-xl shadow-lg shadow-hotel-gold/10 hover:bg-hotel-text transition-all disabled:opacity-20 flex items-center justify-center gap-4 active:scale-95"
+                                                                        class="w-full h-20 btn-gold font-bold text-sm tracking-[0.3em] uppercase rounded-xl shadow-lg shadow-hotel-gold/10 hover:bg-hotel-text transition-all disabled:opacity-20 flex items-center justify-center gap-4 active:scale-95"
                                                                         disabled>
                                                                         <span
                                                                             class="material-symbols-outlined text-2xl">payments</span>
@@ -524,7 +524,7 @@
                                                     const icon = type === 'success' ? 'check_circle' : 'error';
                                                     toast.innerHTML = `
                                                         <span class="material-symbols-outlined">${icon}</span>
-                                                        <span class="text-[11px] font-bold uppercase tracking-widest">${message}</span>
+                                                        <span class="text-base font-bold uppercase tracking-widest">${message}</span>
                                                     `;
                                                     
                                                     document.body.appendChild(toast);

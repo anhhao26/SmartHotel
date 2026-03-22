@@ -64,7 +64,7 @@
                     </h2>
                     <p class="text-hotel-muted text-lg font-medium italic mt-2 tracking-wide opacity-80">Theo dõi dòng thời gian booking và trạng thái thanh toán.</p>
                 </div>
-                <a href="${pageContext.request.contextPath}/admin" class="px-8 py-4 rounded-xl border border-hotel-gold/20 text-hotel-gold text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-hotel-gold hover:text-white transition-all">
+                <a href="${pageContext.request.contextPath}/admin" class="px-8 py-4 rounded-xl border border-hotel-gold/20 text-hotel-gold text-sm font-bold uppercase tracking-[0.2em] hover:bg-hotel-gold hover:text-white transition-all">
                     Quay lại Dashboard
                 </a>
             </div>
@@ -75,13 +75,13 @@
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-hotel-bone border-b border-hotel-gold/10">
                             <tr>
-                                <th class="px-4 py-6 text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Mã</th>
-                                <th class="px-4 py-6 text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em]">HÀNH ĐỘNG</th>
-                                <th class="px-4 py-6 text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Trạng Thái</th>
-                                <th class="px-4 py-6 text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Khách Hàng</th>
-                                <th class="px-4 py-6 text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Phòng / Loại</th>
-                                <th class="px-4 py-6 text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Thời Gian</th>
-                                <th class="px-4 py-6 text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Tiền</th>
+                                <th class="px-4 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Mã</th>
+                                <th class="px-4 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">HÀNH ĐỘNG</th>
+                                <th class="px-4 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Trạng Thái</th>
+                                <th class="px-4 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Khách Hàng</th>
+                                <th class="px-4 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Phòng / Loại</th>
+                                <th class="px-4 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Thời Gian</th>
+                                <th class="px-4 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Tiền</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-hotel-gold/5 italic">
@@ -90,7 +90,7 @@
                                 <c:set var="statusUpper" value="${fn:toUpperCase(valStatus)}" />
                                 <tr class="hover:bg-hotel-cream/40 transition-colors">
                                     <td class="px-4 py-6">
-                                        <span class="text-[11px] font-bold text-hotel-text tracking-widest">#${b.bookingID}</span>
+                                        <span class="text-base font-bold text-hotel-text tracking-widest">#${b.bookingID}</span>
                                     </td>
                                     
                                     <!-- HÀNH ĐỘNG COLUMN (Moved to 2nd position) -->
@@ -163,38 +163,38 @@
                                     <td class="px-4 py-6">
                                         <c:choose>
                                             <c:when test="${statusUpper == 'CONFIRMED' || statusUpper == 'SUCCESS'}">
-                                                <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[9px] font-bold uppercase tracking-widest border border-emerald-100">Confirmed</span>
+                                                <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-sm font-bold uppercase tracking-widest border border-emerald-100">Confirmed</span>
                                             </c:when>
                                             <c:when test="${statusUpper == 'PENDING'}">
-                                                <span class="px-3 py-1 rounded-full bg-orange-50 text-orange-500 text-[9px] font-bold uppercase tracking-widest border border-orange-100">Pending</span>
+                                                <span class="px-3 py-1 rounded-full bg-orange-50 text-orange-500 text-sm font-bold uppercase tracking-widest border border-orange-100">Pending</span>
                                             </c:when>
                                             <c:when test="${statusUpper == 'CHECKED-IN'}">
-                                                <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-500 text-[9px] font-bold uppercase tracking-widest border border-blue-100">In House</span>
+                                                <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-500 text-sm font-bold uppercase tracking-widest border border-blue-100">In House</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="px-3 py-1 rounded-full bg-hotel-gold/10 text-hotel-gold text-[9px] font-bold uppercase tracking-widest">${b.status}</span>
+                                                <span class="px-3 py-1 rounded-full bg-hotel-gold/10 text-hotel-gold text-sm font-bold uppercase tracking-widest">${b.status}</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
 
                                     <td class="px-4 py-6">
-                                        <p class="text-[11px] font-bold text-hotel-text uppercase tracking-wider">${b.customer.fullName}</p>
-                                        <p class="text-[9px] text-hotel-muted">${b.customer.email}</p>
+                                        <p class="text-base font-bold text-hotel-text uppercase tracking-wider">${b.customer.fullName}</p>
+                                        <p class="text-sm text-hotel-muted">${b.customer.email}</p>
                                     </td>
 
                                     <td class="px-4 py-6">
-                                        <p class="text-[11px] font-bold text-hotel-text">P.${b.room.roomNumber}</p>
-                                        <p class="text-[9px] text-hotel-gold font-bold uppercase tracking-widest">${fn:substring(b.room.roomType.typeName, 0, 15)}</p>
+                                        <p class="text-base font-bold text-hotel-text">P.${b.room.roomNumber}</p>
+                                        <p class="text-sm text-hotel-gold font-bold uppercase tracking-widest">${fn:substring(b.room.roomType.typeName, 0, 15)}</p>
                                     </td>
 
                                     <td class="px-4 py-6">
-                                        <div class="text-[9px] font-bold text-hotel-muted">
+                                        <div class="text-sm font-bold text-hotel-muted">
                                             <fmt:formatDate value="${b.checkInDate}" pattern="dd/MM"/> - <fmt:formatDate value="${b.checkOutDate}" pattern="dd/MM"/>
                                         </div>
                                     </td>
 
                                     <td class="px-4 py-6">
-                                        <p class="text-[11px] font-bold text-hotel-text">
+                                        <p class="text-base font-bold text-hotel-text">
                                             <fmt:formatNumber value="${b.totalAmount}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
                                         </p>
                                     </td>
@@ -204,7 +204,7 @@
                                 <tr>
                                     <td colspan="7" class="px-10 py-24 text-center">
                                         <span class="material-symbols-outlined text-6xl text-hotel-gold/20 mb-4 block">receipt_long</span>
-                                        <p class="text-hotel-muted text-[10px] font-bold uppercase tracking-[0.4em]">Không tìm thấy dữ liệu đặt phòng</p>
+                                        <p class="text-hotel-muted text-sm font-bold uppercase tracking-[0.4em]">Không tìm thấy dữ liệu đặt phòng</p>
                                     </td>
                                 </tr>
                             </c:if>

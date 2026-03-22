@@ -92,7 +92,7 @@
                         class="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-hotel-gold/10 pb-12">
                         <div class="space-y-4">
                             <div
-                                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[10px] font-bold uppercase tracking-[0.3em]">
+                                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-sm font-bold uppercase tracking-[0.3em]">
                                 Hệ Thống Phân Tích Chuyên Sâu
                             </div>
                             <h2
@@ -103,14 +103,14 @@
                         <div class="flex gap-4">
                             <div
                                 class="h-20 px-8 card-elegant rounded-2xl flex flex-col justify-center border-hotel-gold/10">
-                                <p class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest opacity-60">
+                                <p class="text-sm font-bold text-hotel-muted uppercase tracking-widest opacity-60">
                                     Lượt Truy Cập</p>
                                 <p class="text-3xl font-serif font-bold text-accent-emerald">142 <span
-                                        class="text-[10px] text-hotel-muted font-sans opacity-40">/ms</span></p>
+                                        class="text-sm text-hotel-muted font-sans opacity-40">/ms</span></p>
                             </div>
                             <div
                                 class="h-20 px-8 card-elegant rounded-2xl flex flex-col justify-center border-hotel-gold/10">
-                                <p class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest opacity-60">
+                                <p class="text-sm font-bold text-hotel-muted uppercase tracking-widest opacity-60">
                                     Tăng Trưởng Doanh Thu</p>
                                 <p class="text-3xl font-serif font-bold text-hotel-gold">+24.8%</p>
                             </div>
@@ -147,11 +147,11 @@
                                 </div>
                                 <div class="flex gap-6 pt-6">
                                     <a href="${pageContext.request.contextPath}/admin/customers"
-                                        class="h-16 px-12 btn-gold text-white font-bold text-[10px] tracking-[0.2em] uppercase rounded-xl shadow-lg transition-all flex items-center justify-center">
+                                        class="h-16 px-12 btn-gold text-white font-bold text-sm tracking-[0.2em] uppercase rounded-xl shadow-lg transition-all flex items-center justify-center">
                                         Xem Danh Sách Hội Viên
                                     </a>
                                     <button
-                                        class="h-16 px-12 bg-white border border-hotel-gold/20 text-hotel-muted font-bold text-[10px] tracking-[0.2em] uppercase rounded-xl hover:bg-hotel-cream transition-all">
+                                        class="h-16 px-12 bg-white border border-hotel-gold/20 text-hotel-muted font-bold text-sm tracking-[0.2em] uppercase rounded-xl hover:bg-hotel-cream transition-all">
                                         Xuất Báo Cáo Chuyên Sâu
                                     </button>
                                 </div>
@@ -167,7 +167,7 @@
                             <div class="flex items-center justify-between">
                                 <span class="material-symbols-outlined text-hotel-gold text-3xl">stars</span>
                                 <span
-                                    class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest opacity-40">Phân
+                                    class="text-sm font-bold text-hotel-muted uppercase tracking-widest opacity-40">Phân
                                     Phối Hạng Thành Viên</span>
                             </div>
                             <div class="space-y-4">
@@ -186,7 +186,7 @@
                             <div class="flex items-center justify-between">
                                 <span class="material-symbols-outlined text-hotel-chocolate text-3xl">favorite</span>
                                 <span
-                                    class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest opacity-40">Chỉ
+                                    class="text-sm font-bold text-hotel-muted uppercase tracking-widest opacity-40">Chỉ
                                     Số Trung Thành</span>
                             </div>
                             <div class="space-y-4">
@@ -194,7 +194,7 @@
                                     <p class="text-xs font-bold text-hotel-text uppercase tracking-tight">Loyalty
                                         Retention</p>
                                     <p class="text-2xl font-serif font-bold text-hotel-text">8.9<span
-                                            class="text-[10px] text-hotel-muted font-sans ml-2 opacity-30">/10</span>
+                                            class="text-sm text-hotel-muted font-sans ml-2 opacity-30">/10</span>
                                     </p>
                                 </div>
                                 <div class="w-full h-1.5 bg-hotel-bone rounded-full overflow-hidden">
@@ -207,7 +207,7 @@
                             <div class="flex items-center justify-between">
                                 <span class="material-symbols-outlined text-accent-emerald text-3xl">payments</span>
                                 <span
-                                    class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest opacity-40">Giá
+                                    class="text-sm font-bold text-hotel-muted uppercase tracking-widest opacity-40">Giá
                                     Trị Trọn Đời (LTV)</span>
                             </div>
                             <div class="space-y-4">
@@ -225,7 +225,7 @@
                     </div>
 
                     <div class="text-center opacity-30 pt-12">
-                        <p class="font-serif italic text-hotel-muted text-[11px] tracking-[0.5em] uppercase">SmartHotel
+                        <p class="font-serif italic text-hotel-muted text-base tracking-[0.5em] uppercase">SmartHotel
                             Intelligence Hub • Guest Data Insights v4.0</p>
                     </div>
                 </div>

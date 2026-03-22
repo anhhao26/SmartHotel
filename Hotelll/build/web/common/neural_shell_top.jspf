@@ -48,86 +48,109 @@
 </style>
 <aside class="w-72 h-screen boutique-glass flex-shrink-0 flex flex-col z-50 border-r border-hotel-gold/10 sticky top-0">
     <div class="h-28 flex items-center px-8 border-b border-hotel-gold/10 relative overflow-hidden bg-hotel-bone">
-        <div class="w-12 h-12 rounded-xl bg-hotel-gold/10 flex items-center justify-center text-hotel-gold border border-hotel-gold/20 mr-4">
+        <div class="w-12 h-16 rounded-xl bg-hotel-gold/10 flex items-center justify-center text-hotel-gold border border-hotel-gold/20 mr-4">
             <span class="material-symbols-outlined text-3xl">local_hotel</span>
         </div>
         <div>
             <h1 class="font-serif text-lg font-bold tracking-widest uppercase text-hotel-text leading-tight">Smart<br/>Hotel</h1>
-            <p class="text-[8px] text-hotel-gold font-bold tracking-[0.2em] uppercase opacity-70">Management</p>
+            <p class="text-xs text-hotel-gold font-bold tracking-[0.2em] uppercase opacity-70">Management</p>
         </div>
     </div>
 
     <nav class="flex-1 overflow-y-auto py-10 space-y-1 no-scrollbar">
-        <p class="px-8 mb-4 text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] opacity-40">Tổng Quan</p>
+        <p class="px-8 mb-4 text-sm font-bold text-hotel-muted uppercase tracking-[0.3em] opacity-40">Tổng Quan</p>
         
         <c:if test="<%= isAdmin %>">
-            <a href="${pageContext.request.contextPath}/admin" class="sidebar-item ${(not empty param.active ? param.active : active) == 'dashboard' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+            <a href="${pageContext.request.contextPath}/admin" class="sidebar-item ${(not empty param.active ? param.active : active) == 'dashboard' ? 'active' : ''} flex items-center px-8 py-4 text-sm uppercase tracking-[0.2em]">
                 <span class="material-symbols-outlined mr-4 text-[20px]">analytics</span> Dashboard
             </a>
         </c:if>
         
-        <p class="px-8 mt-12 mb-4 text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] opacity-40">Vận Hành</p>
+        <p class="px-8 mt-12 mb-4 text-sm font-bold text-hotel-muted uppercase tracking-[0.3em] opacity-40">Vận Hành</p>
         
         <c:if test="<%= isAdmin %>">
-            <a href="${pageContext.request.contextPath}/admin/customers" class="sidebar-item ${(not empty param.active ? param.active : active) == 'crm' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+            <a href="${pageContext.request.contextPath}/admin/customers" class="sidebar-item ${(not empty param.active ? param.active : active) == 'crm' ? 'active' : ''} flex items-center px-8 py-4 text-sm uppercase tracking-[0.2em]">
                 <span class="material-symbols-outlined mr-4 text-[20px]">face</span> Quản Lý Khách
             </a>
         </c:if>
         
         <c:if test='<%= isAdmin || (currentRole != null && currentRole.equalsIgnoreCase("RECEPTIONIST")) %>'>
-            <a href="${pageContext.request.contextPath}/RoomServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'rooms' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+            <a href="${pageContext.request.contextPath}/RoomServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'rooms' ? 'active' : ''} flex items-center px-8 py-4 text-sm uppercase tracking-[0.2em]">
                 <span class="material-symbols-outlined mr-4 text-[20px]">bed</span> Sơ Đồ Phòng
             </a>
         </c:if>
 
         <c:if test="<%= isAdmin %>">
-            <a href="${pageContext.request.contextPath}/admin/bookings" class="sidebar-item ${(not empty param.active ? param.active : active) == 'bookings' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+            <a href="${pageContext.request.contextPath}/admin/bookings" class="sidebar-item ${(not empty param.active ? param.active : active) == 'bookings' ? 'active' : ''} flex items-center px-8 py-4 text-sm uppercase tracking-[0.2em]">
                 <span class="material-symbols-outlined mr-4 text-[20px]">calendar_month</span> Quản Lý Đặt Phòng
             </a>
-            <a href="${pageContext.request.contextPath}/VoucherServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'vouchers' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+            <a href="${pageContext.request.contextPath}/VoucherServlet" class="sidebar-item ${(not empty param.active ? param.active : active) == 'vouchers' ? 'active' : ''} flex items-center px-8 py-4 text-sm uppercase tracking-[0.2em]">
                 <span class="material-symbols-outlined mr-4 text-[20px]">confirmation_number</span> Quản Lý Voucher
             </a>
         </c:if>
  
         <c:if test='<%= isAdmin || (currentRole != null && currentRole.equalsIgnoreCase("RECEPTIONIST")) %>'>
-            <a href="${pageContext.request.contextPath}/reception" class="sidebar-item ${(not empty param.active ? param.active : active) == 'reception' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+            <a href="${pageContext.request.contextPath}/reception" class="sidebar-item ${(not empty param.active ? param.active : active) == 'reception' ? 'active' : ''} flex items-center px-8 py-4 text-sm uppercase tracking-[0.2em]">
                 <span class="material-symbols-outlined mr-4 text-[20px]">concierge</span> Tiếp Tân
             </a>
         </c:if>
         
         <c:if test="<%= isAdmin %>">
-            <a href="${pageContext.request.contextPath}/products" class="sidebar-item ${(not empty param.active ? param.active : active) == 'inventory' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em]">
+            <a href="${pageContext.request.contextPath}/products" class="sidebar-item ${(not empty param.active ? param.active : active) == 'inventory' ? 'active' : ''} flex items-center px-8 py-4 text-sm uppercase tracking-[0.2em]">
                 <span class="material-symbols-outlined mr-4 text-[20px]">inventory</span> Logistics
             </a>
  
-            <p class="px-8 mt-12 mb-4 text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] opacity-40">Phân Tích</p>
+            <p class="px-8 mt-12 mb-4 text-sm font-bold text-hotel-muted uppercase tracking-[0.3em] opacity-40">Phân Tích</p>
             
-            <a href="${pageContext.request.contextPath}/predict-revenue" class="sidebar-item ${(not empty param.active ? param.active : active) == 'ai' ? 'active' : ''} flex items-center px-8 py-4 text-[10px] uppercase tracking-[0.2em] text-hotel-gold hover:font-bold">
+            <a href="${pageContext.request.contextPath}/predict-revenue" class="sidebar-item ${(not empty param.active ? param.active : active) == 'ai' ? 'active' : ''} flex items-center px-8 py-4 text-sm uppercase tracking-[0.2em] text-hotel-gold hover:font-bold">
                 <span class="material-symbols-outlined mr-4 text-[20px]">query_stats</span> Dự Báo Doanh Thu
             </a>
         </c:if>
     </nav>
 
-    <div class="p-8 border-t border-hotel-gold/10 bg-hotel-bone">
-        <div class="flex items-center gap-4 mb-6">
-            <div class="w-12 h-12 rounded-xl border border-hotel-gold/20 p-0.5 shadow-sm">
-                <img src="https://ui-avatars.com/api/?name=<%= session.getAttribute("USER") != null ? session.getAttribute("USER") : "User" %>&background=B89A6C&color=FFFFFF&bold=true" class="rounded-lg" alt="User">
-            </div>
-            <div>
-                <p class="text-[10px] font-bold text-hotel-text uppercase tracking-widest"><%= session.getAttribute("USER") != null ? session.getAttribute("USER") : "Guest" %></p>
-                <div class="flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
-                    <p class="text-[8px] text-hotel-gold font-bold uppercase tracking-widest">Đang Hoạt Động</p>
+    <div class="p-6 border-t border-hotel-gold/10">
+        <!-- User Card -->
+        <div class="relative rounded-2xl overflow-hidden mb-4"
+             style="background: linear-gradient(135deg, rgba(184,154,108,0.12) 0%, rgba(184,154,108,0.04) 100%); border: 1px solid rgba(184,154,108,0.18);">
+            <div class="absolute top-0 left-0 right-0 h-px" style="background: linear-gradient(90deg, transparent, rgba(184,154,108,0.5), transparent);"></div>
+            <div class="p-4 flex items-center gap-4">
+                <!-- Avatar with gold ring -->
+                <div class="relative flex-shrink-0">
+                    <div class="w-11 h-11 rounded-xl p-[2px]"
+                         style="background: linear-gradient(135deg, #c9a87c, #8c6d3f); box-shadow: 0 4px 12px rgba(184,154,108,0.35);">
+                        <div class="w-full h-full rounded-[10px] flex items-center justify-center font-bold text-sm"
+                             style="background:#2C2722; color:#B89A6C; letter-spacing:0.05em;">
+                            ${fn:toUpperCase(fn:substring(not empty sessionScope.acc ? sessionScope.acc.username : (not empty sessionScope.ROLE ? sessionScope.ROLE : 'U'), 0, 2))}
+                        </div>
+                    </div>
+                    <!-- Online dot -->
+                    <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white"
+                          style="box-shadow: 0 0 6px rgba(16,185,129,0.7); animation: pulse 2s infinite;"></span>
+                </div>
+                <!-- Info -->
+                <div class="min-w-0 flex-1">
+                    <p class="text-[13px] font-bold text-hotel-text uppercase tracking-wide leading-tight truncate">
+                        ${not empty sessionScope.acc ? sessionScope.acc.username : (not empty sessionScope.ROLE ? sessionScope.ROLE : 'Guest')}
+                    </p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.22em] mt-0.5"
+                       style="color: #B89A6C;">● Đang hoạt động</p>
                 </div>
             </div>
         </div>
-        <a href="${pageContext.request.contextPath}/logout" class="flex items-center justify-center w-full py-4 rounded-xl bg-white border border-hotel-gold/10 text-hotel-muted text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-hotel-gold hover:text-white hover:border-hotel-gold transition-all">
-            Đăng Xuất <span class="material-symbols-outlined text-sm ml-2">logout</span>
+
+        <!-- Logout Button -->
+        <a href="${pageContext.request.contextPath}/logout"
+           class="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-[11px] font-bold uppercase tracking-[0.22em] transition-all duration-300"
+           style="background: rgba(255,255,255,0.7); border: 1px solid rgba(184,154,108,0.2); color: #70685F;"
+           onmouseover="this.style.background='linear-gradient(135deg,#c9a87c,#9c7f52)'; this.style.color='#fff'; this.style.borderColor='transparent'; this.style.boxShadow='0 8px 20px -6px rgba(184,154,108,0.5)';"
+           onmouseout="this.style.background='rgba(255,255,255,0.7)'; this.style.color='#70685F'; this.style.borderColor='rgba(184,154,108,0.2)'; this.style.boxShadow='none';">
+            <span class="material-symbols-outlined" style="font-size:16px;">logout</span>
+            Đăng Xuất
         </a>
     </div>
 </aside>
 
-<main class="flex-1 flex flex-col relative h-screen overflow-hidden bg-hotel-cream">
+<main class="flex-1 flex flex-col relative min-h-screen overflow-y-auto lg:overflow-hidden bg-hotel-cream">
     <header class="h-28 boutique-glass flex items-center justify-between px-12 z-40 border-b border-hotel-gold/10 relative">
         <div class="flex items-center gap-4 relative">
             <c:set var="searchAction" value="${pageContext.request.contextPath}/RoomServlet" />
@@ -140,30 +163,34 @@
             </c:if>
             <form action="${searchAction}" method="get" class="hidden md:flex items-center bg-white border border-hotel-gold/10 rounded-2xl px-6 py-3.5 w-[450px] group focus-within:border-hotel-gold focus-within:shadow-lg focus-within:shadow-hotel-gold/5 transition-all">
                 <span class="material-symbols-outlined text-hotel-gold opacity-50 group-focus-within:opacity-100 transition-opacity">search</span>
-                <input id="searchInput" name="search" class="bg-transparent border-none focus:ring-0 text-[11px] ml-4 w-full text-hotel-text placeholder-hotel-muted font-bold uppercase tracking-[0.2em]" placeholder="Hệ thống truy vấn thông tin..." type="text" value="${param.search}"/>
+                <input id="searchInput" name="search" class="bg-transparent border-none focus:ring-0 text-base ml-4 w-full text-hotel-text placeholder-hotel-muted font-bold uppercase tracking-[0.2em]" placeholder="Hệ thống truy vấn thông tin..." type="text" value="${param.search}"/>
             </form>
         </div>
         <div class="flex items-center gap-6">
             <!-- Chuông thông báo (Click to toggle) -->
             <div class="relative" id="notifContainer">
-                <button id="notifBell" onclick="toggleNotif()" class="w-12 h-12 rounded-xl bg-white border border-hotel-gold/10 flex items-center justify-center text-hotel-muted hover:text-hotel-gold hover:border-hotel-gold transition-all relative">
+                <button id="notifBell" onclick="toggleNotif()" class="w-12 h-16 rounded-xl bg-white border border-hotel-gold/10 flex items-center justify-center text-hotel-muted hover:text-hotel-gold hover:border-hotel-gold transition-all relative">
                     <span class="material-symbols-outlined">notifications</span>
                     <c:if test="${not empty notifications}">
-                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full ring-2 ring-white font-bold">${fn:length(notifications)}</span>
-                    </c:if>
-                    <c:if test="${empty notifications}">
-                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-hotel-gold/60 text-white text-[8px] flex items-center justify-center rounded-full ring-2 ring-white font-bold">0</span>
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs flex items-center justify-center rounded-full ring-2 ring-white font-bold">${fn:length(notifications)}</span>
                     </c:if>
                 </button>
 
                 <!-- Dropdown Thông báo Real-time -->
                 <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-2xl border border-hotel-gold/10 z-[200] overflow-hidden" style="box-shadow:0 25px 50px -12px rgba(0,0,0,0.12)">
                     <div class="p-5 border-b border-hotel-gold/5 flex justify-between items-center bg-hotel-bone">
-                        <h4 class="text-[10px] font-bold text-hotel-text uppercase tracking-widest flex items-center gap-2">
+                        <h4 class="text-sm font-bold text-hotel-text uppercase tracking-widest flex items-center gap-2">
                             <span class="material-symbols-outlined text-hotel-gold text-sm">notifications_active</span>
                             Thông báo gần đây
                         </h4>
-                        <span class="px-2 py-0.5 bg-hotel-gold/10 text-hotel-gold text-[8px] font-bold rounded-full uppercase tracking-wider">${fn:length(notifications)} Mới</span>
+                        <c:choose>
+                            <c:when test="${not empty notifications}">
+                                <span class="px-2 py-0.5 bg-red-500/10 text-red-500 text-xs font-bold rounded-full uppercase tracking-wider">${fn:length(notifications)} Mới</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="px-2 py-0.5 bg-hotel-gold/10 text-hotel-gold/50 text-xs font-bold rounded-full uppercase tracking-wider">Trống</span>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
 
                     <div class="max-h-[380px] overflow-y-auto divide-y divide-hotel-gold/5">
@@ -200,17 +227,17 @@
                                                 <%-- Nội dung thông báo --%>
                                                 <c:choose>
                                                     <c:when test="${n.status == 'Pending'}">
-                                                        <p class="text-[11px] font-semibold text-hotel-text leading-snug">
+                                                        <p class="text-base font-semibold text-hotel-text leading-snug">
                                                             Phòng <c:out value="${n.room.roomNumber}"/> - <c:out value="${n.customer.fullName}"/> vừa đặt phòng <c:out value="${n.room.roomType.typeName}"/>
                                                         </p>
                                                     </c:when>
                                                     <c:when test="${n.status == 'Confirmed' or n.status == 'Checked-in'}">
-                                                        <p class="text-[11px] font-semibold text-hotel-text leading-snug">
+                                                        <p class="text-base font-semibold text-hotel-text leading-snug">
                                                             Thanh toán <fmt:formatNumber value="${n.totalAmount / 1000000}" pattern="#,##0.##"/>M VND từ phòng <c:out value="${n.room.roomNumber}"/> - Thành công
                                                         </p>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <p class="text-[11px] font-semibold text-hotel-text leading-snug">
+                                                        <p class="text-base font-semibold text-hotel-text leading-snug">
                                                             Đặt phòng #<c:out value="${n.bookingID}"/> - <c:out value="${n.customer.fullName}"/> (<c:out value="${n.status}"/>)
                                                         </p>
                                                     </c:otherwise>
@@ -218,23 +245,23 @@
 
                                                 <%-- Trạng thái badge --%>
                                                 <div class="flex items-center gap-2 mt-1.5">
-                                                    <p class="text-[9px] text-hotel-muted">Gần đây</p>
+                                                    <p class="text-sm text-hotel-muted">Gần đây</p>
                                                     <span class="text-hotel-muted/30">•</span>
                                                     <c:choose>
                                                         <c:when test="${n.status == 'Pending'}">
-                                                            <p class="text-[9px] text-orange-500 font-bold uppercase tracking-tight">Chờ xác nhận</p>
+                                                            <p class="text-sm text-orange-500 font-bold uppercase tracking-tight">Chờ xác nhận</p>
                                                         </c:when>
                                                         <c:when test="${n.status == 'Confirmed'}">
-                                                            <p class="text-[9px] text-green-600 font-bold uppercase tracking-tight">Đã xác nhận</p>
+                                                            <p class="text-sm text-green-600 font-bold uppercase tracking-tight">Đã xác nhận</p>
                                                         </c:when>
                                                         <c:when test="${n.status == 'Checked-in'}">
-                                                            <p class="text-[9px] text-green-600 font-bold uppercase tracking-tight">Đã nhận phòng</p>
+                                                            <p class="text-sm text-green-600 font-bold uppercase tracking-tight">Đã nhận phòng</p>
                                                         </c:when>
                                                         <c:when test="${n.status == 'Cancelled'}">
-                                                            <p class="text-[9px] text-red-500 font-bold uppercase tracking-tight">Đã huỷ</p>
+                                                            <p class="text-sm text-red-500 font-bold uppercase tracking-tight">Đã huỷ</p>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <p class="text-[9px] text-hotel-gold font-bold uppercase tracking-tight"><c:out value="${n.status}"/></p>
+                                                            <p class="text-sm text-hotel-gold font-bold uppercase tracking-tight"><c:out value="${n.status}"/></p>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </div>
@@ -246,13 +273,13 @@
                             <c:otherwise>
                                 <div class="p-12 text-center">
                                     <span class="material-symbols-outlined text-4xl text-hotel-gold/20 block mb-3">notifications_off</span>
-                                    <p class="text-[10px] text-hotel-muted font-bold uppercase tracking-widest opacity-40">Chưa có thông báo</p>
+                                    <p class="text-sm text-hotel-muted font-bold uppercase tracking-widest opacity-40">Chưa có thông báo</p>
                                 </div>
                             </c:otherwise>
                         </c:choose>
                     </div>
 
-                    <a href="${pageContext.request.contextPath}/admin/bookings" class="flex items-center justify-center gap-2 w-full py-4 text-center bg-hotel-bone text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em] hover:bg-hotel-gold hover:text-white transition-all">
+                    <a href="${pageContext.request.contextPath}/admin/bookings" class="flex items-center justify-center gap-2 w-full py-4 text-center bg-hotel-bone text-sm font-bold text-hotel-gold uppercase tracking-[0.2em] hover:bg-hotel-gold hover:text-white transition-all">
                         <span class="material-symbols-outlined text-sm">arrow_forward</span>
                         Xem tất cả thông báo
                     </a>
@@ -274,16 +301,29 @@
             </script>
 
             <!-- Profile Area -->
-            <div class="flex items-center gap-5 pl-6 border-l border-hotel-gold/10">
-                <div class="text-right">
-                    <p class="text-[10px] font-bold text-hotel-text uppercase tracking-widest"><%= session.getAttribute("USER") != null ? session.getAttribute("USER") : "User" %></p>
-                    <div class="flex items-center justify-end gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <p class="text-[8px] text-hotel-gold font-bold uppercase tracking-widest">Đang Hoạt Động</p>
+            <div class="flex items-center gap-3 pl-6 border-l border-hotel-gold/10">
+                <!-- Text info -->
+                <div class="text-right hidden sm:block">
+                    <p class="text-[13px] font-bold text-hotel-text uppercase tracking-wide leading-tight">
+                        ${not empty sessionScope.acc ? sessionScope.acc.username : (not empty sessionScope.ROLE ? sessionScope.ROLE : 'User')}
+                    </p>
+                    <div class="flex items-center justify-end gap-1.5 mt-0.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0"
+                              style="box-shadow: 0 0 5px rgba(16,185,129,0.8); animation: pulse 2s infinite;"></span>
+                        <p class="text-[10px] font-bold uppercase tracking-[0.2em]" style="color: #B89A6C;">Đang Hoạt Động</p>
                     </div>
                 </div>
-                <div class="w-12 h-12 rounded-xl border border-hotel-gold/20 p-0.5 shadow-sm">
-                    <img src="https://ui-avatars.com/api/?name=<%= session.getAttribute("USER") != null ? session.getAttribute("USER") : "User" %>&background=B89A6C&color=FFFFFF&bold=true" class="rounded-lg" alt="User">
+                <!-- Avatar with gold gradient ring -->
+                <div class="relative flex-shrink-0">
+                    <div class="w-11 h-11 rounded-xl p-[2.5px]"
+                         style="background: linear-gradient(135deg, #c9a87c, #8c6d3f); box-shadow: 0 4px 14px rgba(184,154,108,0.4);">
+                        <div class="w-full h-full rounded-[9px] flex items-center justify-center font-bold text-sm"
+                             style="background:#2C2722; color:#B89A6C; letter-spacing:0.05em;">
+                            ${fn:toUpperCase(fn:substring(not empty sessionScope.acc ? sessionScope.acc.username : (not empty sessionScope.ROLE ? sessionScope.ROLE : 'U'), 0, 2))}
+                        </div>
+                    </div>
+                    <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white"
+                          style="box-shadow: 0 0 6px rgba(16,185,129,0.7); animation: pulse 2s infinite;"></span>
                 </div>
             </div>
         </div>

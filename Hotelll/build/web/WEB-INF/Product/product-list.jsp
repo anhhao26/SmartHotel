@@ -71,7 +71,7 @@
             <!-- Header Section -->
             <div class="flex justify-between items-end py-12">
                 <div class="space-y-4">
-                    <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-[9px] font-bold tracking-[0.3em] uppercase">
+                    <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-sm font-bold tracking-[0.3em] uppercase">
                         <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
                         Hệ thống Logistics & Chuỗi cung ứng
                     </div>
@@ -81,13 +81,13 @@
                 </div>
                 
                 <div class="flex items-center gap-4">
-                    <a href="products?action=history" class="inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-white border border-hotel-gold/20 text-hotel-muted text-[10px] font-bold tracking-widest uppercase hover:bg-hotel-gold hover:text-white transition-all shadow-sm">
+                    <a href="products?action=history" class="inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-white border border-hotel-gold/20 text-hotel-muted text-sm font-bold tracking-widest uppercase hover:bg-hotel-gold hover:text-white transition-all shadow-sm">
                         <span class="material-symbols-outlined text-lg">history</span> Báo Cáo
                     </a>
-                    <a href="products?action=listSuppliers" class="inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-white border border-hotel-gold/20 text-hotel-muted text-[10px] font-bold tracking-widest uppercase hover:bg-hotel-gold hover:text-white transition-all shadow-sm">
+                    <a href="products?action=listSuppliers" class="inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-white border border-hotel-gold/20 text-hotel-muted text-sm font-bold tracking-widest uppercase hover:bg-hotel-gold hover:text-white transition-all shadow-sm">
                         <span class="material-symbols-outlined text-lg">local_shipping</span> Nhà Cung Cấp
                     </a>
-                    <a href="products?action=new" class="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-hotel-gold text-white text-[10px] font-bold tracking-widest uppercase hover:bg-hotel-text transition-all shadow-lg shadow-hotel-gold/20">
+                    <a href="products?action=new" class="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-hotel-gold text-white text-sm font-bold tracking-widest uppercase hover:bg-hotel-text transition-all shadow-lg shadow-hotel-gold/20">
                         <span class="material-symbols-outlined text-lg">add_circle</span> Nhập Hàng Mới
                     </a>
                 </div>
@@ -100,7 +100,7 @@
                         <span class="material-symbols-outlined text-3xl">inventory_2</span>
                     </div>
                     <div>
-                        <p class="text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em] mb-1">Tổng Danh Mục</p>
+                        <p class="text-sm font-bold text-hotel-gold uppercase tracking-[0.2em] mb-1">Tổng Danh Mục</p>
                         <h4 class="text-2xl font-serif font-bold text-hotel-text">${listProducts.size()} <span class="text-xs uppercase font-sans text-hotel-muted opacity-60">Sản phẩm</span></h4>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
             <div class="mb-10 flex justify-between items-center bg-white/50 backdrop-blur-md p-6 rounded-3xl border border-hotel-gold/5 shadow-sm">
                 <div class="relative w-96 group">
                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-hotel-gold/40 group-focus-within:text-hotel-gold transition-colors">search</span>
-                    <input type="text" id="quickSearch" placeholder="Tìm kiếm vật tư nhanh..." class="w-full bg-white border border-hotel-gold/10 rounded-2xl pl-12 pr-6 py-3 text-[11px] font-bold uppercase tracking-widest focus:ring-2 focus:ring-hotel-gold/20 focus:border-hotel-gold transition-all outline-none">
+                    <input type="text" id="quickSearch" placeholder="Tìm kiếm vật tư nhanh..." class="w-full bg-white border border-hotel-gold/10 rounded-2xl pl-12 pr-6 py-3 text-base font-bold uppercase tracking-widest focus:ring-2 focus:ring-hotel-gold/20 focus:border-hotel-gold transition-all outline-none">
                 </div>
                 
                 <form action="products" method="get" id="filterForm" class="flex items-center gap-4">
@@ -119,7 +119,7 @@
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="showHidden" value="true" class="sr-only peer" ${isShowHidden ? 'checked' : ''} onchange="this.form.submit()">
                         <div class="w-11 h-6 bg-hotel-gold/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hotel-gold"></div>
-                        <span class="ms-3 text-[10px] font-bold text-hotel-muted uppercase tracking-widest">Hiển thị hàng đã ẩn</span>
+                        <span class="ms-3 text-sm font-bold text-hotel-muted uppercase tracking-widest">Hiển thị hàng đã ẩn</span>
                     </label>
                 </form>
             </div>
@@ -130,11 +130,11 @@
                     <table class="w-full text-left">
                         <thead>
                             <tr class="bg-hotel-bone/50 border-b border-hotel-gold/10">
-                                <th class="px-8 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Thông tin Sản phẩm</th>
-                                <th class="px-8 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Loại & Đơn vị</th>
-                                <th class="px-8 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Tồn Kho</th>
-                                <th class="px-8 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Giá (Cost / Sell)</th>
-                                <th class="px-8 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em] text-center">Hành động</th>
+                                <th class="px-8 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Thông tin Sản phẩm</th>
+                                <th class="px-8 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Loại & Đơn vị</th>
+                                <th class="px-8 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Tồn Kho</th>
+                                <th class="px-8 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Giá (Cost / Sell)</th>
+                                <th class="px-8 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em] text-center">Hành động</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-hotel-gold/5">
@@ -142,14 +142,14 @@
                                 <tr class="table-row-hover transition-colors ${p.isActive ? '' : 'dimmed-row'}">
                                     <td class="px-8 py-6">
                                         <div class="flex items-center gap-5">
-                                            <div class="w-12 h-12 rounded-xl bg-hotel-cream flex items-center justify-center text-hotel-gold border border-hotel-gold/10 font-serif font-bold italic">
+                                            <div class="w-12 h-16 rounded-xl bg-hotel-cream flex items-center justify-center text-hotel-gold border border-hotel-gold/10 font-serif font-bold italic">
                                                 #${p.itemID}
                                             </div>
                                             <div>
-                                                <p class="text-[12px] font-bold text-hotel-text uppercase tracking-widest mb-1">${p.itemName}</p>
+                                                <p class="text-base font-bold text-hotel-text uppercase tracking-widest mb-1">${p.itemName}</p>
                                                 <div class="flex items-center gap-2">
-                                                    <span class="material-symbols-outlined text-[14px] text-hotel-gold opacity-60">store</span>
-                                                    <p class="text-[9px] text-hotel-muted font-bold tracking-wider">${p.supplier.supplierName}</p>
+                                                    <span class="material-symbols-outlined text-lg text-hotel-gold opacity-60">store</span>
+                                                    <p class="text-sm text-hotel-muted font-bold tracking-wider">${p.supplier.supplierName}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -158,13 +158,13 @@
                                         <div class="space-y-2">
                                             <c:choose>
                                                 <c:when test="${p.isTradeGood}">
-                                                    <span class="inline-flex px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[8px] font-bold uppercase tracking-wider border border-emerald-100">Kinh Doanh</span>
+                                                    <span class="inline-flex px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold uppercase tracking-wider border border-emerald-100">Kinh Doanh</span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span class="inline-flex px-3 py-1 rounded-full bg-orange-50 text-orange-600 text-[8px] font-bold uppercase tracking-wider border border-orange-100">Tiêu Hao Nội Bộ</span>
+                                                    <span class="inline-flex px-3 py-1 rounded-full bg-orange-50 text-orange-600 text-xs font-bold uppercase tracking-wider border border-orange-100">Tiêu Hao Nội Bộ</span>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <p class="text-[11px] font-semibold text-hotel-muted">ĐVT: ${p.unit}</p>
+                                            <p class="text-base font-semibold text-hotel-muted">ĐVT: ${p.unit}</p>
                                         </div>
                                     </td>
                                     <td class="px-8 py-6">
@@ -181,7 +181,7 @@
                                         </div>
                                     </td>
                                     <td class="px-8 py-6">
-                                        <p class="text-[10px] font-bold text-hotel-muted line-through opacity-40"><fmt:formatNumber value="${p.costPrice}" pattern="#,##0"/>đ</p>
+                                        <p class="text-sm font-bold text-hotel-muted line-through opacity-40"><fmt:formatNumber value="${p.costPrice}" pattern="#,##0"/>đ</p>
                                         <p class="text-[13px] font-bold text-hotel-gold tracking-tighter"><fmt:formatNumber value="${p.sellingPrice}" pattern="#,##0"/>đ</p>
                                     </td>
                                     <td class="px-8 py-6">
@@ -243,7 +243,7 @@
             const term = e.target.value.toLowerCase();
             const rows = document.querySelectorAll('tbody tr');
             rows.forEach(row => {
-                const text = row.querySelector('.text-[12px]').innerText.toLowerCase();
+                const text = row.querySelector('.text-base').innerText.toLowerCase();
                 row.style.display = text.includes(term) ? '' : 'none';
             });
         });

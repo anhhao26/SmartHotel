@@ -22,6 +22,10 @@ import java.util.List;
 public class CheckoutServlet extends HttpServlet {
     private final BillingService billingService = new BillingService();
     private final BookingDAO bookingDAO = new BookingDAO();
+    private final dao.CustomerDAO customerDAO = new dao.CustomerDAO();
+    private final dao.InventoryDAO inventoryDAO = new dao.InventoryDAO();
+    private final service.VoucherService voucherService = new service.VoucherService();
+    private final dao.VoucherDAO voucherDAO = new dao.VoucherDAO();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,9 +42,8 @@ public class CheckoutServlet extends HttpServlet {
                     if (ok) {
                         Booking b = bookingDAO.find(bid);
                         if (b != null && b.getCustomer() != null && b.getTotalAmount() != null) {
-                            dao.CustomerDAO cDao = new dao.CustomerDAO();
                             // ĐÃ FIX: Fetch lại Customer để tránh LazyInitializationException
-                            model.Customer actualCus = cDao.findById(b.getCustomer().getCustomerID());
+                            model.Customer actualCus = customerDAO.findById(b.getCustomer().getCustomerID());
                             
                             if (actualCus != null) {
                                 double amount = b.getTotalAmount();
@@ -55,7 +58,7 @@ public class CheckoutServlet extends HttpServlet {
                                 if (next >= 10000000.0) actualCus.setMemberType("VIP");
                                 else if (next > 0 && !"VIP".equalsIgnoreCase(actualCus.getMemberType())) actualCus.setMemberType("Member");
                                 
-                                cDao.update(actualCus);
+                                customerDAO.update(actualCus);
                                 System.out.println("[Manual] Updated CRM for Cust #" + actualCus.getCustomerID() + ": +" + amount + " VND, +" + added + " pts");
                             }
                         }
@@ -83,7 +86,6 @@ public class CheckoutServlet extends HttpServlet {
                 double itemTotal = 0.0;
                 List<CartItem> items = new ArrayList<>();
                 String[] itemIds = req.getParameterValues("itemId");
-                dao.InventoryDAO inventoryDAO = new dao.InventoryDAO();
                 
                 if (itemIds != null) {
                     for (String sId : itemIds) {
@@ -108,7 +110,6 @@ public class CheckoutServlet extends HttpServlet {
 
                 // 2. ÁP DỤNG VOUCHER (Nếu có)
                 if (voucherCode != null && !voucherCode.trim().isEmpty()) {
-                    VoucherService voucherService = new VoucherService();
                     String voucherMsg = voucherService.checkVoucherValid(voucherCode, BigDecimal.valueOf(finalPrice));
 
                     if (!"OK".equals(voucherMsg)) {
@@ -116,14 +117,13 @@ public class CheckoutServlet extends HttpServlet {
                         return;
                     }
 
-                    VoucherDAO vdao = new VoucherDAO();
-                    Voucher v = vdao.findById(voucherCode);
+                    Voucher v = voucherDAO.findById(voucherCode);
                     if (v != null) {
                         finalPrice = finalPrice - v.getDiscountValue().doubleValue();
                         if (finalPrice < 0) finalPrice = 0;
                         
                         v.setUsedCount(v.getUsedCount() + 1);
-                        vdao.update(v);
+                        voucherDAO.update(v);
                     }
                 }
                 

@@ -8,13 +8,14 @@ import java.io.IOException;
 
 @WebServlet("/confirmPayment")
 public class ConfirmPaymentServlet extends HttpServlet {
+    private final BookingDAO bookingDAO = new BookingDAO();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         
         // Cập nhật trạng thái thành Confirmed
-        new BookingDAO().confirm(id);
+        bookingDAO.confirm(id);
 
         // Gửi mail giả lập
         String email = req.getParameter("email");

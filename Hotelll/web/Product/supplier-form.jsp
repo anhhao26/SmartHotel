@@ -114,7 +114,7 @@
                     <!-- Header Section -->
                     <div class="text-center mb-16 space-y-4">
                         <div
-                            class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[10px] font-bold tracking-[0.3em] uppercase">
+                            class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-sm font-bold tracking-[0.3em] uppercase">
                             Hồ Sơ Đối Tác Chiến Lược
                         </div>
                         <h2
@@ -175,13 +175,13 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-10">
                                 <button type="submit"
-                                    class="h-16 btn-gold font-bold text-[11px] tracking-[0.3em] uppercase rounded-2xl shadow-lg active:scale-95 flex items-center justify-center gap-2 group">
+                                    class="h-16 btn-gold font-bold text-base tracking-[0.3em] uppercase rounded-2xl shadow-lg active:scale-95 flex items-center justify-center gap-2 group">
                                     <span
                                         class="material-symbols-outlined group-hover:scale-110 transition-transform">save</span>
                                     Lưu Thông Tin
                                 </button>
                                 <a href="products?action=listSuppliers"
-                                    class="h-16 bg-hotel-muted/5 border border-hotel-muted/10 flex items-center justify-center font-bold text-[11px] tracking-[0.3em] uppercase rounded-2xl hover:bg-hotel-muted hover:text-white transition-all text-hotel-muted">
+                                    class="h-16 bg-hotel-muted/5 border border-hotel-muted/10 flex items-center justify-center font-bold text-base tracking-[0.3em] uppercase rounded-2xl hover:bg-hotel-muted hover:text-white transition-all text-hotel-muted">
                                     Quay Lại
                                 </a>
                             </div>
@@ -189,7 +189,7 @@
                     </div>
 
                     <div class="text-center opacity-40 py-12">
-                        <p class="font-serif italic text-hotel-muted text-[11px] tracking-[0.5em] uppercase">SmartHotel
+                        <p class="font-serif italic text-hotel-muted text-base tracking-[0.5em] uppercase">SmartHotel
                             Luxury Management System • Supplier Profile v2.0</p>
                     </div>
                 </div>

@@ -88,14 +88,14 @@
             
             <!-- Breadcrumb / Back Link -->
             <a href="${pageContext.request.contextPath}/admin/bookings" 
-               class="inline-flex items-center gap-2 mb-8 text-[10px] font-bold tracking-[0.2em] uppercase text-hotel-muted hover:text-hotel-gold transition-colors group">
+               class="inline-flex items-center gap-2 mb-8 text-sm font-bold tracking-[0.2em] uppercase text-hotel-muted hover:text-hotel-gold transition-colors group">
                 <span class="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
                 Trở lại danh sách
             </a>
 
             <div class="form-card rounded-[2.5rem] p-12 md:p-16 space-y-12">
                 <header class="space-y-4">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[9px] font-bold uppercase tracking-widest">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-sm font-bold uppercase tracking-widest">
                         Cập nhật thông tin lưu trú
                     </div>
                     <h1 class="text-4xl font-serif font-bold italic tracking-tight uppercase">Chỉnh Sửa <span class="text-hotel-gold">Đặt Phòng.</span></h1>
@@ -109,14 +109,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                         <!-- Client Info (Read Only for safety in this simple edit) -->
                         <div class="space-y-2">
-                            <label class="text-[10px] font-bold text-hotel-muted uppercase tracking-widest block ml-1">Khách hàng</label>
+                            <label class="text-sm font-bold text-hotel-muted uppercase tracking-widest block ml-1">Khách hàng</label>
                             <div class="p-4 rounded-2xl bg-hotel-bone border border-hotel-gold/5 text-hotel-chocolate font-serif font-bold italic text-lg uppercase tracking-wide">
                                 <%= b.getCustomer().getFullName() %>
                             </div>
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-[10px] font-bold text-hotel-muted uppercase tracking-widest block ml-1">Phòng hiện tại</label>
+                            <label class="text-sm font-bold text-hotel-muted uppercase tracking-widest block ml-1">Phòng hiện tại</label>
                             <div class="p-4 rounded-2xl bg-hotel-bone border border-hotel-gold/5 text-hotel-chocolate font-serif font-bold italic text-lg uppercase tracking-wide">
                                 Room <%= b.getRoom().getRoomNumber() %>
                             </div>
@@ -124,14 +124,14 @@
 
                         <!-- Date Selection -->
                         <div class="space-y-2">
-                            <label for="checkIn" class="text-[10px] font-bold text-hotel-muted uppercase tracking-widest block ml-1">Ngày Check-in</label>
+                            <label for="checkIn" class="text-sm font-bold text-hotel-muted uppercase tracking-widest block ml-1">Ngày Check-in</label>
                             <input type="date" id="checkIn" name="checkIn" required 
                                    value="<%= sdf.format(b.getCheckInDate()) %>"
                                    class="w-full p-4 rounded-2xl input-premium font-bold text-hotel-text tracking-tight uppercase text-sm" />
                         </div>
 
                         <div class="space-y-2">
-                            <label for="checkOut" class="text-[10px] font-bold text-hotel-muted uppercase tracking-widest block ml-1">Ngày Check-out</label>
+                            <label for="checkOut" class="text-sm font-bold text-hotel-muted uppercase tracking-widest block ml-1">Ngày Check-out</label>
                             <input type="date" id="checkOut" name="checkOut" required 
                                    value="<%= sdf.format(b.getCheckOutDate()) %>"
                                    class="w-full p-4 rounded-2xl input-premium font-bold text-hotel-text tracking-tight uppercase text-sm" />
@@ -139,7 +139,7 @@
 
                         <!-- Status Selection -->
                         <div class="space-y-2 md:col-span-2">
-                            <label for="status" class="text-[10px] font-bold text-hotel-muted uppercase tracking-widest block ml-1">Trạng thái đặt phòng</label>
+                            <label for="status" class="text-sm font-bold text-hotel-muted uppercase tracking-widest block ml-1">Trạng thái đặt phòng</label>
                             <select id="status" name="status" 
                                     class="w-full p-4 rounded-2xl input-premium font-bold text-hotel-text uppercase text-sm cursor-pointer appearance-none">
                                 <option value="Pending" <%= "Pending".equalsIgnoreCase(b.getStatus()) ? "selected" : "" %>>Đang Chờ (Pending)</option>
@@ -153,18 +153,18 @@
 
                     <div class="pt-8 flex flex-col md:flex-row gap-4">
                         <button type="submit" 
-                                class="flex-1 bg-hotel-gold text-white px-10 py-5 rounded-2xl font-bold text-[11px] tracking-[0.3em] uppercase hover:bg-hotel-chocolate transition-all shadow-lg active:scale-[0.98]">
+                                class="flex-1 bg-hotel-gold text-white px-10 py-5 rounded-2xl font-bold text-base tracking-[0.3em] uppercase hover:bg-hotel-chocolate transition-all shadow-lg active:scale-[0.98]">
                             Lưu thay đổi hệ thống
                         </button>
                         <a href="${pageContext.request.contextPath}/admin/bookings" 
-                           class="px-10 py-5 rounded-2xl border border-hotel-gold/20 text-hotel-muted font-bold text-[11px] tracking-[0.3em] uppercase hover:bg-white text-center transition-all">
+                           class="px-10 py-5 rounded-2xl border border-hotel-gold/20 text-hotel-muted font-bold text-base tracking-[0.3em] uppercase hover:bg-white text-center transition-all">
                             Hủy bỏ
                         </a>
                     </div>
                 </form>
 
                 <footer class="pt-8 border-t border-hotel-gold/10 text-center">
-                    <p class="text-[9px] font-medium tracking-[0.5em] text-hotel-muted/40 uppercase italic">
+                    <p class="text-sm font-medium tracking-[0.5em] text-hotel-muted/40 uppercase italic">
                         SmartHotel • Intelligence Engine Layer v2.0
                     </p>
                 </footer>

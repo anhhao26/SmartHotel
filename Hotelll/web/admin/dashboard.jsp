@@ -109,7 +109,7 @@
                             class="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-hotel-gold/10 pb-12">
                             <div class="space-y-4">
                                 <div
-                                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[10px] font-bold uppercase tracking-[0.3em]">
+                                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-sm font-bold uppercase tracking-[0.3em]">
                                     <span class="w-2 h-2 rounded-full bg-hotel-gold animate-pulse"></span>
                                     Hệ Thống Quản Trị Cao Cấp
                                 </div>
@@ -124,11 +124,11 @@
                             </div>
                             <div class="flex gap-4">
                                 <button
-                                    class="px-8 py-4 rounded-xl border border-hotel-gold/20 text-hotel-muted text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white transition-all">
+                                    class="px-8 py-4 rounded-xl border border-hotel-gold/20 text-hotel-muted text-sm font-bold uppercase tracking-[0.2em] hover:bg-white transition-all">
                                     Xuất báo cáo
                                 </button>
                                 <button
-                                    class="px-8 py-4 rounded-xl btn-gold font-bold text-[10px] uppercase tracking-[0.2em] shadow-lg">
+                                    class="px-8 py-4 rounded-xl btn-gold font-bold text-sm uppercase tracking-[0.2em] shadow-lg">
                                     Cấu hình hệ thống
                                 </button>
                             </div>
@@ -139,14 +139,14 @@
                             <div class="stat-card p-8 rounded-2xl">
                                 <div class="flex items-center justify-between mb-8">
                                     <div
-                                        class="w-14 h-14 rounded-2xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold border border-hotel-gold/10">
+                                        class="w-14 h-16 rounded-2xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold border border-hotel-gold/10">
                                         <span class="material-symbols-outlined text-3xl">payments</span>
                                     </div>
                                     <span
-                                        class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">+12.5%</span>
+                                        class="text-sm font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">+12.5%</span>
                                 </div>
                                 <p
-                                    class="text-hotel-muted text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
+                                    class="text-hotel-muted text-sm font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
                                     Doanh thu tháng</p>
                                 <h3 class="text-4xl font-serif font-bold text-hotel-text tracking-tight">
                                     <fmt:formatNumber value="${monthlyRevenue / 1000000}" pattern="#,##0.0"/>M 
@@ -157,15 +157,15 @@
                             <div class="stat-card p-8 rounded-2xl border-l-hotel-muted">
                                 <div class="flex items-center justify-between mb-8">
                                     <div
-                                        class="w-14 h-14 rounded-2xl bg-hotel-muted/5 flex items-center justify-center text-hotel-muted border border-hotel-muted/10">
+                                        class="w-14 h-16 rounded-2xl bg-hotel-muted/5 flex items-center justify-center text-hotel-muted border border-hotel-muted/10">
                                         <span class="material-symbols-outlined text-3xl">bed</span>
                                     </div>
                                     <span
-                                        class="text-[10px] font-bold text-hotel-gold bg-hotel-gold/5 px-3 py-1 rounded-full uppercase tracking-tighter">Cao
+                                        class="text-sm font-bold text-hotel-gold bg-hotel-gold/5 px-3 py-1 rounded-full uppercase tracking-tighter">Cao
                                         điểm</span>
                                 </div>
                                 <p
-                                    class="text-hotel-muted text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
+                                    class="text-hotel-muted text-sm font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
                                     Công suất phòng</p>
                                 <h3 class="text-4xl font-serif font-bold text-hotel-text tracking-tight">
                                     <fmt:formatNumber value="${occupancyRate}" pattern="#,##0.0"/>%
@@ -175,15 +175,15 @@
                             <div class="stat-card p-8 rounded-2xl border-l-hotel-gold/40">
                                 <div class="flex items-center justify-between mb-8">
                                     <div
-                                        class="w-14 h-14 rounded-2xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold border border-hotel-gold/10">
+                                        class="w-14 h-16 rounded-2xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold border border-hotel-gold/10">
                                         <span class="material-symbols-outlined text-3xl">person_check</span>
                                     </div>
                                     <span
-                                        class="text-[10px] font-bold text-hotel-muted bg-hotel-bone px-3 py-1 rounded-full italic">Hôm
+                                        class="text-sm font-bold text-hotel-muted bg-hotel-bone px-3 py-1 rounded-full italic">Hôm
                                         nay</span>
                                 </div>
                                 <p
-                                    class="text-hotel-muted text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
+                                    class="text-hotel-muted text-sm font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
                                     Yêu cầu phục vụ</p>
                                 <h3 class="text-4xl font-serif font-bold text-hotel-text tracking-tight">${serviceRequests} <span
                                         class="text-xs text-hotel-muted font-sans ml-1 opacity-40">Phục vụ</span></h3>
@@ -192,13 +192,13 @@
                             <div class="stat-card p-8 rounded-2xl">
                                 <div class="flex items-center justify-between mb-8">
                                     <div
-                                        class="w-14 h-14 rounded-2xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold border border-hotel-gold/10">
+                                        class="w-14 h-16 rounded-2xl bg-hotel-gold/5 flex items-center justify-center text-hotel-gold border border-hotel-gold/10">
                                         <span class="material-symbols-outlined text-3xl">auto_graph</span>
                                     </div>
                                     <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                                 </div>
                                 <p
-                                    class="text-hotel-muted text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
+                                    class="text-hotel-muted text-sm font-bold uppercase tracking-[0.3em] mb-2 opacity-60">
                                     Dự báo tăng trưởng</p>
                                 <h3 class="text-4xl font-serif font-bold text-hotel-text tracking-tight">
                                     <fmt:formatNumber value="${monthlyRevenue * 1.2 / 1000000}" pattern="#,##0.0"/>M 
@@ -211,7 +211,7 @@
                         <div class="space-y-10">
                             <div class="flex items-center gap-6">
                                 <h3
-                                    class="text-[11px] font-bold text-hotel-muted/40 uppercase tracking-[0.5em] whitespace-nowrap">
+                                    class="text-base font-bold text-hotel-muted/40 uppercase tracking-[0.5em] whitespace-nowrap">
                                     Hệ Sinh Thái Quản Trị</h3>
                                 <div class="w-full h-[1px] bg-hotel-gold/10"></div>
                             </div>
@@ -232,7 +232,7 @@
                                         cấp tại SmartHotel.
                                     </p>
                                     <a href="${pageContext.request.contextPath}/admin/customers"
-                                        class="w-full py-5 rounded-2xl bg-hotel-gold text-white font-bold text-[10px] uppercase tracking-[0.3em] text-center hover:bg-hotel-chocolate transition-all shadow-md">
+                                        class="w-full py-5 rounded-2xl bg-hotel-gold text-white font-bold text-sm uppercase tracking-[0.3em] text-center hover:bg-hotel-chocolate transition-all shadow-md">
                                         Truy cập CRM
                                     </a>
                                 </div>
@@ -252,7 +252,7 @@
                                         nguyên buồng phòng.
                                     </p>
                                     <a href="${pageContext.request.contextPath}/RoomServlet"
-                                        class="w-full py-5 rounded-2xl border border-hotel-gold text-hotel-gold font-bold text-[10px] uppercase tracking-[0.3em] text-center hover:bg-hotel-gold hover:text-white transition-all">
+                                        class="w-full py-5 rounded-2xl border border-hotel-gold text-hotel-gold font-bold text-sm uppercase tracking-[0.3em] text-center hover:bg-hotel-gold hover:text-white transition-all">
                                         Xem sơ đồ
                                     </a>
                                 </div>
@@ -272,7 +272,7 @@
                                         chuyên nghiệp.
                                     </p>
                                     <a href="${pageContext.request.contextPath}/products"
-                                        class="w-full py-5 rounded-2xl bg-hotel-bone border border-hotel-gold/10 text-hotel-muted font-bold text-[10px] uppercase tracking-[0.3em] text-center hover:bg-hotel-gold hover:text-white transition-all shadow-sm">
+                                        class="w-full py-5 rounded-2xl bg-hotel-bone border border-hotel-gold/10 text-hotel-muted font-bold text-sm uppercase tracking-[0.3em] text-center hover:bg-hotel-gold hover:text-white transition-all shadow-sm">
                                         Hệ thống kho
                                     </a>
                                 </div>
@@ -280,7 +280,7 @@
                         </div>
 
                         <div class="text-center opacity-30 pt-12 pb-8 border-t border-hotel-gold/5">
-                            <p class="font-serif italic text-hotel-muted text-[11px] tracking-[0.6em] uppercase">
+                            <p class="font-serif italic text-hotel-muted text-base tracking-[0.6em] uppercase">
                                 SmartHotel Luxury Management Hub • Corporate Edition v2.5</p>
                         </div>
                     </div>

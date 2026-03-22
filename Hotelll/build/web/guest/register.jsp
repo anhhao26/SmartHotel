@@ -7,7 +7,6 @@
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <title>SmartHotel - Đăng Ký Hội Viên</title>
 
-        <!-- Premium Fonts -->
         <link
             href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Be+Vietnam+Pro:wght@100;300;400;500;700;900&display=swap"
             rel="stylesheet">
@@ -116,7 +115,6 @@
     <body class="antialiased min-h-screen relative flex">
         <%@ include file="/common/toast.jspf" %>
 
-            <!-- Cinematic Side Panel -->
             <div class="hidden lg:flex w-[40%] relative overflow-hidden bg-hotel-chocolate">
                 <div class="absolute inset-0 bg-hotel-chocolate/30 z-10"></div>
                 <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=2080"
@@ -134,10 +132,8 @@
                 </div>
             </div>
 
-            <!-- Multi-Step Registration Side -->
             <div class="w-full lg:w-[60%] flex flex-col bg-hotel-cream relative shadow-2xl overflow-y-auto">
 
-                <!-- Header -->
                 <div class="p-10 flex justify-between items-center border-b border-hotel-gold/10">
                     <a href="${pageContext.request.contextPath}/" class="flex items-center gap-4 group">
                         <div
@@ -159,7 +155,6 @@
                     </div>
                 </div>
 
-                <!-- Progress Bar -->
                 <div class="px-12 lg:px-24 mt-12 mb-16">
                     <div class="flex justify-between items-end mb-4">
                         <div class="space-y-1">
@@ -179,7 +174,6 @@
                     </div>
                 </div>
 
-                <!-- Form Area -->
                 <div class="flex-1 px-12 lg:px-24 pb-20">
                     <form id="onboardingForm" action="${pageContext.request.contextPath}/register" method="post"
                         class="max-w-xl">
@@ -190,7 +184,6 @@
                             </script>
                             <% } %>
 
-                                <!-- Step 1: Security -->
                                 <div id="step1" class="step-transition space-y-10">
                                     <div class="space-y-8">
                                         <div class="space-y-1 group">
@@ -208,7 +201,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Step 2: Personal Info -->
                                 <div id="step2" class="step-inactive step-transition space-y-10">
                                     <div class="grid grid-cols-1 gap-10">
                                         <div class="space-y-1 group">
@@ -220,33 +212,38 @@
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                             <div class="space-y-1 group">
                                                 <label class="label-premium ml-1">Thư điện tử (Email)</label>
-                                                <input type="email" name="email"
+                                                <input type="email" name="email" required
+                                                    pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+                                                    title="Vui lòng nhập đúng định dạng (Ví dụ: ten@domain.com)"
                                                     class="w-full h-20 px-8 rounded-xl input-elegant font-semibold text-hotel-text text-[15px] tracking-wide"
                                                     placeholder="example@mail.com" />
                                             </div>
                                             <div class="space-y-1 group">
                                                 <label class="label-premium ml-1">Đường dây liên hệ</label>
-                                                <input type="text" name="phone"
+                                                <input type="tel" name="phone" required
+                                                    pattern="\d{10}"
+                                                    title="Số điện thoại phải bao gồm chính xác 10 chữ số"
                                                     class="w-full h-20 px-8 rounded-xl input-elegant font-bold text-hotel-text text-[17px] tracking-widest"
-                                                    placeholder="091 123 4567" />
+                                                    placeholder="0912345678" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Step 3: Identity & Identification -->
                                 <div id="step3" class="step-inactive step-transition space-y-8">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div class="space-y-1 group">
                                             <label class="label-premium ml-1">Định danh pháp lý (CCCD/Passport)</label>
-                                            <input type="text" name="cccd"
+                                            <input type="text" name="cccd" required
+                                                pattern="\d{12}"
+                                                title="CCCD phải bao gồm chính xác 12 chữ số"
                                                 class="w-full h-20 px-8 rounded-xl input-elegant font-bold text-hotel-text text-lg tracking-[0.3em]"
-                                                placeholder="123456789" />
+                                                placeholder="012345678912" />
                                         </div>
                                         <div class="space-y-1 group">
                                             <label class="label-premium ml-1">Giới tính</label>
                                             <div class="relative">
-                                                <select name="gender"
+                                                <select name="gender" required
                                                     class="w-full h-20 px-8 rounded-xl input-elegant font-bold text-hotel-text appearance-none cursor-pointer text-[13px] tracking-widest uppercase">
                                                     <option value="">LỰA CHỌN</option>
                                                     <option value="Male">NAM GIỚI (MALE)</option>
@@ -258,25 +255,24 @@
                                         </div>
                                         <div class="space-y-1 group">
                                             <label class="label-premium ml-1">Niên san (DOB)</label>
-                                            <input type="date" name="dob"
+                                            <input id="dobInput" type="date" name="dob" required
                                                 class="w-full h-20 px-8 rounded-xl input-elegant font-bold text-hotel-muted text-[13px] uppercase tracking-widest" />
                                         </div>
                                         <div class="space-y-1 group">
                                             <label class="label-premium ml-1">Bản quán (Nationality)</label>
-                                            <input type="text" name="nationality"
+                                            <input type="text" name="nationality" required
                                                 class="w-full h-20 px-8 rounded-xl input-elegant font-bold text-hotel-text uppercase tracking-widest placeholder:text-hotel-muted/20"
                                                 placeholder="VIỆT NAM" />
                                         </div>
                                         <div class="md:col-span-2 space-y-1 group">
                                             <label class="label-premium ml-1">Địa chỉ thường trú</label>
-                                            <input type="text" name="address"
+                                            <input type="text" name="address" required
                                                 class="w-full h-20 px-8 rounded-xl input-elegant font-semibold text-hotel-text text-[15px]"
                                                 placeholder="Số nhà, Tên đường, Thành phố..." />
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Step 4: Preferences -->
                                 <div id="step4" class="step-inactive step-transition space-y-10">
                                     <div class="space-y-1 group">
                                         <label class="label-premium ml-1">Tâm đắc & Yêu cầu riêng biệt</label>
@@ -302,7 +298,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Navigation Controls -->
                                 <div class="pt-16 flex items-center justify-between">
                                     <button type="button" id="prevBtn"
                                         class="px-10 h-16 rounded-xl border border-hotel-gold/10 text-[11px] font-bold text-hotel-gold uppercase tracking-[0.3em] hover:bg-hotel-gold hover:text-white transition-all opacity-0 pointer-events-none active:scale-95 shadow-sm">
@@ -322,7 +317,6 @@
                     </form>
                 </div>
 
-                <!-- Footer Protocol -->
                 <div class="p-10 border-t border-hotel-gold/10 flex justify-between items-center opacity-40">
                     <div class="flex items-center gap-4">
                         <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
@@ -337,6 +331,14 @@
 
             <script>
                 document.addEventListener('DOMContentLoaded', () => {
+                    // --- ĐOẠN SCRIPT CHẶN NGÀY SINH TƯƠNG LAI ---
+                    const dobInput = document.getElementById('dobInput');
+                    if (dobInput) {
+                        const today = new Date().toISOString().split('T')[0];
+                        dobInput.setAttribute('max', today);
+                    }
+                    // --------------------------------------------
+
                     let currentStep = 1;
                     const totalSteps = 4;
                     const steps = [
@@ -406,7 +408,7 @@
                     let allValid = true;
                     
                     requiredFields.forEach(f => {
-                        if (!f.value || !f.value.trim()) {
+                        if (!f.checkValidity()) {
                             f.style.borderColor = "#B89A6C";
                             f.style.backgroundColor = "rgba(184, 154, 108, 0.05)";
                             allValid = false;
@@ -418,10 +420,12 @@
 
                     if (!allValid) {
                         if (window.showToast) {
-                            showToast("Vui lòng hoàn thành các thông tin bắt buộc.", "warning");
+                            showToast("Vui lòng nhập đúng định dạng các thông tin bắt buộc.", "warning");
                         } else {
-                            alert("Vui lòng hoàn thành các thông tin bắt buộc.");
+                            alert("Vui lòng nhập đúng định dạng các thông tin bắt buộc.");
                         }
+                        // Trigger native validation popup so user sees what is wrong
+                        document.getElementById('onboardingForm').reportValidity();
                         return;
                     }
 

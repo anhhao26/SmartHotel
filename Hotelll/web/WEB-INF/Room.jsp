@@ -1,7 +1,21 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-    <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-        <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-            <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%
+    // Xác định role của người dùng: staff/admin được dùng đầy đủ chức năng quản lý phòng
+    Object accObj = session.getAttribute("acc");
+    boolean isStaffOrAdmin = false;
+    if (accObj instanceof model.Account) {
+        String role = ((model.Account) accObj).getRole();
+        if (role != null) {
+            role = role.trim().toUpperCase();
+            isStaffOrAdmin = role.equals("ADMIN") || role.equals("MANAGER") || role.equals("SUPERADMIN")
+                          || role.equals("RECEPTIONIST") || role.equals("STAFF");
+        }
+    }
+    request.setAttribute("isAdminUser", isStaffOrAdmin);
+%>
                 <!DOCTYPE html>
                 <html lang="vi">
 
@@ -97,7 +111,7 @@
                     </style>
                 </head>
 
-                <body class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-hidden">
+                <body class="font-sans antialiased bg-hotel-cream text-hotel-text min-h-screen flex overflow-auto">
 
                     <c:set var="active" value="rooms" scope="request" />
                     <%@ include file="/common/neural_shell_top.jspf" %>
@@ -109,7 +123,7 @@
                             <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                                 <div>
                                     <div
-                                        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[9px] font-bold tracking-widest uppercase mb-4">
+                                        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-sm font-bold tracking-widest uppercase mb-4">
                                         Hotel Inventory Management
                                     </div>
                                     <h2 class="text-6xl font-serif text-hotel-text tracking-tight">Quản Lý <br /><span
@@ -117,25 +131,27 @@
                                     <p class="text-hotel-muted text-lg font-serif italic mt-4">Điều phối trạng thái và
                                         cấu hình phòng thời gian thực.</p>
                                 </div>
+                                <c:if test="${isAdminUser}">
                                 <div class="flex gap-4">
                                     <button onclick="openTailwindModal('addRoomModal')"
-                                        class="px-8 py-4 rounded-sm bg-hotel-gold text-white font-bold text-[10px] tracking-widest uppercase hover:bg-hotel-text transition-all flex items-center gap-2">
+                                        class="px-8 py-4 rounded-sm bg-hotel-gold text-white font-bold text-sm tracking-widest uppercase hover:bg-hotel-text transition-all flex items-center gap-2">
                                         <span class="material-symbols-outlined text-sm">add_circle</span> THÊM PHÒNG MỚI
                                     </button>
                                     <button onclick="openTailwindModal('updatePriceModal')"
-                                        class="px-8 py-4 rounded-sm bg-hotel-bone border border-hotel-gold/20 text-hotel-text font-bold text-[10px] tracking-widest uppercase hover:bg-hotel-gold/5 transition-all">ĐIỀU
+                                        class="px-8 py-4 rounded-sm bg-hotel-bone border border-hotel-gold/20 text-hotel-text font-bold text-sm tracking-widest uppercase hover:bg-hotel-gold/5 transition-all">ĐIỀU
                                         CHỈNH GIÁ CHUNG</button>
                                 </div>
+                                </c:if>
                             </div>
 
                             <c:if test="${not empty errorMessage}">
                                 <div
-                                    class="p-6 rounded-sm bg-red-500/5 border border-red-500/20 text-red-600 font-bold text-[10px] uppercase tracking-widest italic">
+                                    class="p-6 rounded-sm bg-red-500/5 border border-red-500/20 text-red-600 font-bold text-sm uppercase tracking-widest italic">
                                     ${errorMessage}</div>
                             </c:if>
                             <c:if test="${not empty successMessage}">
                                 <div
-                                    class="p-6 rounded-sm bg-emerald-500/5 border border-emerald-500/20 text-emerald-600 font-bold text-[10px] uppercase tracking-widest italic">
+                                    class="p-6 rounded-sm bg-emerald-500/5 border border-emerald-500/20 text-emerald-600 font-bold text-sm uppercase tracking-widest italic">
                                     ${successMessage}</div>
                             </c:if>
 
@@ -151,13 +167,13 @@
                                                     class="text-4xl font-serif font-bold text-hotel-text group-hover:text-hotel-gold transition-colors tracking-tight">
                                                     ${room.roomNumber}</h3>
                                                 <p
-                                                    class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest mt-2">
+                                                    class="text-sm font-bold text-hotel-muted uppercase tracking-widest mt-2">
                                                     ${room.roomType.typeName}</p>
                                             </div>
                                             <div class="flex flex-col items-end gap-3">
                                                 <span class="status-dot status-${room.status}"></span>
                                                 <span
-                                                    class="text-[8px] font-bold text-hotel-muted/50 uppercase tracking-widest">${room.status
+                                                    class="text-xs font-bold text-hotel-muted/50 uppercase tracking-widest">${room.status
                                                     == 'Available' ? 'Còn Trống' : (room.status == 'Occupied' ? 'Đã
                                                     Nhận' : 'Dọn Phòng')}</span>
                                             </div>
@@ -165,7 +181,7 @@
 
                                         <div class="flex-1 space-y-6 relative">
                                             <div
-                                                class="flex justify-between items-center text-[9px] font-bold text-hotel-text uppercase tracking-widest bg-hotel-gold/5 p-2 rounded-sm border border-hotel-gold/10">
+                                                class="flex justify-between items-center text-sm font-bold text-hotel-text uppercase tracking-widest bg-hotel-gold/5 p-2 rounded-sm border border-hotel-gold/10">
                                                 <span class="flex items-center gap-1.5"><span
                                                         class="material-symbols-outlined text-[16px] text-hotel-gold">apartment</span>
                                                     Tầng ${room.floor}</span>
@@ -181,16 +197,16 @@
                                         <div class="mt-10 flex items-end justify-between relative">
                                             <div>
                                                 <p
-                                                    class="text-[8px] font-bold text-hotel-muted uppercase tracking-widest mb-1">
+                                                    class="text-xs font-bold text-hotel-muted uppercase tracking-widest mb-1">
                                                     Giá chuẩn</p>
                                                 <p class="text-xl font-bold text-hotel-text tracking-tight">
                                                     <fmt:formatNumber value="${room.price}" pattern="#,###" /> <span
-                                                        class="text-[9px] text-hotel-muted ml-0.5 font-serif">đ</span>
+                                                        class="text-sm text-hotel-muted ml-0.5 font-serif">đ</span>
                                                 </p>
                                             </div>
                                             <button
                                                 onclick="event.stopPropagation(); openStatusModal('${room.roomNumber}', '${room.status}')"
-                                                class="w-12 h-12 rounded-sm bg-hotel-gold/5 border border-hotel-gold/10 flex items-center justify-center text-hotel-gold/40 hover:text-hotel-gold hover:border-hotel-gold hover:bg-hotel-gold/10 transition-all">
+                                                class="w-12 h-16 rounded-sm bg-hotel-gold/5 border border-hotel-gold/10 flex items-center justify-center text-hotel-gold/40 hover:text-hotel-gold hover:border-hotel-gold hover:bg-hotel-gold/10 transition-all">
                                                 <span
                                                     class="material-symbols-outlined text-xl">settings_input_component</span>
                                             </button>
@@ -229,7 +245,7 @@
                                                 class="text-3xl font-serif font-bold text-hotel-text tracking-tight uppercase">
                                                 Trạng Thái</h3>
                                             <p
-                                                class="text-[9px] text-hotel-gold font-bold tracking-widest uppercase opacity-60">
+                                                class="text-sm text-hotel-gold font-bold tracking-widest uppercase opacity-60">
                                                 Phòng <span id="displayRoomId"></span></p>
                                         </div>
                                     </div>
@@ -238,13 +254,13 @@
                                         <div class="space-y-1">
                                             <label class="label-premium">Trạng thái hiện tạ (Current Status)</label>
                                             <input type="text" id="modalCurrentStatus" readonly
-                                                class="w-full bg-hotel-gold/5 border border-hotel-gold/10 rounded-xl px-8 py-5 font-bold text-hotel-muted/60 cursor-not-allowed text-[11px] uppercase tracking-widest">
+                                                class="w-full bg-hotel-gold/5 border border-hotel-gold/10 rounded-xl px-8 py-5 font-bold text-hotel-muted/60 cursor-not-allowed text-base uppercase tracking-widest">
                                         </div>
                                         <div class="space-y-1">
                                             <label class="label-premium">Điều chuyển quy trình (*)</label>
                                             <div class="relative">
                                                 <select name="newStatus" id="modalNewStatus"
-                                                    class="w-full bg-white border border-hotel-gold/10 rounded-xl px-8 py-5 font-bold text-hotel-text focus:border-hotel-gold focus:ring-0 text-[11px] uppercase tracking-widest appearance-none cursor-pointer">
+                                                    class="w-full bg-white border border-hotel-gold/10 rounded-xl px-8 py-5 font-bold text-hotel-text focus:border-hotel-gold focus:ring-0 text-base uppercase tracking-widest appearance-none cursor-pointer">
                                                     <option value="Available">Hợp lệ (Available)</option>
                                                     <option value="Occupied">Đang ở (Occupied)</option>
                                                     <option value="Cleaning">Dọn dẹp (Cleaning)</option>
@@ -257,16 +273,18 @@
 
                                     <div class="flex gap-4 pt-4">
                                         <button type="button" onclick="closeTailwindModal('statusModal')"
-                                            class="flex-1 py-5 rounded-sm text-hotel-muted font-bold text-[9px] tracking-widest uppercase hover:bg-hotel-gold/5 transition-all">Hủy
+                                            class="flex-1 py-5 rounded-sm text-hotel-muted font-bold text-sm tracking-widest uppercase hover:bg-hotel-gold/5 transition-all">Hủy
                                             bỏ</button>
                                         <button type="submit"
-                                            class="flex-[2] py-5 rounded-sm bg-hotel-gold text-white font-bold text-[9px] tracking-widest uppercase hover:bg-hotel-text transition-all">Xác
+                                            class="flex-[2] py-5 rounded-sm bg-hotel-gold text-white font-bold text-sm tracking-widest uppercase hover:bg-hotel-text transition-all">Xác
                                             nhận đơn</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
 
+                        <%-- Các modal chỉ dành cho ADMIN --%>
+                        <c:if test="${isAdminUser}">
                         <!-- Add Room Modal -->
                         <div id="addRoomModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6" x-cloak>
                             <div class="absolute inset-0 bg-hotel-text/60 backdrop-blur-md" onclick="closeTailwindModal('addRoomModal')"></div>
@@ -289,7 +307,7 @@
                                         <div class="space-y-1">
                                             <label class="label-premium">Hạng Phòng (Category)</label>
                                             <div class="relative">
-                                                <select name="typeId" class="w-full bg-white border border-hotel-gold/10 rounded-xl px-6 py-4 font-bold text-hotel-text text-[11px] uppercase tracking-widest appearance-none cursor-pointer">
+                                                <select name="typeId" class="w-full bg-white border border-hotel-gold/10 rounded-xl px-6 py-4 font-bold text-hotel-text text-base uppercase tracking-widest appearance-none cursor-pointer">
                                                     <c:forEach items="${typeList}" var="type">
                                                         <option value="${type.roomTypeId}">${type.typeName}</option>
                                                     </c:forEach>
@@ -304,8 +322,8 @@
                                     </div>
 
                                     <div class="flex gap-4 pt-4">
-                                        <button type="button" onclick="closeTailwindModal('addRoomModal')" class="flex-1 py-4 text-hotel-muted font-bold text-[9px] tracking-widest uppercase hover:bg-hotel-gold/5 transition-all">Hủy</button>
-                                        <button type="submit" class="flex-1 py-4 bg-hotel-gold text-white font-bold text-[9px] tracking-widest uppercase hover:bg-hotel-text transition-all">Tạo Phòng</button>
+                                        <button type="button" onclick="closeTailwindModal('addRoomModal')" class="flex-1 py-4 text-hotel-muted font-bold text-sm tracking-widest uppercase hover:bg-hotel-gold/5 transition-all">Hủy</button>
+                                        <button type="submit" class="flex-1 py-4 bg-hotel-gold text-white font-bold text-sm tracking-widest uppercase hover:bg-hotel-text transition-all">Tạo Phòng</button>
                                     </div>
                                 </form>
                             </div>
@@ -331,12 +349,13 @@
                                     </div>
 
                                     <div class="flex gap-4 pt-4">
-                                        <button type="button" onclick="closeTailwindModal('updatePriceModal')" class="flex-1 py-4 text-hotel-muted font-bold text-[9px] tracking-widest uppercase hover:bg-hotel-gold/5 transition-all">Hủy</button>
-                                        <button type="submit" class="flex-1 py-4 bg-hotel-gold text-white font-bold text-[9px] tracking-widest uppercase hover:bg-hotel-text transition-all">Cập Nhật</button>
+                                        <button type="button" onclick="closeTailwindModal('updatePriceModal')" class="flex-1 py-4 text-hotel-muted font-bold text-sm tracking-widest uppercase hover:bg-hotel-gold/5 transition-all">Hủy</button>
+                                        <button type="submit" class="flex-1 py-4 bg-hotel-gold text-white font-bold text-sm tracking-widest uppercase hover:bg-hotel-text transition-all">Cập Nhật</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
+                        </c:if>
 
                         <!-- Management Modal -->
                         <div id="manageModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6"
@@ -346,7 +365,7 @@
                             <div
                                 class="relative w-full max-w-[1400px] h-[85vh] bg-hotel-bone rounded-sm flex flex-col md:flex-row overflow-hidden border border-hotel-gold/20 shadow-2xl">
                                 <button onclick="closeTailwindModal('manageModal')"
-                                    class="absolute top-10 right-10 z-[110] w-14 h-14 rounded-full bg-hotel-gold/10 text-hotel-gold hover:bg-hotel-gold hover:text-white transition-all flex items-center justify-center border border-hotel-gold/20 group">
+                                    class="absolute top-10 right-10 z-[110] w-14 h-16 rounded-full bg-hotel-gold/10 text-hotel-gold hover:bg-hotel-gold hover:text-white transition-all flex items-center justify-center border border-hotel-gold/20 group">
                                     <span
                                         class="material-symbols-outlined group-hover:rotate-90 transition-transform">close</span>
                                 </button>
@@ -359,49 +378,65 @@
                                             class="text-5xl font-serif font-bold text-hotel-text tracking-tighter leading-tight uppercase">
                                             Phòng<br /><span id="displayManageRoomId" class="text-hotel-gold italic"></span>
                                         </h3>
-                                        <p class="text-[9px] text-hotel-gold font-bold tracking-[0.4em] uppercase mt-4">
+                                        <p class="text-sm text-hotel-gold font-bold tracking-[0.4em] uppercase mt-4">
                                             Cấu hình Node</p>
                                     </div>
 
-                                    <form action="${pageContext.request.contextPath}/RoomServlet" method="POST"
-                                        class="space-y-10 flex-1">
-                                        <input type="hidden" name="action" value="updateRoomInfo">
-                                        <input type="hidden" name="roomId" id="manageRoomId">
+                                    <c:choose>
+                                        <c:when test="${isAdminUser}">
+                                            <%-- ADMIN: được phép chỉnh sửa loại phòng, giá và xóa phòng --%>
+                                            <form action="${pageContext.request.contextPath}/RoomServlet" method="POST"
+                                                class="space-y-10 flex-1">
+                                                <input type="hidden" name="action" value="updateRoomInfo">
+                                                <input type="hidden" name="roomId" id="manageRoomId">
 
-                                        <div class="space-y-1">
-                                            <label class="label-premium">Phân loại hạng phòng</label>
-                                            <div class="relative">
-                                                <select name="typeId" id="manageTypeId"
-                                                    class="w-full bg-white border border-hotel-gold/10 rounded-xl px-6 py-5 font-bold text-hotel-text text-[11px] uppercase tracking-widest appearance-none cursor-pointer">
-                                                    <c:forEach items="${typeList}" var="type">
-                                                        <option value="${type.roomTypeId}">${type.typeName}</option>
-                                                    </c:forEach>
-                                                </select>
-                                                <span class="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-hotel-gold/40 pointer-events-none">expand_more</span>
+                                                <div class="space-y-1">
+                                                    <label class="label-premium">Phân loại hạng phòng</label>
+                                                    <div class="relative">
+                                                        <select name="typeId" id="manageTypeId"
+                                                            class="w-full bg-white border border-hotel-gold/10 rounded-xl px-6 py-5 font-bold text-hotel-text text-base uppercase tracking-widest appearance-none cursor-pointer">
+                                                            <c:forEach items="${typeList}" var="type">
+                                                                <option value="${type.roomTypeId}">${type.typeName}</option>
+                                                            </c:forEach>
+                                                        </select>
+                                                        <span class="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-hotel-gold/40 pointer-events-none">expand_more</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="space-y-1">
+                                                    <label class="label-premium">Giá Niêm Yết (VNĐ)</label>
+                                                    <input type="number" name="price" id="managePrice"
+                                                        class="w-full bg-white border border-hotel-gold/10 rounded-xl px-6 py-5 font-serif font-bold text-hotel-text text-3xl tracking-tight border-hotel-gold/20">
+                                                </div>
+
+                                                <button type="submit"
+                                                    class="w-full py-6 rounded-sm bg-hotel-gold text-white font-bold text-sm tracking-[0.4em] uppercase hover:bg-hotel-text transition-all active:scale-95 shadow-xl">Áp dụng Thay đổi</button>
+                                            </form>
+
+                                            <div class="mt-14 pt-10 border-t border-hotel-gold/10">
+                                                <form action="${pageContext.request.contextPath}/RoomServlet" method="POST"
+                                                    onsubmit="return confirm('CẢNH BÁO: Xóa vĩnh viễn dữ liệu phòng này?');">
+                                                    <input type="hidden" name="action" value="deleteRoom">
+                                                    <input type="hidden" name="roomId" id="deleteRoomId">
+                                                    <button type="submit"
+                                                        class="w-full py-4 rounded-sm text-red-500 hover:text-white hover:bg-red-500 font-bold text-sm tracking-[0.2em] uppercase border border-red-500/20 transition-all flex items-center justify-center gap-3">
+                                                        <span class="material-symbols-outlined text-sm">delete</span> Xóa Phòng
+                                                    </button>
+                                                </form>
                                             </div>
-                                        </div>
-
-                                        <div class="space-y-1">
-                                            <label class="label-premium">Giá Niêm Yết (VNĐ)</label>
-                                            <input type="number" name="price" id="managePrice"
-                                                class="w-full bg-white border border-hotel-gold/10 rounded-xl px-6 py-5 font-serif font-bold text-hotel-text text-3xl tracking-tight border-hotel-gold/20">
-                                        </div>
-
-                                        <button type="submit"
-                                            class="w-full py-6 rounded-sm bg-hotel-gold text-white font-bold text-[9px] tracking-[0.4em] uppercase hover:bg-hotel-text transition-all active:scale-95 shadow-xl">Áp dụng Thay đổi</button>
-                                    </form>
-
-                                    <div class="mt-14 pt-10 border-t border-hotel-gold/10">
-                                        <form action="${pageContext.request.contextPath}/RoomServlet" method="POST"
-                                            onsubmit="return confirm('CẢNH BÁO: Xóa vĩnh viễn dữ liệu phòng này?');">
-                                            <input type="hidden" name="action" value="deleteRoom">
-                                            <input type="hidden" name="roomId" id="deleteRoomId">
-                                            <button type="submit"
-                                                class="w-full py-4 rounded-sm text-red-500 hover:text-white hover:bg-red-500 font-bold text-[9px] tracking-[0.2em] uppercase border border-red-500/20 transition-all flex items-center justify-center gap-3">
-                                                <span class="material-symbols-outlined text-sm">delete</span> Xóa Phòng
-                                            </button>
-                                        </form>
-                                    </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <%-- STAFF/RECEPTIONIST: chỉ xem thông tin phòng, không chỉnh sửa --%>
+                                            <input type="hidden" id="manageRoomId">
+                                            <input type="hidden" id="manageTypeId">
+                                            <input type="hidden" id="managePrice">
+                                            <input type="hidden" id="deleteRoomId">
+                                            <div class="flex-1 flex flex-col items-center justify-center gap-4 text-center opacity-50">
+                                                <span class="material-symbols-outlined text-4xl text-hotel-gold">lock</span>
+                                                <p class="text-sm font-bold text-hotel-muted uppercase tracking-widest">Chỉ quản trị viên<br/>mới có thể chỉnh sửa</p>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
 
                                 <!-- Media/Gallery Panel -->
@@ -412,12 +447,12 @@
                                             <h4 class="text-xs font-black text-white/30 uppercase tracking-[0.4em]">
                                                 Asset
                                                 Repository</h4>
-                                            <p class="text-[9px] text-white/10 font-bold uppercase tracking-widest">
+                                            <p class="text-sm text-white/10 font-bold uppercase tracking-widest">
                                                 Visual
                                                 data stream for this node</p>
                                         </div>
                                         <button onclick="triggerUpload()"
-                                            class="flex items-center gap-3 px-8 py-4 rounded-2xl bg-primary text-background-dark font-black text-[9px] tracking-[0.3em] uppercase hover:shadow-[0_0_25px_rgba(34,211,238,0.4)] transition-all">
+                                            class="flex items-center gap-3 px-8 py-4 rounded-2xl bg-primary text-background-dark font-black text-sm tracking-[0.3em] uppercase hover:shadow-[0_0_25px_rgba(34,211,238,0.4)] transition-all">
                                             <span class="material-symbols-outlined text-sm">cloud_upload</span> Inject
                                             Media
                                         </button>
@@ -494,9 +529,9 @@
                                             }
                                             innerHtml += '<div class="absolute inset-0 bg-hotel-text/60 opacity-0 group-hover:opacity-100 transition-all duration-400 flex items-center justify-center gap-6 backdrop-blur-[2px]">';
                                             if (!isPrimary) {
-                                                innerHtml += '<button onclick="setPrimaryImage(\'' + roomId + '\', \'' + rawUrl + '\')" class="w-12 h-12 rounded-full bg-hotel-gold text-white hover:scale-110 transition-all flex items-center justify-center shadow-lg"><span class="material-symbols-outlined text-lg">star</span></button>';
+                                                innerHtml += '<button onclick="setPrimaryImage(\'' + roomId + '\', \'' + rawUrl + '\')" class="w-12 h-16 rounded-full bg-hotel-gold text-white hover:scale-110 transition-all flex items-center justify-center shadow-lg"><span class="material-symbols-outlined text-lg">star</span></button>';
                                             }
-                                            innerHtml += '<button onclick="deleteImage(\'' + id + '\')" class="w-12 h-12 rounded-full bg-white text-hotel-text hover:bg-red-500 hover:text-white hover:scale-110 transition-all flex items-center justify-center shadow-lg"><span class="material-symbols-outlined text-lg">delete</span></button>';
+                                            innerHtml += '<button onclick="deleteImage(\'' + id + '\')" class="w-12 h-16 rounded-full bg-white text-hotel-text hover:bg-red-500 hover:text-white hover:scale-110 transition-all flex items-center justify-center shadow-lg"><span class="material-symbols-outlined text-lg">delete</span></button>';
                                             innerHtml += '</div>';
 
                                             card.innerHTML = innerHtml;

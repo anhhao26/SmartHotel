@@ -85,7 +85,7 @@
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 py-12">
                     <div class="space-y-4">
                         <div
-                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[9px] font-bold uppercase tracking-[0.3em]">
+                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-sm font-bold uppercase tracking-[0.3em]">
                             Trí Tuệ Doanh Nghiệp v8.0
                         </div>
                         <h2
@@ -107,7 +107,7 @@
                                 class="material-symbols-outlined text-hotel-gold text-4xl group-hover:scale-110 transition-transform">insights</span>
                             <div>
                                 <p
-                                    class="text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] mb-1 opacity-60">
+                                    class="text-sm font-bold text-hotel-muted uppercase tracking-[0.3em] mb-1 opacity-60">
                                     CƠ CHẾ PHÂN TÍCH</p>
                                 <p
                                     class="text-xl font-serif font-bold text-hotel-text tracking-widest uppercase italic">
@@ -135,12 +135,12 @@
                                     <h3 class="text-2xl font-serif font-bold text-hotel-text tracking-tight uppercase">
                                         Dự Báo Doanh Thu</h3>
                                     <p
-                                        class="text-[9px] text-hotel-muted font-bold uppercase tracking-[0.3em] mt-1 italic opacity-50">
+                                        class="text-sm text-hotel-muted font-bold uppercase tracking-[0.3em] mt-1 italic opacity-50">
                                         Chu kỳ 12 tháng kế tiếp</p>
                                 </div>
                             </div>
                             <span
-                                class="text-[8px] font-bold text-hotel-gold bg-hotel-gold/10 px-4 py-1.5 rounded-full border border-hotel-gold/20 uppercase tracking-[0.4em]">Time
+                                class="text-xs font-bold text-hotel-gold bg-hotel-gold/10 px-4 py-1.5 rounded-full border border-hotel-gold/20 uppercase tracking-[0.4em]">Time
                                 Series</span>
                         </div>
 
@@ -165,12 +165,12 @@
                                     <h3 class="text-2xl font-serif font-bold text-hotel-text tracking-tight uppercase">
                                         Dự Báo Nhu Cầu</h3>
                                     <p
-                                        class="text-[9px] text-hotel-muted font-bold uppercase tracking-[0.3em] mt-1 italic opacity-50">
+                                        class="text-sm text-hotel-muted font-bold uppercase tracking-[0.3em] mt-1 italic opacity-50">
                                         Xu hướng mùa vụ cao cấp</p>
                                 </div>
                             </div>
                             <span
-                                class="text-[8px] font-bold text-hotel-chocolate bg-hotel-chocolate/10 px-4 py-1.5 rounded-full border border-hotel-chocolate/20 uppercase tracking-[0.4em]">Capacity
+                                class="text-xs font-bold text-hotel-chocolate bg-hotel-chocolate/10 px-4 py-1.5 rounded-full border border-hotel-chocolate/20 uppercase tracking-[0.4em]">Capacity
                                 Plan</span>
                         </div>
 
@@ -192,7 +192,7 @@
                                 class="material-symbols-outlined text-4xl group-hover:rotate-12 transition-transform duration-500">description</span>
                         </div>
                         <div class="space-y-6">
-                            <h4 class="text-[10px] font-bold text-hotel-muted uppercase tracking-[0.5em] opacity-60">Cơ
+                            <h4 class="text-sm font-bold text-hotel-muted uppercase tracking-[0.5em] opacity-60">Cơ
                                 sở dữ liệu phân tích hệ thống</h4>
                             <p
                                 class="text-hotel-muted text-base font-medium leading-relaxed max-w-5xl italic uppercase tracking-widest opacity-80">
@@ -206,13 +206,13 @@
                                 <div class="flex items-center gap-3">
                                     <span class="w-2 h-2 rounded-full bg-accent-emerald"></span>
                                     <span
-                                        class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest opacity-60">Model
+                                        class="text-sm font-bold text-hotel-muted uppercase tracking-widest opacity-60">Model
                                         Balanced</span>
                                 </div>
                                 <div class="flex items-center gap-3">
                                     <span class="w-2 h-2 rounded-full bg-hotel-gold"></span>
                                     <span
-                                        class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest opacity-60">Real-time
+                                        class="text-sm font-bold text-hotel-muted uppercase tracking-widest opacity-60">Real-time
                                         Stream</span>
                                 </div>
                             </div>
@@ -255,10 +255,10 @@
                             errorDiv.innerHTML = `
                         <span class="material-symbols-outlined text-6xl text-hotel-gold opacity-50">analytics</span>
                         <div>
-                            <p class="text-[11px] font-bold text-hotel-text uppercase tracking-[0.4em] mb-2">Lỗi Kết Nối Trung Tâm Phân Tích</p>
+                            <p class="text-base font-bold text-hotel-text uppercase tracking-[0.4em] mb-2">Lỗi Kết Nối Trung Tâm Phân Tích</p>
                             <p class="text-xs font-medium text-hotel-muted italic leading-relaxed max-w-xs uppercase tracking-widest">${message}</p>
                         </div>
-                        <button onclick="location.reload()" class="px-10 py-4 rounded-xl bg-white border border-hotel-gold/20 text-[9px] font-bold uppercase tracking-widest hover:bg-hotel-gold hover:text-white transition-all shadow-sm">Cập nhật dữ liệu</button>
+                        <button onclick="location.reload()" class="px-10 py-4 rounded-xl bg-white border border-hotel-gold/20 text-sm font-bold uppercase tracking-widest hover:bg-hotel-gold hover:text-white transition-all shadow-sm">Cập nhật dữ liệu</button>
                     `;
                             container.appendChild(errorDiv);
                         }

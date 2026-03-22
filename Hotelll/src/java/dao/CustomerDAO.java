@@ -36,7 +36,8 @@ public class CustomerDAO {
     public List<Customer> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            return em.createQuery("SELECT c FROM Customer c", Customer.class)
+            return em.createQuery("SELECT c FROM Customer c ORDER BY c.points DESC, c.totalSpending DESC, c.customerID DESC", Customer.class)
+                    .setMaxResults(100)
                     .getResultList();
         } finally {
             em.close();

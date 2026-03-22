@@ -100,7 +100,7 @@
 
     <div class="hero-bg"></div>
 
-    <a href="${pageContext.request.contextPath}/rooms" class="absolute top-12 left-12 flex items-center gap-3 text-hotel-muted hover:text-hotel-gold transition-all font-bold text-[10px] tracking-[0.4em] uppercase z-10 group">
+    <a href="${pageContext.request.contextPath}/rooms" class="absolute top-12 left-12 flex items-center gap-3 text-hotel-muted hover:text-hotel-gold transition-all font-bold text-sm tracking-[0.4em] uppercase z-10 group">
         <span class="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">west</span> Quay lại
     </a>
 
@@ -110,14 +110,14 @@
                 <span class="material-symbols-outlined text-3xl">key</span>
             </div>
             <h1 class="text-5xl font-serif font-bold text-hotel-text tracking-tight uppercase">Yêu Cầu <span class="text-hotel-gold italic">Đặt Phòng.</span></h1>
-            <p class="text-hotel-muted font-bold text-[9px] tracking-[0.4em] uppercase border-t border-hotel-gold/10 pt-6 inline-block">Khởi tạo trải nghiệm lưu trú của bạn</p>
+            <p class="text-hotel-muted font-bold text-sm tracking-[0.4em] uppercase border-t border-hotel-gold/10 pt-6 inline-block">Khởi tạo trải nghiệm lưu trú của bạn</p>
         </div>
 
         <div class="glass-panel p-10 md:p-14 rounded-sm relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-hotel-gold/40 to-transparent"></div>
 
             <c:if test="${not empty error}">
-                <div class="mb-8 p-6 rounded-sm bg-red-50/50 border border-red-100 text-red-600 text-[10px] font-bold tracking-widest uppercase flex items-center gap-4">
+                <div class="mb-8 p-6 rounded-sm bg-red-50/50 border border-red-100 text-red-600 text-sm font-bold tracking-widest uppercase flex items-center gap-4">
                     <span class="material-symbols-outlined">error</span> ${error}
                 </div>
             </c:if>
@@ -155,7 +155,7 @@
                 </div>
 
                 <div class="pt-6">
-                    <button type="submit" class="w-full h-16 rounded-sm font-bold text-[11px] tracking-[0.4em] uppercase btn-gold flex items-center justify-center gap-4 group">
+                    <button type="submit" class="w-full h-16 rounded-sm font-bold text-base tracking-[0.4em] uppercase btn-gold flex items-center justify-center gap-4 group">
                         Xác nhận thông tin <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">east</span>
                     </button>
                 </div>
@@ -163,7 +163,7 @@
         </div>
     </main>
 
-    <footer class="mt-20 text-hotel-muted/30 text-[9px] font-bold tracking-[0.4em] uppercase">
+    <footer class="mt-20 text-hotel-muted/30 text-sm font-bold tracking-[0.4em] uppercase">
         © 2026 SmartHotel Boutique Collection
     </footer>
 

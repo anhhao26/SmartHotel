@@ -22,8 +22,38 @@ public class RoomServlet extends HttpServlet {
 
     private final RoomService roomService = new RoomService();
 
+    /** Kiểm tra xem role có thuộc nhóm staff/admin không */
+    private boolean isStaffOrAdmin(HttpServletRequest request) {
+        HttpSession s = request.getSession(false);
+        if (s == null) return false;
+        Object accObj = s.getAttribute("acc");
+        if (!(accObj instanceof model.Account)) return false;
+        String role = ((model.Account) accObj).getRole();
+        if (role == null) return false;
+        role = role.trim().toUpperCase();
+        return role.equals("ADMIN") || role.equals("MANAGER") || role.equals("SUPERADMIN")
+            || role.equals("RECEPTIONIST") || role.equals("STAFF");
+    }
+
+    /** Kiểm tra xem role có thuộc nhóm admin quản lý không */
+    private boolean isAdmin(HttpServletRequest request) {
+        HttpSession s = request.getSession(false);
+        if (s == null) return false;
+        Object accObj = s.getAttribute("acc");
+        if (!(accObj instanceof model.Account)) return false;
+        String role = ((model.Account) accObj).getRole();
+        if (role == null) return false;
+        role = role.trim().toUpperCase();
+        return role.equals("ADMIN") || role.equals("MANAGER") || role.equals("SUPERADMIN");
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Chỉ staff/admin mới được xem trang quản lý phòng
+        if (!isStaffOrAdmin(request)) {
+            response.sendRedirect(request.getContextPath() + "/403.jsp");
+            return;
+        }
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
@@ -50,6 +80,12 @@ public class RoomServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
+
+        // Tất cả action quản lý phòng: chỉ dành cho staff/admin, không dành cho khách thường
+        if (!isStaffOrAdmin(request)) {
+            response.sendRedirect(request.getContextPath() + "/403.jsp");
+            return;
+        }
 
         if ("changeStatus".equals(action)) {
             String roomId = request.getParameter("roomId");
@@ -103,8 +139,8 @@ public class RoomServlet extends HttpServlet {
                     String originalFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
                     String uniqueFileName = java.util.UUID.randomUUID().toString() + "_" + originalFileName;
 
-                    // Lưu file vào thư mục assets/images trong project của bạn (Đường dẫn tuyệt đối để tránh mất ảnh khi redeploy)
-                    String uploadPath = "D:" + File.separator + "FinalPRJ" + File.separator + "SmartHotel" + File.separator + "Hotelll" + File.separator + "web" + File.separator + "assets" + File.separator + "images";
+                    // Dùng getRealPath để tự động lấy đúng thư mục deploy, không hardcode đường dẫn
+                    String uploadPath = request.getServletContext().getRealPath("/assets/images");
                     File uploadDir = new File(uploadPath);
                     if (!uploadDir.exists()) uploadDir.mkdirs();
 

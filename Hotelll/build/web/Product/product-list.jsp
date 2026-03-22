@@ -102,7 +102,7 @@
                         <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
                             <div class="space-y-4">
                                 <div
-                                    class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-[10px] font-bold tracking-[0.2em] uppercase">
+                                    class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-hotel-gold/5 border border-hotel-gold/20 text-hotel-gold text-sm font-bold tracking-[0.2em] uppercase">
                                     Hệ Thống Quản Trị Kho Vận
                                 </div>
                                 <h2
@@ -116,12 +116,12 @@
                             </div>
                             <div class="flex gap-4">
                                 <a href="products?action=listSuppliers"
-                                    class="px-8 py-4 rounded-xl bg-white border border-hotel-gold/20 text-hotel-chocolate font-bold text-[10px] tracking-[0.2em] uppercase hover:bg-hotel-gold/5 flex items-center gap-3 transition-all shadow-sm">
+                                    class="px-8 py-4 rounded-xl bg-white border border-hotel-gold/20 text-hotel-chocolate font-bold text-sm tracking-[0.2em] uppercase hover:bg-hotel-gold/5 flex items-center gap-3 transition-all shadow-sm">
                                     <span class="material-symbols-outlined text-lg">local_shipping</span> Danh sách đối
                                     tác
                                 </a>
                                 <a href="${pageContext.request.contextPath}/products?action=new"
-                                    class="px-8 py-4 rounded-xl btn-gold font-bold text-[10px] tracking-[0.2em] uppercase flex items-center gap-3 shadow-lg">
+                                    class="px-8 py-4 rounded-xl btn-gold font-bold text-sm tracking-[0.2em] uppercase flex items-center gap-3 shadow-lg">
                                     <span class="material-symbols-outlined text-lg text-white/80">add_box</span> Thêm
                                     vật tư mới
                                 </a>
@@ -141,7 +141,7 @@
                                             class="w-14 h-7 bg-hotel-gold/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-hotel-gold/20 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:bg-white peer-checked:bg-hotel-gold shadow-inner">
                                         </div>
                                         <span
-                                            class="ml-4 text-[10px] font-bold text-hotel-muted group-hover:text-hotel-gold transition-colors uppercase tracking-[0.2em]">Hiển
+                                            class="ml-4 text-sm font-bold text-hotel-muted group-hover:text-hotel-gold transition-colors uppercase tracking-[0.2em]">Hiển
                                             thị hàng đã ẩn</span>
                                     </label>
                                 </form>
@@ -149,7 +149,7 @@
                                     class="flex items-center gap-4 py-3 px-6 rounded-2xl bg-hotel-gold/5 border border-hotel-gold/10">
                                     <div class="w-2.5 h-2.5 rounded-full bg-accent-emerald animate-pulse"></div>
                                     <span
-                                        class="text-[9px] font-bold text-hotel-muted uppercase tracking-[0.3em] italic">Hệ
+                                        class="text-sm font-bold text-hotel-muted uppercase tracking-[0.3em] italic">Hệ
                                         thống trực tuyến</span>
                                 </div>
                             </div>
@@ -158,7 +158,7 @@
                                 class="card-elegant rounded-3xl p-8 border-l-4 border-l-accent-ruby flex items-center justify-between">
                                 <div>
                                     <p
-                                        class="text-[10px] font-bold text-hotel-muted uppercase tracking-[0.2em] mb-2 opacity-60">
+                                        class="text-sm font-bold text-hotel-muted uppercase tracking-[0.2em] mb-2 opacity-60">
                                         Thông báo tồn kho</p>
                                     <p class="text-2xl font-serif font-bold text-hotel-text tracking-tight italic">Mức
                                         độ <span class="text-accent-ruby">Thấp</span></p>
@@ -176,22 +176,22 @@
                                     <thead>
                                         <tr class="table-header">
                                             <th
-                                                class="px-10 py-8 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
+                                                class="px-10 py-8 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
                                                 STT / Mã Vật Tư</th>
                                             <th
-                                                class="px-10 py-8 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
+                                                class="px-10 py-8 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
                                                 Tên Vật Tư & Đơn Vị</th>
                                             <th
-                                                class="px-10 py-8 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
+                                                class="px-10 py-8 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
                                                 Phân Loại</th>
                                             <th
-                                                class="px-10 py-8 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
+                                                class="px-10 py-8 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
                                                 Tồn Kho Hiện Tại</th>
                                             <th
-                                                class="px-10 py-8 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
+                                                class="px-10 py-8 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em]">
                                                 Đơn Giá (Vốn/Bán)</th>
                                             <th
-                                                class="px-10 py-8 text-[10px] font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-center">
+                                                class="px-10 py-8 text-sm font-bold text-hotel-chocolate uppercase tracking-[0.4em] text-center">
                                                 Hành Động</th>
                                         </tr>
                                     </thead>
@@ -211,19 +211,19 @@
                                                     <div
                                                         class="inline-flex items-center gap-2 mt-2 px-3 py-1 bg-hotel-gold/5 border border-hotel-gold/10 rounded-md">
                                                         <span
-                                                            class="text-[10px] text-hotel-muted font-bold uppercase tracking-widest">Đơn
+                                                            class="text-sm text-hotel-muted font-bold uppercase tracking-widest">Đơn
                                                             vị: ${p.unit}</span>
                                                     </div>
                                                 </td>
                                                 <td class="px-10 py-10">
                                                     <c:if test="${p.isTradeGood}">
                                                         <span
-                                                            class="bg-accent-emerald/5 text-accent-emerald border border-accent-emerald/20 text-[9px] font-bold px-5 py-1.5 rounded-full uppercase tracking-[0.2em]">Thương
+                                                            class="bg-accent-emerald/5 text-accent-emerald border border-accent-emerald/20 text-sm font-bold px-5 py-1.5 rounded-full uppercase tracking-[0.2em]">Thương
                                                             mại</span>
                                                     </c:if>
                                                     <c:if test="${!p.isTradeGood}">
                                                         <span
-                                                            class="bg-hotel-gold/5 text-hotel-gold border border-hotel-gold/20 text-[9px] font-bold px-5 py-1.5 rounded-full uppercase tracking-[0.2em]">Nội
+                                                            class="bg-hotel-gold/5 text-hotel-gold border border-hotel-gold/20 text-sm font-bold px-5 py-1.5 rounded-full uppercase tracking-[0.2em]">Nội
                                                             bộ</span>
                                                     </c:if>
                                                 </td>
@@ -239,7 +239,7 @@
                                                                 <span
                                                                     class="w-2 h-2 rounded-full bg-accent-ruby animate-ping"></span>
                                                                 <span
-                                                                    class="text-[9px] font-bold text-accent-ruby uppercase tracking-widest">Sắp
+                                                                    class="text-sm font-bold text-accent-ruby uppercase tracking-widest">Sắp
                                                                     hết hàng</span>
                                                             </div>
                                                         </c:if>
@@ -248,17 +248,17 @@
                                                 <td class="px-10 py-10">
                                                     <div class="space-y-1">
                                                         <p
-                                                            class="text-hotel-muted text-[11px] font-bold tracking-tight italic">
+                                                            class="text-hotel-muted text-base font-bold tracking-tight italic">
                                                             <span class="opacity-40 uppercase mr-1">Vốn:</span>
                                                             <fmt:formatNumber value="${p.costPrice}" pattern="#,###" />
-                                                            <span class="text-[9px]">VND</span>
+                                                            <span class="text-sm">VND</span>
                                                         </p>
                                                         <p
                                                             class="text-hotel-gold text-lg font-serif font-bold tracking-tight italic">
                                                             <span
-                                                                class="opacity-40 uppercase mr-1 text-[11px] font-sans">Bán:</span>
+                                                                class="opacity-40 uppercase mr-1 text-base font-sans">Bán:</span>
                                                             <fmt:formatNumber value="${p.sellingPrice}"
-                                                                pattern="#,###" /> <span class="text-[9px]">VND</span>
+                                                                pattern="#,###" /> <span class="text-sm">VND</span>
                                                         </p>
                                                     </div>
                                                 </td>
@@ -266,13 +266,13 @@
                                                     <div class="flex items-center justify-center gap-4">
                                                         <c:if test="${p.isActive}">
                                                             <a href="${pageContext.request.contextPath}/products?action=edit&id=${p.itemID}"
-                                                                class="w-12 h-12 rounded-xl bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold hover:bg-hotel-gold hover:text-white transition-all flex items-center justify-center shadow-sm group active:scale-90"
+                                                                class="w-12 h-16 rounded-xl bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold hover:bg-hotel-gold hover:text-white transition-all flex items-center justify-center shadow-sm group active:scale-90"
                                                                 title="Chỉnh sửa">
                                                                 <span
                                                                     class="material-symbols-outlined text-xl">edit_square</span>
                                                             </a>
                                                             <a href="${pageContext.request.contextPath}/products?action=import&id=${p.itemID}"
-                                                                class="w-12 h-12 rounded-xl bg-accent-emerald/5 border border-accent-emerald/10 text-accent-emerald hover:bg-accent-emerald hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
+                                                                class="w-12 h-16 rounded-xl bg-accent-emerald/5 border border-accent-emerald/10 text-accent-emerald hover:bg-accent-emerald hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
                                                                 title="Nhập hàng">
                                                                 <span
                                                                     class="material-symbols-outlined text-xl">add_shopping_cart</span>
@@ -282,7 +282,7 @@
                                                                 <input type="hidden" name="id" value="${p.itemID}">
                                                                 <button type="submit"
                                                                     onclick="return confirm('Bạn có chắc chắn muốn ẩn vật tư này?')"
-                                                                    class="w-12 h-12 rounded-xl bg-hotel-muted/5 border border-hotel-muted/10 text-hotel-muted hover:bg-hotel-muted hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
+                                                                    class="w-12 h-16 rounded-xl bg-hotel-muted/5 border border-hotel-muted/10 text-hotel-muted hover:bg-hotel-muted hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
                                                                     title="Ẩn vật tư">
                                                                     <span
                                                                         class="material-symbols-outlined text-xl">visibility_off</span>
@@ -294,7 +294,7 @@
                                                                 <input type="hidden" name="action" value="restore">
                                                                 <input type="hidden" name="id" value="${p.itemID}">
                                                                 <button type="submit"
-                                                                    class="w-12 h-12 rounded-xl bg-hotel-gold/20 text-hotel-gold border border-hotel-gold/30 hover:bg-hotel-gold hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
+                                                                    class="w-12 h-16 rounded-xl bg-hotel-gold/20 text-hotel-gold border border-hotel-gold/30 hover:bg-hotel-gold hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
                                                                     title="Khôi phục">
                                                                     <span
                                                                         class="material-symbols-outlined text-xl">visibility</span>
@@ -306,7 +306,7 @@
                                                             <input type="hidden" name="id" value="${p.itemID}">
                                                             <button type="submit"
                                                                 onclick="return confirm('CẢNH BÁO: Xóa vĩnh viễn vật tư này khỏi hệ thống?')"
-                                                                class="w-12 h-12 rounded-xl bg-accent-ruby/5 border border-accent-ruby/10 text-accent-ruby hover:bg-accent-ruby hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
+                                                                class="w-12 h-16 rounded-xl bg-accent-ruby/5 border border-accent-ruby/10 text-accent-ruby hover:bg-accent-ruby hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90"
                                                                 title="Xóa vĩnh viễn">
                                                                 <span
                                                                     class="material-symbols-outlined text-xl">delete_forever</span>
@@ -322,7 +322,7 @@
                         </div>
 
                         <div class="text-center opacity-40 py-8">
-                            <p class="font-serif italic text-hotel-muted text-[11px] tracking-[0.5em] uppercase">
+                            <p class="font-serif italic text-hotel-muted text-base tracking-[0.5em] uppercase">
                                 SmartHotel Luxury Management System • Inventory v2.0</p>
                         </div>
                     </div>

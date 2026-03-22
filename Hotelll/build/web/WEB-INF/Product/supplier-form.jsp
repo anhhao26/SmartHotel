@@ -60,7 +60,7 @@
             
             <!-- Header Section -->
             <div class="py-12 text-center">
-                <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-[9px] font-bold tracking-[0.3em] uppercase mb-6">
+                <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-sm font-bold tracking-[0.3em] uppercase mb-6">
                     <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
                     Hồ sơ đơn vị cung ứng
                 </div>
@@ -83,41 +83,41 @@
                     </c:if>
 
                     <div class="space-y-4">
-                        <label class="text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em] flex items-center gap-2">
+                        <label class="text-sm font-bold text-hotel-gold uppercase tracking-[0.2em] flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm">business_center</span> Tên Nhà Cung Cấp (*)
                         </label>
-                        <input type="text" name="name" value="${supplier.supplierName}" placeholder="Vd: Công ty TNHH SmartGoods..." class="w-full bg-hotel-cream border border-hotel-gold/10 rounded-2xl px-6 py-4 text-[11px] font-bold uppercase tracking-widest transition-all outline-none focus:ring-4 focus:ring-hotel-gold/10 focus:border-hotel-gold focus:bg-white" required />
+                        <input type="text" name="name" value="${supplier.supplierName}" placeholder="Vd: Công ty TNHH SmartGoods..." class="w-full bg-hotel-cream border border-hotel-gold/10 rounded-2xl px-6 py-4 text-base font-bold uppercase tracking-widest transition-all outline-none focus:ring-4 focus:ring-hotel-gold/10 focus:border-hotel-gold focus:bg-white" required />
                     </div>
 
                     <div class="grid grid-cols-2 gap-8">
                         <div class="space-y-4">
-                            <label class="text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em] flex items-center gap-2">
+                            <label class="text-sm font-bold text-hotel-gold uppercase tracking-[0.2em] flex items-center gap-2">
                                 <span class="material-symbols-outlined text-sm">call_quality</span> Hotline Liên Hệ
                             </label>
-                            <input type="text" name="phone" value="${supplier.contactPhone}" placeholder="Vd: 0987-xxx-xxx" class="w-full bg-hotel-cream border border-hotel-gold/10 rounded-2xl px-6 py-4 text-[11px] font-bold uppercase tracking-widest transition-all outline-none focus:ring-4 focus:ring-hotel-gold/10 focus:border-hotel-gold focus:bg-white" />
+                            <input type="text" name="phone" value="${supplier.contactPhone}" placeholder="Vd: 0987-xxx-xxx" class="w-full bg-hotel-cream border border-hotel-gold/10 rounded-2xl px-6 py-4 text-base font-bold uppercase tracking-widest transition-all outline-none focus:ring-4 focus:ring-hotel-gold/10 focus:border-hotel-gold focus:bg-white" />
                         </div>
                         <div class="space-y-4 group">
-                            <label class="text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em] flex items-center gap-2">
+                            <label class="text-sm font-bold text-hotel-gold uppercase tracking-[0.2em] flex items-center gap-2">
                                 <span class="material-symbols-outlined text-sm">badge</span> Trạng thái hợp tác
                             </label>
                             <div class="h-[54px] bg-hotel-gold/5 rounded-2xl border border-hotel-gold/10 px-6 flex items-center">
-                                <span class="text-[9px] font-bold text-hotel-gold uppercase tracking-widest">Đang Hoạt Động</span>
+                                <span class="text-sm font-bold text-hotel-gold uppercase tracking-widest">Đang Hoạt Động</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="space-y-4">
-                        <label class="text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em] flex items-center gap-2">
+                        <label class="text-sm font-bold text-hotel-gold uppercase tracking-[0.2em] flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm">location_city</span> Địa chỉ trụ sở
                         </label>
-                        <input type="text" name="address" value="${supplier.address}" placeholder="Nhập địa chỉ chi tiết..." class="w-full bg-hotel-cream border border-hotel-gold/10 rounded-2xl px-6 py-4 text-[11px] font-bold uppercase tracking-widest transition-all outline-none focus:ring-4 focus:ring-hotel-gold/10 focus:border-hotel-gold focus:bg-white" />
+                        <input type="text" name="address" value="${supplier.address}" placeholder="Nhập địa chỉ chi tiết..." class="w-full bg-hotel-cream border border-hotel-gold/10 rounded-2xl px-6 py-4 text-base font-bold uppercase tracking-widest transition-all outline-none focus:ring-4 focus:ring-hotel-gold/10 focus:border-hotel-gold focus:bg-white" />
                     </div>
 
                     <div class="flex gap-6 pt-12">
-                        <a href="products?action=listSuppliers" class="flex-1 py-5 rounded-2xl border border-hotel-gold/20 text-hotel-muted text-[11px] font-bold uppercase tracking-[0.3em] text-center hover:bg-hotel-bone transition-all">
+                        <a href="products?action=listSuppliers" class="flex-1 py-5 rounded-2xl border border-hotel-gold/20 text-hotel-muted text-base font-bold uppercase tracking-[0.3em] text-center hover:bg-hotel-bone transition-all">
                             Quay Lại
                         </a>
-                        <button type="submit" class="flex-[2] py-5 rounded-2xl bg-hotel-gold text-white text-[11px] font-bold uppercase tracking-[0.3em] shadow-xl shadow-hotel-gold/30 hover:bg-hotel-text transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <button type="submit" class="flex-[2] py-5 rounded-2xl bg-hotel-gold text-white text-base font-bold uppercase tracking-[0.3em] shadow-xl shadow-hotel-gold/30 hover:bg-hotel-text transition-all active:scale-95 flex items-center justify-center gap-2">
                             Lưu Thông Tin <span class="material-symbols-outlined text-sm">save_as</span>
                         </button>
                     </div>

@@ -64,7 +64,7 @@
             <!-- Header Section -->
             <div class="flex justify-between items-end py-12">
                 <div class="space-y-4">
-                    <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-[9px] font-bold tracking-[0.3em] uppercase">
+                    <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-hotel-gold/5 border border-hotel-gold/10 text-hotel-gold text-sm font-bold tracking-[0.3em] uppercase">
                         <span class="w-1.5 h-1.5 rounded-full bg-hotel-gold"></span>
                         Phân tích luồng cung ứng
                     </div>
@@ -76,10 +76,10 @@
                 <div class="flex items-center gap-6 bg-white p-4 rounded-2xl border border-hotel-gold/10">
                     <form action="products" method="GET" class="flex items-center gap-4 m-0">
                         <input type="hidden" name="action" value="history">
-                        <label class="text-[9px] font-bold text-hotel-muted uppercase tracking-widest">Thời điểm:</label>
-                        <input type="month" name="monthPicker" value="${selectedMonth}" onchange="this.form.submit()" class="bg-hotel-cream border border-hotel-gold/10 rounded-xl px-4 py-2 text-[10px] font-bold text-hotel-text outline-none focus:border-hotel-gold transition-all">
+                        <label class="text-sm font-bold text-hotel-muted uppercase tracking-widest">Thời điểm:</label>
+                        <input type="month" name="monthPicker" value="${selectedMonth}" onchange="this.form.submit()" class="bg-hotel-cream border border-hotel-gold/10 rounded-xl px-4 py-2 text-sm font-bold text-hotel-text outline-none focus:border-hotel-gold transition-all">
                     </form>
-                    <a href="products" class="w-12 h-12 rounded-xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-gold hover:bg-hotel-gold hover:text-white transition-all" title="Về kho hàng">
+                    <a href="products" class="w-12 h-16 rounded-xl bg-hotel-bone border border-hotel-gold/10 flex items-center justify-center text-hotel-gold hover:bg-hotel-gold hover:text-white transition-all" title="Về kho hàng">
                         <span class="material-symbols-outlined">arrow_back</span>
                     </a>
                 </div>
@@ -97,13 +97,13 @@
                                 <div class="w-10 h-10 rounded-full flex items-center justify-center font-serif font-bold ${loop.index == 0 ? 'bg-hotel-gold text-white' : 'bg-hotel-gold/10 text-hotel-gold'}">
                                     ${loop.index + 1}
                                 </div>
-                                <p class="text-[10px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Hạng ${loop.index + 1}</p>
+                                <p class="text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Hạng ${loop.index + 1}</p>
                             </div>
                             <h4 class="text-xl font-serif font-bold text-hotel-text mb-2 line-clamp-1">${stat[0].itemName}</h4>
-                            <p class="text-[9px] text-hotel-muted font-bold tracking-widest uppercase mb-6 opacity-60">${stat[0].supplier.supplierName}</p>
+                            <p class="text-sm text-hotel-muted font-bold tracking-widest uppercase mb-6 opacity-60">${stat[0].supplier.supplierName}</p>
                             <div class="flex items-baseline gap-2">
                                 <span class="text-3xl font-serif font-bold text-hotel-text">${stat[1]}</span>
-                                <span class="text-[10px] font-bold text-hotel-gold uppercase">${stat[0].unit}</span>
+                                <span class="text-sm font-bold text-hotel-gold uppercase">${stat[0].unit}</span>
                             </div>
                         </div>
                     </c:forEach>
@@ -113,17 +113,17 @@
             <!-- Full Report Table -->
             <div class="card-elegant rounded-[3rem] overflow-hidden">
                 <div class="p-8 border-b border-hotel-gold/5 flex justify-between items-center bg-hotel-bone/30">
-                    <h5 class="text-[11px] font-bold text-hotel-text uppercase tracking-[0.3em]">Chi tiết biến động tồn kho</h5>
-                    <span class="px-3 py-1 bg-hotel-gold/10 text-hotel-gold text-[8px] font-bold rounded-full uppercase tracking-tighter">Tháng ${selectedMonth}</span>
+                    <h5 class="text-base font-bold text-hotel-text uppercase tracking-[0.3em]">Chi tiết biến động tồn kho</h5>
+                    <span class="px-3 py-1 bg-hotel-gold/10 text-hotel-gold text-xs font-bold rounded-full uppercase tracking-tighter">Tháng ${selectedMonth}</span>
                 </div>
                 
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead>
                             <tr class="bg-hotel-bone/50 border-b border-hotel-gold/10">
-                                <th class="px-10 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Thứ hạng</th>
-                                <th class="px-10 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em]">Sản phẩm & NCC</th>
-                                <th class="px-10 py-6 text-[9px] font-bold text-hotel-gold uppercase tracking-[0.2em] text-right">Khối lượng nhập</th>
+                                <th class="px-10 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Thứ hạng</th>
+                                <th class="px-10 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em]">Sản phẩm & NCC</th>
+                                <th class="px-10 py-6 text-sm font-bold text-hotel-gold uppercase tracking-[0.2em] text-right">Khối lượng nhập</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-hotel-gold/5">
@@ -136,15 +136,15 @@
                                     </td>
                                     <td class="px-10 py-8">
                                         <div>
-                                            <p class="text-[12px] font-bold text-hotel-text uppercase tracking-widest mb-1">${stat[0].itemName}</p>
-                                            <p class="text-[9px] text-hotel-muted font-bold opacity-60 tracking-wider">${stat[0].supplier.supplierName}</p>
+                                            <p class="text-base font-bold text-hotel-text uppercase tracking-widest mb-1">${stat[0].itemName}</p>
+                                            <p class="text-sm text-hotel-muted font-bold opacity-60 tracking-wider">${stat[0].supplier.supplierName}</p>
                                         </div>
                                     </td>
                                     <td class="px-10 py-8 text-right">
                                         <div class="inline-flex items-center gap-3 bg-emerald-50 px-5 py-2.5 rounded-xl border border-emerald-100">
                                             <span class="material-symbols-outlined text-emerald-600 text-sm">add_shopping_cart</span>
                                             <span class="text-lg font-serif font-bold text-emerald-700">${stat[1]}</span>
-                                            <span class="text-[9px] font-bold text-emerald-600/60 uppercase uppercase">${stat[0].unit}</span>
+                                            <span class="text-sm font-bold text-emerald-600/60 uppercase uppercase">${stat[0].unit}</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -157,7 +157,7 @@
                     <div class="py-32 text-center">
                         <span class="material-symbols-outlined text-7xl text-hotel-gold/20 block mb-6">query_stats</span>
                         <h3 class="text-xl font-serif font-bold text-hotel-text uppercase tracking-[0.2em] opacity-30">Không có dữ liệu nhập hàng</h3>
-                        <p class="text-[9px] text-hotel-muted font-bold tracking-widest uppercase mt-2">Vui lòng chọn mốc thời gian khác</p>
+                        <p class="text-sm text-hotel-muted font-bold tracking-widest uppercase mt-2">Vui lòng chọn mốc thời gian khác</p>
                     </div>
                 </c:if>
             </div>
