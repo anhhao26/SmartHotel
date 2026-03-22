@@ -9,5 +9,5 @@ public class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 
     // PHẢI SỬA DÒNG NÀY THEO LINK NGROK ĐANG CHẠY
-    public static String vnp_ReturnUrl = "https://damp-beatrisa-tyberos-99b62712.koyeb.app/Hotelll/vnpay_return";
+    public static String vnp_ReturnUrl = "https://damp-beatrisa-tyberos-99b62712.koyeb.app/vnpay_return";
 }
